@@ -1,4 +1,18 @@
 {
+  "evqa-rewrite_doc_gen": {
+    "file_name": "jinghong_chen/rewrite_pseudo_doc/train_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
   "identity": {
     "file_name": "identity.json"
   },
