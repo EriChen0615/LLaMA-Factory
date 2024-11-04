@@ -8,15 +8,15 @@ finetuning_type: lora
 lora_target: all
 
 ### dataset
-dataset: evqa-rewrite_doc_gen  # video: mllm_video_demo
+dataset: evqa-norag_answer # video: mllm_video_demo
 template: qwen2_vl
 cutoff_len: 1024 
-max_samples: 50000
+max_samples: 200000
 overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: saves/qwen2_vl-2b/lora/sft-rewrite_doc_gen
+output_dir: saves/qwen2_vl-2b/lora/norag_answer
 logging_steps: 10
 save_steps: 500
 plot_loss: true
@@ -26,14 +26,14 @@ overwrite_output_dir: true
 per_device_train_batch_size: 4
 gradient_accumulation_steps: 8
 learning_rate: 1.0e-4
-num_train_epochs: 3.0
+num_train_epochs: 1.0
 lr_scheduler_type: cosine
 warmup_ratio: 0.1
 bf16: true
 ddp_timeout: 180000000
 
 ### eval
-val_size: 0.1
+val_size: 0.001
 per_device_eval_batch_size: 1
 eval_strategy: steps
 eval_steps: 500
