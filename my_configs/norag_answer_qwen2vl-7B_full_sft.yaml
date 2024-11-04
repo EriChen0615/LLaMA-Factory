@@ -1,11 +1,11 @@
 ### model
-model_name_or_path: QWen/QWen2-VL-2B-Instruct
+model_name_or_path: QWen/QWen2-VL-7B-Instruct
 
 ### method
 stage: sft
 do_train: true
 finetuning_type: full
-# deepspeed: examples/deepspeed/ds_z3_config.json
+deepspeed: examples/deepspeed/ds_z3_config.json
 
 ### dataset
 dataset: evqa-norag_answer
@@ -16,15 +16,15 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: saves/qwen2_vl-2b/full-sft/norag_answer
+output_dir: saves/qwen2_vl-7b/full-sft/norag_answer
 logging_steps: 10
-save_steps: 500
+save_steps: 1250
 plot_loss: true
 overwrite_output_dir: true
 
 ### train
-per_device_train_batch_size: 8
-gradient_accumulation_steps: 4
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 16
 learning_rate: 1.0e-5
 num_train_epochs: 1.0
 lr_scheduler_type: cosine
@@ -36,4 +36,4 @@ ddp_timeout: 180000000
 val_size: 0.001
 per_device_eval_batch_size: 1
 eval_strategy: steps
-eval_steps: 500
+eval_steps: 10000
