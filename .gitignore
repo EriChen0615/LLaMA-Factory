@@ -168,3 +168,4 @@ saves/
 output/
 wandb/
 data/jinghong_chen/**
+*.out
