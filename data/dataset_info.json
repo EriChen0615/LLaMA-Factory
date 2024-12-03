@@ -1,4 +1,18 @@
 {
+  "evqa-rag1_answer": {
+    "file_name": "jinghong_chen/rag1-answer/train_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
   "evqa-norag_answer": {
     "file_name": "jinghong_chen/norag_answer/train_sharegpt.json",
     "formatting": "sharegpt",
