@@ -1,4 +1,18 @@
 {
+  "okvqa-norag_answer": {
+    "file_name": "jinghong_chen/okvqa/norag_answer/train_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
   "evqa-doc1_verify": {
     "file_name": "jinghong_chen/doc1-verify/train_sharegpt.json",
     "formatting": "sharegpt",
