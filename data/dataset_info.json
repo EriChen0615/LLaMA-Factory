@@ -1,4 +1,46 @@
 {
+  "infoseek-norag_answer": {
+    "file_name": "jinghong_chen/Infoseek/norag_answer/train_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
+  "okvqa-doc1_verify": {
+    "file_name": "jinghong_chen/okvqa/doc1-verify/train_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
+  "okvqa-rag1_answer": {
+    "file_name": "jinghong_chen/okvqa/rag1-answer/train_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
   "okvqa-norag_answer": {
     "file_name": "jinghong_chen/okvqa/norag_answer/train_sharegpt.json",
     "formatting": "sharegpt",
