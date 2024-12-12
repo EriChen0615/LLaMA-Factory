@@ -1,4 +1,18 @@
 {
+   "okvqa-rag5_answer-sft": {
+    "file_name": "jinghong_chen/okvqa/rag5-answer-sft/train_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
   "infoseek-norag_answer": {
     "file_name": "jinghong_chen/Infoseek/norag_answer/train_sharegpt.json",
     "formatting": "sharegpt",
