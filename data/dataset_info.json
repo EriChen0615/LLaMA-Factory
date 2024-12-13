@@ -1,4 +1,32 @@
 {
+  "evqa-rag5_answer-sft_max=4096": {
+    "file_name": "jinghong_chen/evqa/rag5-answer-sft_max=4096/train_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
+  "evqa-rag5_answer-sft": {
+    "file_name": "jinghong_chen/evqa/rag5-answer-sft/train_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
   "infoseek-doc1_verify": {
     "file_name": "jinghong_chen/Infoseek/doc1-verify/train_sharegpt.json",
     "formatting": "sharegpt",

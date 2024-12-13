@@ -1,0 +1,13 @@
+### Note: DO NOT use quantized model or quantization_bit when merging lora adapters
+
+### model
+model_name_or_path: Qwen/Qwen2-VL-2B-Instruct
+adapter_name_or_path: saves/qwen2_vl-2b/lora/rag1_answer/checkpoint-5000 # QWen/QWen2-VL-2B-Instruct
+template: qwen2_vl
+finetuning_type: lora
+
+### export
+export_dir: ../../data/jinghong_chen/Qwen2-VL-2B-Instruct_EVQA-RAG1_LoRA-SFT
+export_size: 2
+export_device: cpu
+export_legacy_format: false
