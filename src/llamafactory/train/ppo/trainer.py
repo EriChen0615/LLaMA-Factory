@@ -41,7 +41,7 @@ from ...extras.logging import get_logger
 from ...extras.misc import AverageMeter, count_parameters, get_current_device, get_logits_processor
 from ..callbacks import FixValueHeadModelCallback, SaveProcessorCallback
 from ..trainer_utils import create_custom_optimizer, create_custom_scheduler
-from .ppo_utils import dump_layernorm, get_rewards_from_server, replace_model, restore_layernorm
+from .ppo_utils import dump_layernorm, get_rewards_from_server, replace_model, restore_layernorm, rule_based_reward_fn
 
 
 if TYPE_CHECKING:
@@ -76,6 +76,7 @@ class CustomPPOTrainer(PPOTrainer, Trainer):
         model: "AutoModelForCausalLMWithValueHead",
         reward_model: Optional["AutoModelForCausalLMWithValueHead"],
         ref_model: Optional["AutoModelForCausalLMWithValueHead"],
+        reward_fn: Optional[str],
         tokenizer: "PreTrainedTokenizer",
         processor: Optional["ProcessorMixin"],
         data_collator: "DataCollatorWithPadding",
@@ -143,6 +144,7 @@ class CustomPPOTrainer(PPOTrainer, Trainer):
         self.model_args = model_args
         self.finetuning_args = finetuning_args
         self.reward_model = reward_model
+        self.reward_fn = reward_fn
         self.current_device = get_current_device()  # patch for deepspeed training
 
         self.generation_config = GenerationConfig(
@@ -394,6 +396,9 @@ class CustomPPOTrainer(PPOTrainer, Trainer):
             token_ids = [torch.cat((q, r), dim=-1).tolist() for q, r in zip(queries, responses)]
             messages = self.tokenizer.batch_decode(token_ids, skip_special_tokens=False)
             return get_rewards_from_server(self.reward_model, messages)
+        elif self.finetuning_args.reward_model_type == "function":
+            messages = self.tokenizer.batch_decode(token_ids, skip_special_tokens=False)
+            return rule_based_reward_fn(messages, type=self.reward_fn)
 
         batch: Dict[str, "torch.Tensor"] = self.prepare_model_inputs(queries, responses)
         unwrapped_model: "AutoModelForCausalLMWithValueHead" = self.accelerator.unwrap_model(self.model)

@@ -86,3 +86,6 @@ def restore_layernorm(model: "PreTrainedModel", layernorm_params: Optional[Dict[
     for name, param in model.named_parameters():
         if name in layernorm_params:
             param.data = layernorm_params[name]
+
+def rule_based_reward_fn(response, answer, type="vqa_evqa"):
+    pass

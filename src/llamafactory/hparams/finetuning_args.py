@@ -204,9 +204,13 @@ class RLHFArguments:
         default=None,
         metadata={"help": "The number of bits to quantize the reward model."},
     )
-    reward_model_type: Literal["lora", "full", "api"] = field(
+    reward_model_type: Literal["lora", "full", "api", "function"] = field(
         default="lora",
         metadata={"help": "The type of the reward model in PPO training. Lora model only supports lora training."},
+    )
+    reward_fn: Optional[str] = field(
+        default=None,
+        metadata={"help": "The deterministic function to compute the reward."},
     )
 
 
