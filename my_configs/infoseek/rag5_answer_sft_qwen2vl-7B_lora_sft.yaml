@@ -1,0 +1,39 @@
+### model
+model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_Infoseek-RAG1_LoRA-SFT
+
+### method
+stage: sft
+do_train: true
+finetuning_type: lora
+lora_target: all
+
+### dataset
+dataset: Infoseek-7B-rag5_answer-sft_max=4096 # video: mllm_video_demo
+template: qwen2_vl
+cutoff_len: 8192 # set to 8192 for long context 
+max_samples: 200000
+overwrite_cache: true
+preprocessing_num_workers: 16
+
+### output
+output_dir: saves/qwen2_vl-7b/lora/infoseek/rag5_answer-sft_max=4096_lr=1e-5
+logging_steps: 10
+save_steps: 250
+plot_loss: true
+overwrite_output_dir: true
+
+### train
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 8
+learning_rate: 1.0e-5 # 1.0e-4
+num_train_epochs: 1.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+bf16: true
+ddp_timeout: 180000000
+
+### eval
+val_size: 0.001
+per_device_eval_batch_size: 1
+eval_strategy: steps
+eval_steps: 500

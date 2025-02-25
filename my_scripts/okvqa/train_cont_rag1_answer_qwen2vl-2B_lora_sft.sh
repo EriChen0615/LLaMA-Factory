@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J train_okvqa_rag1_answer_qwen2vl-2B_lora_sft
+#SBATCH -J train_okvqa_cont_rag1_answer_qwen2vl-2B_lora_sft
 #SBATCH -A BYRNE-SL2-GPU
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
