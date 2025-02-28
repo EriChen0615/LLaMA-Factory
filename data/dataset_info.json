@@ -55,7 +55,7 @@
       "assistant_tag": "assistant"
     }
   },
-   "okvqa-rag5_answer-sft": {
+  "okvqa-rag5_answer-sft": {
     "file_name": "jinghong_chen/okvqa/rag5-answer-sft/train_sharegpt.json",
     "formatting": "sharegpt",
     "columns": {
@@ -806,5 +806,15 @@
       "prompt": "content"
     },
     "folder": "python"
+  },
+  "gsm8k": {
+    "file_name": "gsm8k/train.json",
+    "formatting": "alpaca",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "output",
+      "system": "system"
+    }
   }
 }
