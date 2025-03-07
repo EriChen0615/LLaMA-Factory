@@ -1,0 +1,42 @@
+### model
+# model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_Infoseek-RAG5_LoRA-SFT
+model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-RAG1_LoRA-SFT
+
+### method
+stage: dpo
+do_train: true
+finetuning_type: lora
+lora_target: all
+pref_beta: 2.0
+pref_loss: sigmoid
+
+### dataset
+dataset: InfoseekNew-rag3_answer-dpo_max=8196 # video: mllm_video_demo
+template: qwen2_vl
+cutoff_len: 8196 # set to 8192 for long context 
+max_samples: 200000 # 200000
+overwrite_cache: true
+preprocessing_num_workers: 16
+
+### output
+output_dir: saves/qwen2_vl-7b/lora/infoseek_new/rag3_answer-dpo_max=8196_beta=2.0
+logging_steps: 10
+save_steps: 250
+plot_loss: true
+overwrite_output_dir: true
+
+### train: 2 GPUs. So effective batch size = 32
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 16
+learning_rate: 5.0e-6
+num_train_epochs: 1.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+bf16: true
+ddp_timeout: 180000000
+
+### eval
+val_size: 0.001
+per_device_eval_batch_size: 1
+eval_strategy: steps
+eval_steps: 500
