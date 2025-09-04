@@ -1,4 +1,19 @@
 {
+  "evqa-7B-rag5_answer-attn_sft-size=1000-max=4096":{
+    "file_name": "jinghong_chen/evqa/rag5-answer-attn_sft-size=1000-max=4096/train_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images",
+      "gt_evidence_labels": "gt_evidence_labels"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
   "InfoseekNew-rag3_answer-dpo_max=8196":{
     "file_name": "jinghong_chen/InfoseekNew/7B-rag3-answer-dpo_max=8196/train_sharegpt.json",
     "ranking": true,
@@ -12,6 +27,17 @@
   },
   "InfoseekNew-rag1_answer-dpo_max=8196":{
     "file_name": "jinghong_chen/InfoseekNew/7B-rag1-answer-dpo_max=8196/train_sharegpt.json",
+    "ranking": true,
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations",
+      "chosen": "chosen",
+      "rejected": "rejected",
+      "images": "images"
+    }
+  },
+  "InfoseekNew-rag1_answer-dpo_max=8196_it2":{
+    "file_name": "jinghong_chen/InfoseekNew/7B-rag1-answer-dpo_max=8196_it2/train_sharegpt.json",
     "ranking": true,
     "formatting": "sharegpt",
     "columns": {

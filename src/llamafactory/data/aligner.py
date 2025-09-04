@@ -124,6 +124,7 @@ def convert_alpaca(
         "_tools": example[dataset_attr.tools] if dataset_attr.tools else "",
         "_images": convert_images(example[dataset_attr.images]) if dataset_attr.images else None,
         "_videos": convert_videos(example[dataset_attr.videos]) if dataset_attr.videos else None,
+        "_gt_evidence_labels": example.get("gt_evidence_labels", []),
     }
     return output
 
@@ -217,6 +218,7 @@ def convert_sharegpt(
         "_tools": example[dataset_attr.tools] if dataset_attr.tools else "",
         "_images": convert_images(example[dataset_attr.images]) if dataset_attr.images else None,
         "_videos": convert_videos(example[dataset_attr.videos]) if dataset_attr.videos else None,
+        "_gt_evidence_labels": example.get("gt_evidence_labels", []),
     }
     return output
 
