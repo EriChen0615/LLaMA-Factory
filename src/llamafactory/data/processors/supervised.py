@@ -27,6 +27,7 @@ if TYPE_CHECKING:
     from ..mm_plugin import ImageInput, VideoInput
     from ..template import Template
 
+import torch
 
 logger = get_logger(__name__)
 
@@ -86,6 +87,23 @@ def _encode_supervised_example(
 
     return input_ids, labels
 
+def _extract_response_span(input_ids_tensor: torch.Tensor, template: "Template", tokenizer: "PreTrainedTokenizer") -> Tuple[int, int]:
+    """
+    Extract the response span (final assistant turn) from input_ids.
+    This depends on your template format.
+    """
+    # Convert to tensor for easier manipulation
+    assistant_start_token = tokenizer.convert_tokens_to_ids("<|im_start|>")
+    assistant_end_token = tokenizer.convert_tokens_to_ids("<|im_end|>")
+        
+    # Find the last assistant start position
+    assistant_starts = (input_ids_tensor == assistant_start_token).nonzero(as_tuple=True)[0]
+    start_pos = int(assistant_starts[-1].item())
+    assistant_ends = (input_ids_tensor == assistant_end_token).nonzero(as_tuple=True)[0]
+    end_pos = int(assistant_ends[-1].item())
+
+    return (start_pos, end_pos)
+
 def _encode_attn_supervised_example(
     prompt: Sequence[Dict[str, str]],
     response: Sequence[Dict[str, str]],
@@ -100,15 +118,12 @@ def _encode_attn_supervised_example(
     cutoff_len: int,
     train_on_prompt: bool,
     mask_history: bool,
+    evidence_start_token_id: int,
+    evidence_end_token_id: int
 ) -> Tuple[List[int], List[int]]:
     messages = template.mm_plugin.process_messages(prompt + response, images, videos, processor)
     input_ids, labels = template.mm_plugin.process_token_ids([], [], images, videos, tokenizer, processor)
     encoded_pairs = template.encode_multiturn(tokenizer, messages, system, tools)
-
-    # print("DEBUG: messages after process_messages:", messages)
-    # print("DEBUG: len(messages):", len(messages))
-    # print("DEBUG: encoded_pairs:", encoded_pairs)
-    # print("DEBUG: len(encoded_pairs):", len(encoded_pairs))
 
     total_length = len(input_ids) + (1 if template.efficient_eos else 0)
     if mask_history:
@@ -148,6 +163,29 @@ def _encode_attn_supervised_example(
         input_ids += [tokenizer.eos_token_id]
         labels += [tokenizer.eos_token_id]
 
+    # Extract evidence spans
+    evidence_spans = []
+    input_ids_tensor = torch.tensor(input_ids, dtype=torch.long)
+    evidence_start_positions = (input_ids_tensor == evidence_start_token_id).nonzero(as_tuple=True)[0]
+    evidence_end_positions = (input_ids_tensor == evidence_end_token_id).nonzero(as_tuple=True)[0]
+        
+    for start_idx, end_idx in zip(evidence_start_positions, evidence_end_positions):
+        evidence_spans.append((int(start_idx.item()), int(end_idx.item())))
+    # print("DEBUG: evidence_spans:", evidence_spans)
+    # for (start_idx, end_idx) in evidence_spans:
+        # print("DEBUG: evidence:", tokenizer.decode(input_ids[start_idx:end_idx]))
+
+    # Extract response span (i.e., final assistant turn)
+    response_span = _extract_response_span(input_ids_tensor, template, tokenizer)
+    # print("DEBUG: response_span:", tokenizer.decode(input_ids[response_span[0]:response_span[1]]))
+
+    # Replace evidence tokens with space tokens
+    space_token_id = tokenizer.encode(" ", add_special_tokens=False)[0]
+    input_ids_tensor[input_ids_tensor == evidence_start_token_id] = space_token_id
+    input_ids_tensor[input_ids_tensor == evidence_end_token_id] = space_token_id
+    input_ids = input_ids_tensor.tolist()
+
+
     #NOTE DEBUG
     # print("In supervised.py:_encode_attn_supervised_example")
     # print("prompt:", prompt)
@@ -156,7 +194,7 @@ def _encode_attn_supervised_example(
     # print("input_ids:", input_ids) 
     # print("labels:", labels) 
 
-    return input_ids, labels
+    return input_ids, labels, evidence_spans, response_span
 
 def preprocess_attn_supervised_dataset(
     examples: Dict[str, List[Any]],
@@ -173,7 +211,7 @@ def preprocess_attn_supervised_dataset(
             logger.warning("Dropped invalid example: {}".format(examples["_prompt"][i] + examples["_response"][i]))
             continue
 
-        input_ids, labels = _encode_attn_supervised_example(
+        input_ids, labels, evidence_spans, response_span = _encode_attn_supervised_example(
             prompt=examples["_prompt"][i],
             response=examples["_response"][i],
             system=examples["_system"][i],
@@ -187,6 +225,8 @@ def preprocess_attn_supervised_dataset(
             cutoff_len=data_args.cutoff_len,
             train_on_prompt=data_args.train_on_prompt,
             mask_history=data_args.mask_history,
+            evidence_start_token_id=tokenizer.convert_tokens_to_ids(data_args.evidence_start_token),
+            evidence_end_token_id=tokenizer.convert_tokens_to_ids(data_args.evidence_end_token),
         )
         model_inputs["input_ids"].append(input_ids)
         model_inputs["attention_mask"].append([1] * len(input_ids))

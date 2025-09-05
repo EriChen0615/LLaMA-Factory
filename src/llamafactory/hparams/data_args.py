@@ -113,6 +113,14 @@ class DataArguments:
         default=None,
         metadata={"help": "Path to save or load the tokenized datasets."},
     )
+    evidence_start_token: str = field(
+        default="<evidence_start>",
+        metadata={"help": "The token to start the evidence."},
+    )
+    evidence_end_token: str = field(
+        default="<evidence_end>",
+        metadata={"help": "The token to end the evidence."},
+    )
 
     def __post_init__(self):
         def split_arg(arg):
