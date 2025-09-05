@@ -30,6 +30,8 @@ from ...extras.logging import get_logger
 from ..callbacks import PissaConvertCallback, SaveProcessorCallback
 from ..trainer_utils import create_custom_optimizer, create_custom_scheduler
 
+from .attn_loss import _compute_attn_loss
+
 
 if TYPE_CHECKING:
     from torch.utils.data import Dataset
@@ -79,31 +81,23 @@ class CustomSeq2SeqAttnTrainer(Seq2SeqTrainer):
             labels = None
 
         gt_evidence_labels = inputs.pop("gt_evidence_labels")
-        breakpoint() # NOTE: debug. See if gt_evidence_labels is here.
-        outputs = model(**inputs, output_attentions=True)
-        # Save past state if it exists
-        # TODO: this needs to be fixed and made cleaner later.
-        if self.args.past_index >= 0:
-            self._past = outputs[self.args.past_index]
+        evidence_spans = inputs.pop("evidence_spans")
+        response_span = inputs.pop("response_span")
+        for i, (start_idx, end_idx) in enumerate(evidence_spans[0]): #NOTE debug. batch_idx=0
+            print("DEBUG: evidence_spans [{}]:".format(i), self.tokenizer.decode(inputs["input_ids"][0][start_idx:end_idx+1]))
+        print("DEBUG: response span", self.tokenizer.decode(inputs["input_ids"][0][response_span[0][0]:response_span[0][1]+1]))
 
-        if labels is not None:
-            unwrapped_model = self.accelerator.unwrap_model(model)
-            if _is_peft_model(unwrapped_model):
-                model_name = unwrapped_model.base_model.model._get_name()
-            else:
-                model_name = unwrapped_model._get_name()
-            if model_name in MODEL_FOR_CAUSAL_LM_MAPPING_NAMES.values():
-                loss = self.label_smoother(outputs, labels, shift_labels=True)
-            else:
-                loss = self.label_smoother(outputs, labels)
-        else:
-            if isinstance(outputs, dict) and "loss" not in outputs:
-                raise ValueError(
-                    "The model did not return a loss from the inputs, only the following keys: "
-                    f"{','.join(outputs.keys())}. For reference, the inputs it received are {','.join(inputs.keys())}."
-                )
-            # We don't use .loss here since the model may return tuples instead of ModelOutput.
-            loss = outputs["loss"] if isinstance(outputs, dict) else outputs[0]
+        outputs = model(**inputs, output_attentions=True)
+
+        lm_loss = outputs["loss"]
+        attn_loss, gt_evidence_probs = _compute_attn_loss(outputs["attentions"], gt_evidence_labels, evidence_spans, response_span)
+
+        loss = lm_loss + attn_loss
+        # print("DEBUG: loss", loss)
+        # print("DEBUG: lm_loss", lm_loss)
+        # print("DEBUG: attn_loss", attn_loss)
+        # print("DEBUG: gt_evidence_probs", gt_evidence_probs)
+        # breakpoint()
 
         return (loss, outputs) if return_outputs else loss
     

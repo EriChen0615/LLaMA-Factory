@@ -234,6 +234,8 @@ def preprocess_attn_supervised_dataset(
         model_inputs["images"].append(examples["_images"][i])
         model_inputs["videos"].append(examples["_videos"][i])
         model_inputs["gt_evidence_labels"].append(examples["_gt_evidence_labels"][i])
+        model_inputs["evidence_spans"].append(evidence_spans)
+        model_inputs["response_span"].append(response_span)
 
     return model_inputs
 
