@@ -79,9 +79,8 @@ class CustomSeq2SeqAttnTrainer(Seq2SeqTrainer):
             labels = None
 
         gt_evidence_labels = inputs.pop("gt_evidence_labels")
-        # breakpoint() # NOTE: debug. See if gt_evidence_labels is here.
+        breakpoint() # NOTE: debug. See if gt_evidence_labels is here.
         outputs = model(**inputs, output_attentions=True)
-        breakpoint()
         # Save past state if it exists
         # TODO: this needs to be fixed and made cleaner later.
         if self.args.past_index >= 0:
