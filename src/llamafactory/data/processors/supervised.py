@@ -104,12 +104,20 @@ def _encode_attn_supervised_example(
     messages = template.mm_plugin.process_messages(prompt + response, images, videos, processor)
     input_ids, labels = template.mm_plugin.process_token_ids([], [], images, videos, tokenizer, processor)
     encoded_pairs = template.encode_multiturn(tokenizer, messages, system, tools)
+
+    # print("DEBUG: messages after process_messages:", messages)
+    # print("DEBUG: len(messages):", len(messages))
+    # print("DEBUG: encoded_pairs:", encoded_pairs)
+    # print("DEBUG: len(encoded_pairs):", len(encoded_pairs))
+
     total_length = len(input_ids) + (1 if template.efficient_eos else 0)
     if mask_history:
         encoded_pairs = encoded_pairs[::-1]  # high priority for last turns
 
     for turn_idx, (source_ids, target_ids) in enumerate(encoded_pairs):
         if total_length >= cutoff_len:
+            print("DEBUG: turn_idx:", turn_idx)
+            print("DEBUG: Breaking due to total_length >= cutoff_len")
             break
 
         source_len, target_len = infer_seqlen(len(source_ids), len(target_ids), cutoff_len - total_length)
@@ -139,6 +147,14 @@ def _encode_attn_supervised_example(
     if template.efficient_eos:
         input_ids += [tokenizer.eos_token_id]
         labels += [tokenizer.eos_token_id]
+
+    #NOTE DEBUG
+    # print("In supervised.py:_encode_attn_supervised_example")
+    # print("prompt:", prompt)
+    # print("response:", response)
+    # print("gt_evidence_labels:", gt_evidence_labels)
+    # print("input_ids:", input_ids) 
+    # print("labels:", labels) 
 
     return input_ids, labels
 
