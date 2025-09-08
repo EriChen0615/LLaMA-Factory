@@ -31,6 +31,7 @@ from ..callbacks import PissaConvertCallback, SaveProcessorCallback
 from ..trainer_utils import create_custom_optimizer, create_custom_scheduler
 
 from .attn_loss import _compute_attn_loss
+from collections import defaultdict
 
 
 if TYPE_CHECKING:
@@ -54,6 +55,8 @@ class CustomSeq2SeqAttnTrainer(Seq2SeqTrainer):
     ) -> None:
         super().__init__(**kwargs)
         self.finetuning_args = finetuning_args
+        # Initialize metrics storage for custom logging
+        self._metrics = defaultdict(list)
 
         if processor is not None:
             self.add_callback(SaveProcessorCallback(processor))
@@ -83,21 +86,21 @@ class CustomSeq2SeqAttnTrainer(Seq2SeqTrainer):
         gt_evidence_labels = inputs.pop("gt_evidence_labels")
         evidence_spans = inputs.pop("evidence_spans")
         response_span = inputs.pop("response_span")
-        for i, (start_idx, end_idx) in enumerate(evidence_spans[0]): #NOTE debug. batch_idx=0
-            print("DEBUG: evidence_spans [{}]:".format(i), self.tokenizer.decode(inputs["input_ids"][0][start_idx:end_idx+1]))
-        print("DEBUG: response span", self.tokenizer.decode(inputs["input_ids"][0][response_span[0][0]:response_span[0][1]+1]))
 
         outputs = model(**inputs, output_attentions=True)
 
         lm_loss = outputs["loss"]
-        attn_loss, gt_evidence_probs = _compute_attn_loss(outputs["attentions"], gt_evidence_labels, evidence_spans, response_span)
+        if self.finetuning_args.use_attn_sft:
+            attn_loss, evidence_probs, hit_top1 = _compute_attn_loss(outputs["attentions"], gt_evidence_labels, evidence_spans, response_span)
+            loss = lm_loss + attn_loss
+            self._metrics["attn_loss"].append(attn_loss.item())
+            self._metrics["evidence_probs"].extend(evidence_probs)
+            self._metrics["hit_top1"].extend(hit_top1)
+        else:
+            loss = lm_loss
 
-        loss = lm_loss + attn_loss
-        # print("DEBUG: loss", loss)
-        # print("DEBUG: lm_loss", lm_loss)
-        # print("DEBUG: attn_loss", attn_loss)
-        # print("DEBUG: gt_evidence_probs", gt_evidence_probs)
-        # breakpoint()
+        # Store metrics for logging
+        self._metrics["lm_loss"].append(lm_loss.item())
 
         return (loss, outputs) if return_outputs else loss
     
@@ -189,3 +192,35 @@ class CustomSeq2SeqAttnTrainer(Seq2SeqTrainer):
                 res.append(json.dumps({"prompt": text, "label": label, "predict": pred}, ensure_ascii=False))
 
             writer.write("\n".join(res))
+
+    def log(self, logs: Dict[str, float]) -> None:
+        """Override log method to include custom metrics."""
+        # Calculate averaged metrics
+        metrics = {}
+        if self._metrics["attn_loss"]:
+            metrics["attn_loss"] = sum(self._metrics["attn_loss"]) / len(self._metrics["attn_loss"])
+        if self._metrics["lm_loss"]:
+            metrics["lm_loss"] = sum(self._metrics["lm_loss"]) / len(self._metrics["lm_loss"])
+        if self._metrics["evidence_probs"]:
+            # INSERT_YOUR_CODE
+            # Compute average entropy for evidence_probs
+            # Each element in self._metrics["evidence_probs"] is a tensor of probabilities for a sample
+            entropies = []
+            for probs in self._metrics["evidence_probs"]:
+                # Avoid log(0) by adding a small epsilon
+                eps = 1e-12
+                entropy = -(probs * (probs + eps).log()).sum().item()
+                entropies.append(entropy)
+            if entropies:
+                metrics["evidence_probs_entropy"] = sum(entropies) / len(entropies)
+            pass
+        if self._metrics["hit_top1"]:
+            metrics["hit_top1_mean"] = sum(self._metrics["hit_top1"]) / len(self._metrics["hit_top1"])
+        # Merge with existing logs
+        logs = {**logs, **metrics}
+        
+        # Call parent log method
+        super().log(logs)
+        
+        # Clear metrics for next cycle
+        self._metrics.clear()

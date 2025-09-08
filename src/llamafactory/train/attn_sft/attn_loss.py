@@ -49,7 +49,9 @@ def _compute_attn_loss(attention_weights, gt_evidence_labels, evidence_spans, re
     
     batch_size = attention_weights[0].shape[0]
     loss = torch.tensor(0.0, device=device)
-    gt_probs = []
+    # gt_probs = []
+    evidence_probs = []
+    hit_top1 = []
     
     for batch_idx in range(batch_size):
         if batch_idx >= len(evidence_spans) or batch_idx >= len(response_spans):
@@ -57,8 +59,11 @@ def _compute_attn_loss(attention_weights, gt_evidence_labels, evidence_spans, re
             
         batch_evidence_spans = evidence_spans[batch_idx]
         batch_response_span = response_spans[batch_idx]
-        batch_gt_labels = torch.tensor(gt_evidence_labels[batch_idx], device=device)
-        if batch_gt_labels.sum() == 0:
+        batch_gt_labels = torch.as_tensor(gt_evidence_labels[batch_idx], device=device)
+        gt_idx = batch_gt_labels.argmax()
+        if batch_gt_labels.sum() == 0 or gt_idx < 0 or gt_idx >= len(batch_evidence_spans):
+            if gt_idx < 0 or gt_idx >= len(batch_evidence_spans):
+                print("[WARNING] gt_idx is out of range")
             continue
         
         # Compute attention-based reranking scores
@@ -68,7 +73,6 @@ def _compute_attn_loss(attention_weights, gt_evidence_labels, evidence_spans, re
         
         # Numerically stable softmax using logsumexp trick
         logits = rerank_scores
-        gt_idx = batch_gt_labels.argmax()
         loss += torch.nn.functional.cross_entropy(logits.unsqueeze(0), torch.tensor([gt_idx], device=logits.device))
 
         max_logit = logits.max()
@@ -76,7 +80,9 @@ def _compute_attn_loss(attention_weights, gt_evidence_labels, evidence_spans, re
 
         log_probs = shifted_logits - torch.logsumexp(shifted_logits, dim=0)
         probs = torch.exp(log_probs)
-        gt_prob = probs[gt_idx]
-        gt_probs.append(gt_prob.item())
+        evidence_probs.append(probs)
+        # gt_prob = probs[gt_idx]
+        # gt_probs.append(gt_prob.item())
+        hit_top1.append((logits.argmax() == gt_idx).item())
 
-    return loss, gt_probs
+    return loss, evidence_probs, hit_top1
