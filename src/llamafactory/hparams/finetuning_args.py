@@ -320,6 +320,20 @@ class AttnSFTArguments:
         },
     )
 
+    attn_aggregate: Literal["sum", "max", "late-interaction"] = field(
+        default="sum",
+        metadata={
+            "help": "The mode of aggregation for the attention-based SFT training."
+        },
+    )
+
+    remove_small_attn: bool = field(
+        default=False,
+        metadata={
+            "help": "Whether or not to remove small attention values."
+        },
+    )
+
 @dataclass
 class FinetuningArguments(FreezeArguments, LoraArguments, RLHFArguments, GaloreArguments, BAdamArgument, AttnSFTArguments):
     r"""

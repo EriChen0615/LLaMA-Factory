@@ -72,6 +72,7 @@ class CustomSeq2SeqAttnTrainer(Seq2SeqTrainer):
 
         if finetuning_args.use_attn_sft:
             print("Using attention-based SFT training.")
+        print(f"Using attention aggregate mode: {self.finetuning_args.attn_aggregate}")
 
     def compute_loss(self, model, inputs, num_items_in_batch=None, return_outputs=False, eval_mode=False):
         """
@@ -85,13 +86,20 @@ class CustomSeq2SeqAttnTrainer(Seq2SeqTrainer):
 
         gt_evidence_labels = inputs.pop("gt_evidence_labels")
         evidence_spans = inputs.pop("evidence_spans")
-        response_span = inputs.pop("response_span")
+        attn_source_spans = inputs.pop("attn_source_spans")
 
         outputs = model(**inputs, output_attentions=True)
 
         lm_loss = outputs["loss"]
         if self.finetuning_args.use_attn_sft:
-            attn_loss, evidence_probs, hit_top1 = _compute_attn_loss(outputs["attentions"], gt_evidence_labels, evidence_spans, response_span)
+            attn_loss, evidence_probs, hit_top1 = _compute_attn_loss(
+                outputs["attentions"], 
+                gt_evidence_labels, 
+                evidence_spans, 
+                attn_source_spans,
+                aggregate_mode=self.finetuning_args.attn_aggregate,
+                remove_small_attn=self.finetuning_args.remove_small_attn
+            )
             loss = lm_loss + attn_loss
             self._metrics["attn_loss"].append(attn_loss.item())
             self._metrics["evidence_probs"].extend(evidence_probs)

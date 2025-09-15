@@ -87,6 +87,16 @@ def _encode_supervised_example(
 
     return input_ids, labels
 
+def _extract_source_span(input_ids_tensor: torch.Tensor, attn_source_start_token_id: int, attn_source_end_token_id: int) -> Tuple[int, int]:
+    attn_source_start_positions = (input_ids_tensor == attn_source_start_token_id).nonzero(as_tuple=True)[0]
+    attn_source_end_positions = (input_ids_tensor == attn_source_end_token_id).nonzero(as_tuple=True)[0]
+    attn_source_spans = None
+    for start_idx, end_idx in zip(attn_source_start_positions, attn_source_end_positions):
+        attn_source_spans = (int(start_idx.item()), int(end_idx.item()))
+    return attn_source_spans
+
+#NOTE JC: previous version where the attn source span is the last assitant turn.
+# @deprecated("Use _extract_source_span instead")
 def _extract_response_span(input_ids_tensor: torch.Tensor, template: "Template", tokenizer: "PreTrainedTokenizer") -> Tuple[int, int]:
     """
     Extract the response span (final assistant turn) from input_ids.
@@ -119,7 +129,11 @@ def _encode_attn_supervised_example(
     train_on_prompt: bool,
     mask_history: bool,
     evidence_start_token_id: int,
-    evidence_end_token_id: int
+    evidence_end_token_id: int,
+    attn_source_start_token_id: int,
+    attn_source_end_token_id: int,
+    attn_calibration_start_token_id: int,
+    attn_calibration_end_token_id: int,
 ) -> Tuple[List[int], List[int]]:
     messages = template.mm_plugin.process_messages(prompt + response, images, videos, processor)
     input_ids, labels = template.mm_plugin.process_token_ids([], [], images, videos, tokenizer, processor)
@@ -176,13 +190,17 @@ def _encode_attn_supervised_example(
         # print("DEBUG: evidence:", tokenizer.decode(input_ids[start_idx:end_idx]))
 
     # Extract response span (i.e., final assistant turn)
-    response_span = _extract_response_span(input_ids_tensor, template, tokenizer)
-    # print("DEBUG: response_span:", tokenizer.decode(input_ids[response_span[0]:response_span[1]]))
+    # response_span = _extract_response_span(input_ids_tensor, template, tokenizer)
+    attn_source_span = _extract_source_span(input_ids_tensor, attn_source_start_token_id, attn_source_end_token_id)
 
-    # Replace evidence tokens with space tokens
+    # Replace special marking tokens with space tokens
     space_token_id = tokenizer.encode(" ", add_special_tokens=False)[0]
     input_ids_tensor[input_ids_tensor == evidence_start_token_id] = space_token_id
     input_ids_tensor[input_ids_tensor == evidence_end_token_id] = space_token_id
+    input_ids_tensor[input_ids_tensor == attn_source_start_token_id] = space_token_id
+    input_ids_tensor[input_ids_tensor == attn_source_end_token_id] = space_token_id
+    input_ids_tensor[input_ids_tensor == attn_calibration_start_token_id] = space_token_id
+    input_ids_tensor[input_ids_tensor == attn_calibration_end_token_id] = space_token_id
     input_ids = input_ids_tensor.tolist()
 
 
@@ -193,8 +211,10 @@ def _encode_attn_supervised_example(
     # print("gt_evidence_labels:", gt_evidence_labels)
     # print("input_ids:", input_ids) 
     # print("labels:", labels) 
+    # print("DEBUG: attn_source_span:", tokenizer.decode(input_ids[attn_source_span[0]:attn_source_span[1]]))
+    # breakpoint()
 
-    return input_ids, labels, evidence_spans, response_span
+    return input_ids, labels, evidence_spans, attn_source_span
 
 def preprocess_attn_supervised_dataset(
     examples: Dict[str, List[Any]],
@@ -211,7 +231,7 @@ def preprocess_attn_supervised_dataset(
             logger.warning("Dropped invalid example: {}".format(examples["_prompt"][i] + examples["_response"][i]))
             continue
 
-        input_ids, labels, evidence_spans, response_span = _encode_attn_supervised_example(
+        input_ids, labels, evidence_spans, attn_source_span = _encode_attn_supervised_example(
             prompt=examples["_prompt"][i],
             response=examples["_response"][i],
             system=examples["_system"][i],
@@ -227,6 +247,10 @@ def preprocess_attn_supervised_dataset(
             mask_history=data_args.mask_history,
             evidence_start_token_id=tokenizer.convert_tokens_to_ids(data_args.evidence_start_token),
             evidence_end_token_id=tokenizer.convert_tokens_to_ids(data_args.evidence_end_token),
+            attn_source_start_token_id=tokenizer.convert_tokens_to_ids(data_args.attn_source_start_token),
+            attn_source_end_token_id=tokenizer.convert_tokens_to_ids(data_args.attn_source_end_token),
+            attn_calibration_start_token_id=tokenizer.convert_tokens_to_ids(data_args.attn_calibration_start_token),
+            attn_calibration_end_token_id=tokenizer.convert_tokens_to_ids(data_args.attn_calibration_end_token),
         )
         model_inputs["input_ids"].append(input_ids)
         model_inputs["attention_mask"].append([1] * len(input_ids))
@@ -235,7 +259,7 @@ def preprocess_attn_supervised_dataset(
         model_inputs["videos"].append(examples["_videos"][i])
         model_inputs["gt_evidence_labels"].append(examples["_gt_evidence_labels"][i])
         model_inputs["evidence_spans"].append(evidence_spans)
-        model_inputs["response_span"].append(response_span)
+        model_inputs["attn_source_spans"].append(attn_source_span)
 
     return model_inputs
 

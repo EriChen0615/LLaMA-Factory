@@ -405,11 +405,18 @@ def get_template_and_fix_tokenizer(tokenizer: "PreTrainedTokenizer", data_args: 
         except ValueError:
             logger.info("Cannot add this chat template to tokenizer.")
 
-    # Add evidence tokens
+    # Add marking tokens for evidence spans, attention source spans, and attention calibration spans
     if hasattr(data_args, 'evidence_start_token') and hasattr(data_args, 'evidence_end_token'):
         evidence_tokens = [data_args.evidence_start_token, data_args.evidence_end_token]
         tokenizer.add_special_tokens({"additional_special_tokens": evidence_tokens})
         print("DEBUG: Added evidence tokens to the tokenizer:", evidence_tokens)
+    if hasattr(data_args, 'attn_source_start_token') and hasattr(data_args, 'attn_source_end_token'):
+        attn_source_tokens = [data_args.attn_source_start_token, data_args.attn_source_end_token]
+        tokenizer.add_special_tokens({"additional_special_tokens": attn_source_tokens})
+        print("DEBUG: Added attn source tokens to the tokenizer:", attn_source_tokens)
+    if hasattr(data_args, 'attn_calibration_start_token') and hasattr(data_args, 'attn_calibration_end_token'):
+        attn_calibration_tokens = [data_args.attn_calibration_start_token, data_args.attn_calibration_end_token]
+        tokenizer.add_special_tokens({"additional_special_tokens": attn_calibration_tokens})
 
     return template
 

@@ -121,6 +121,24 @@ class DataArguments:
         default="<evidence_end>",
         metadata={"help": "The token to end the evidence."},
     )
+    attn_source_start_token: str = field(
+        default="<attn_source_start>",
+        metadata={"help": "The token marks the start of the attention source."},
+    )
+    attn_source_end_token: str = field(
+        default="<attn_source_end>",
+        metadata={"help": "The token marks the end of the attention source."},
+    )
+    attn_calibration_start_token: str = field(
+        default="<attn_cali_start>",
+        metadata={"help": "The token marks the start of the attention calibration."},
+    )
+    attn_calibration_end_token: str = field(
+        default="<attn_cali_end>",
+        metadata={"help": "The token marks the end of the attention calibration."},
+    )
+
+    
 
     def __post_init__(self):
         def split_arg(arg):
