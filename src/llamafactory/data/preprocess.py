@@ -25,6 +25,7 @@ from .processors.supervised import (
     print_supervised_dataset_example,
 )
 from .processors.unsupervised import preprocess_unsupervised_dataset, print_unsupervised_dataset_example
+from .processors.ppl_contrastive import preprocess_ppl_contrastive_dataset, print_ppl_contrastive_dataset_example
 
 
 if TYPE_CHECKING:
@@ -108,6 +109,15 @@ def get_preprocess_and_print_func(
             data_args=data_args,
         )
         print_function = partial(print_supervised_dataset_example, tokenizer=tokenizer)
+    elif stage == "ppl":
+        preprocess_func = partial(
+            preprocess_ppl_contrastive_dataset,
+            template=template,
+            tokenizer=tokenizer,
+            processor=processor,
+            data_args=data_args,
+        )
+        print_function = partial(print_ppl_contrastive_dataset_example, tokenizer=tokenizer)
     else:
         raise NotImplementedError(f"Stage {stage} is not implemented")
         # preprocess_func = partial(

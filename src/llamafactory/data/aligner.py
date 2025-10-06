@@ -219,6 +219,8 @@ def convert_sharegpt(
         "_images": convert_images(example[dataset_attr.images]) if dataset_attr.images else None,
         "_videos": convert_videos(example[dataset_attr.videos]) if dataset_attr.videos else None,
         "_gt_evidence_labels": example.get("gt_evidence_labels", []),
+        "_passages": example.get("passages", []),
+        "_gt_evidence_idx": example.get("gt_evidence_idx", -1),
     }
     # print(output) # NOTE checked. worked correctly. 
     # breakpoint()
