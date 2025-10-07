@@ -28,14 +28,22 @@ if TYPE_CHECKING:
     from ..template import Template
 
 import torch
+from copy import deepcopy
 
 logger = get_logger(__name__)
 
 
 def _expand_prompt_with_passages(prompt: Sequence[Dict[str, str]], passages: Sequence[Dict[str, str]], response: Sequence[Dict[str, str]]) -> Tuple[Sequence[Dict[str, str]], Sequence[Dict[str, str]]]:
-    breakpoint()
-    #TODO
-    return prompt, response
+    all_prompts = [{}] * len(passages)
+    for psg_idx, psg in enumerate(passages):
+        this_prompt = deepcopy(prompt)
+        prompt_content = this_prompt[-1]['content']
+        prompt_content_with_passage = prompt_content.replace("<<<EVIDENCE>>>", psg)
+        this_prompt[-1]['content'] = prompt_content_with_passage
+
+        all_prompts[psg_idx] = this_prompt
+
+    return all_prompts, [response]*len(passages)
 
 
 def _encode_ppl_contrastive_example(
@@ -46,7 +54,7 @@ def _encode_ppl_contrastive_example(
     tools: Optional[str],
     images: Sequence["ImageInput"],
     videos: Sequence["VideoInput"],
-    gt_evidence_idx: int,
+    gt_passage_idx: int,
     template: "Template",
     tokenizer: "PreTrainedTokenizer",
     processor: Optional["ProcessorMixin"],
@@ -55,16 +63,17 @@ def _encode_ppl_contrastive_example(
     mask_history: bool,
 ) -> Tuple[List[int], List[int], List[int], int]:
     #TODO
-    breakpoint() # check `prompt`, `passages`, and `response`
+    # print("In _encode_ppl_contrastive_example")
+    # print("prompt", prompt)
+    # print("passages", passages)
+    # print("response", response)
     prompt_with_passages, exploded_responses = _expand_prompt_with_passages(prompt, passages, response)
     all_input_ids = []
     all_attention_masks = []
     all_labels = []
-    gt_input_idx = gt_evidence_idx
 
     for prompt, response in zip(prompt_with_passages, exploded_responses):
         messages = template.mm_plugin.process_messages(prompt + response, images, videos, processor)
-        breakpoint()
         input_ids, labels = template.mm_plugin.process_token_ids([], [], images, videos, tokenizer, processor)
         
         encoded_pairs = template.encode_multiturn(tokenizer, messages, system, tools)
@@ -108,7 +117,7 @@ def _encode_ppl_contrastive_example(
         all_attention_masks.append([1] * len(input_ids))
         all_labels.append(labels)
 
-    return all_input_ids, all_attention_masks, all_labels, gt_input_idx
+    return all_input_ids, all_attention_masks, all_labels
 
 def preprocess_ppl_contrastive_dataset(
     examples: Dict[str, List[Any]],
@@ -125,7 +134,7 @@ def preprocess_ppl_contrastive_dataset(
             logger.warning("Dropped invalid example: {}".format(examples["_prompt"][i] + examples["_response"][i]))
             continue
 
-        all_input_ids, all_attention_mask, all_labels, gt_input_idx = _encode_ppl_contrastive_example(
+        all_input_ids, all_attention_mask, all_labels = _encode_ppl_contrastive_example(
             prompt=examples["_prompt"][i],
             response=examples["_response"][i],
             passages=examples["_passages"][i],
@@ -133,7 +142,7 @@ def preprocess_ppl_contrastive_dataset(
             tools=examples["_tools"][i],
             images=examples["_images"][i] or [],
             videos=examples["_videos"][i] or [],
-            gt_evidence_idx=examples["_gt_evidence_idx"][i] or -1,
+            gt_passage_idx=examples["_gt_passage_idx"][i] or -1,
             template=template,
             tokenizer=tokenizer,
             processor=processor,
@@ -146,15 +155,14 @@ def preprocess_ppl_contrastive_dataset(
         model_inputs["images"].append(examples["_images"][i])
         model_inputs["videos"].append(examples["_videos"][i])
         model_inputs["all_labels"].append(all_labels)
-        model_inputs["gt_input_idx"].append(gt_input_idx)
-        model_inputs["gt_evidence_idx"].append(examples["_gt_evidence_idx"][i])
+        model_inputs["gt_passage_idx"].append(examples["_gt_passage_idx"][i])
 
     return model_inputs
 
 def print_ppl_contrastive_dataset_example(example: Dict[str, List[int]], tokenizer: "PreTrainedTokenizer") -> None:
-    #TODO
-    valid_labels = list(filter(lambda x: x != IGNORE_INDEX, example["labels"]))
-    print("input_ids:\n{}".format(example["input_ids"]))
-    print("inputs:\n{}".format(tokenizer.decode(example["input_ids"], skip_special_tokens=False)))
-    print("label_ids:\n{}".format(example["labels"]))
-    print("labels:\n{}".format(tokenizer.decode(valid_labels, skip_special_tokens=False)))
+    print("================================================")
+    print("Inspecting example:")
+    print(f"\tNumber of input_ids: {len(example['all_input_ids'])}")
+    print(f"\tgt_passage_idx: {example['gt_passage_idx']}")
+    print(f"\tgt_input: {tokenizer.decode(example['all_input_ids'][0], skip_special_tokens=False)}")
+    print(f"\tall_labels: {example['all_labels']}")

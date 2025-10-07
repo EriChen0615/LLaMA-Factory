@@ -32,7 +32,7 @@ from .pt import run_pt
 from .rm import run_rm
 from .sft import run_sft
 from .attn_sft import run_attn_sft
-
+from .ppl import run_ppl
 
 if TYPE_CHECKING:
     from transformers import TrainerCallback
@@ -59,6 +59,8 @@ def run_exp(args: Optional[Dict[str, Any]] = None, callbacks: List["TrainerCallb
         run_kto(model_args, data_args, training_args, finetuning_args, callbacks)
     elif finetuning_args.stage == "attn_sft":
         run_attn_sft(model_args, data_args, training_args, finetuning_args, generating_args, callbacks)
+    elif finetuning_args.stage == "ppl":
+        run_ppl(model_args, data_args, training_args, finetuning_args, generating_args, callbacks)
     else:
         raise ValueError("Unknown task: {}.".format(finetuning_args.stage))
 

@@ -335,7 +335,20 @@ class AttnSFTArguments:
     )
 
 @dataclass
-class FinetuningArguments(FreezeArguments, LoraArguments, RLHFArguments, GaloreArguments, BAdamArgument, AttnSFTArguments):
+class PPLArguments:
+    r"""
+    Arguments pertaining to the Passage Posterior Learning (PPL) training.
+    """
+    ppl_tau: float = field(
+        default=1.0,
+        metadata={
+            "help": "The temperature parameter in the PPL training."
+        },
+    )
+    
+
+@dataclass
+class FinetuningArguments(FreezeArguments, LoraArguments, RLHFArguments, GaloreArguments, BAdamArgument, AttnSFTArguments, PPLArguments):
     r"""
     Arguments pertaining to which techniques we are going to fine-tuning with.
     """
@@ -344,7 +357,7 @@ class FinetuningArguments(FreezeArguments, LoraArguments, RLHFArguments, GaloreA
         default=False,
         metadata={"help": "Whether or not to train model in purely bf16 precision (without AMP)."},
     )
-    stage: Literal["pt", "sft", "rm", "ppo", "dpo", "kto", "attn_sft"] = field(
+    stage: Literal["pt", "sft", "rm", "ppo", "dpo", "kto", "attn_sft", "ppl"] = field(
         default="sft",
         metadata={"help": "Which stage will be performed in training."},
     )
