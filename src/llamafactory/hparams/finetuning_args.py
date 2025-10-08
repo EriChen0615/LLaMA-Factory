@@ -339,12 +339,26 @@ class PPLArguments:
     r"""
     Arguments pertaining to the Passage Posterior Learning (PPL) training.
     """
+    use_ppl_loss: bool = field(
+        default=True,
+        metadata={
+            "help": "Whether or not to use the Posterior Loss in PPL training."
+        },
+    )
+    ppl_loss_type: Literal["joint", "posterior", "llk"] = field(
+        default="joint",
+        metadata={
+            "help": "The type of the PPL loss to use."
+        },
+    )
+
     ppl_tau: float = field(
         default=1.0,
         metadata={
             "help": "The temperature parameter in the PPL training."
         },
     )
+
     
 
 @dataclass
