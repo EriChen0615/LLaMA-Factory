@@ -345,7 +345,7 @@ class PPLArguments:
             "help": "Whether or not to use the Posterior Loss in PPL training."
         },
     )
-    ppl_loss_type: Literal["joint", "posterior", "llk"] = field(
+    ppl_loss_type: Literal["joint", "posterior", "llk", "ensemble"] = field(
         default="joint",
         metadata={
             "help": "The type of the PPL loss to use."

@@ -40,7 +40,7 @@ if TYPE_CHECKING:
 
     from ...hparams import FinetuningArguments
 
-from .ppl_loss import compute_ppl_loss, compute_joint_loss
+from .ppl_loss import compute_ppl_loss, compute_joint_loss, compute_ensemble_loss
 
 
 logger = get_logger(__name__)
@@ -104,6 +104,8 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             loss, posterior_loss, llk_loss, posterior_logprob = compute_joint_loss(pos_logps, all_logits, inputs["labels"])
         elif self.finetuning_args.ppl_loss_type == "posterior":
             loss, posterior_loss, llk_loss, posterior_logprob = compute_ppl_loss(pos_logps, neg_logps)
+        elif self.finetuning_args.ppl_loss_type == "ensemble":
+            loss, posterior_loss, llk_loss, posterior_logprob = compute_ensemble_loss(all_logits, inputs["labels"])
         elif self.finetuning_args.ppl_loss_type == "llk":
             loss, posterior_loss, llk_loss, posterior_logprob = compute_ppl_loss(pos_logps, neg_logps)
             loss = llk_loss
@@ -127,7 +129,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         self._metrics["posterior_hit_over_steps"].append(posterior_hitrate_over_steps.item())
 
         self._metrics["posterior_entropy_mean"].append(posterior_entropy.mean().item())
-        self._metrics["posterior_entropy_at_first"].append(posterior_entropy[0].item())
+        self._metrics["posterior_entropy_at_first"].append(posterior_entropy[1].item())
         self._metrics["posterior_entropy_at_mid"].append(posterior_entropy[ans_len//2].item())
         self._metrics["posterior_entropy_at_last"].append(posterior_entropy[-1].item())
 
@@ -138,7 +140,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         # print(f"[PPL Trainer] Posterior Hit (at mid): {map_passage_idx[ans_len//2].item() == 0}, Posterior Entropy (at mid): {posterior_entropy[ans_len//2].item()}")
         # print(f"[PPL Trainer] Posterior Hit (at last): {map_passage_idx[-1].item() == 0}, Posterior Entropy (at last): {posterior_entropy[-1].item()}")
         # breakpoint()
-
+ #
         return (loss, outputs) if return_outputs else loss
     
     @override
