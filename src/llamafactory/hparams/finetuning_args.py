@@ -351,6 +351,30 @@ class PPLArguments:
             "help": "The type of the PPL loss to use."
         },
     )
+    ppl_prior_modeling: Literal["mlp_head", "none"] = field(
+        default="none",
+        metadata={
+            "help": "The type of the prior head modeling to use."
+        },
+    )
+    ppl_prior_head_num_of_layers: int = field(
+        default=2,
+        metadata={
+            "help": "The number of layers in the prior head."
+        },
+    )
+    ppl_prior_head_proj_dim: int = field(
+        default=1024,
+        metadata={
+            "help": "The projection dimension in the prior head."
+        },
+    )
+    use_prior_head_loss: bool = field(
+        default=False,
+        metadata={
+            "help": "Whether or not to use the prior head loss in PPL training."
+        },
+    )
 
     ppl_tau: float = field(
         default=1.0,

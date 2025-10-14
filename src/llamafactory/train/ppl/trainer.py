@@ -22,6 +22,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import torch
+import torch.nn as nn
 from transformers import Seq2SeqTrainer
 from typing_extensions import override
 
@@ -72,6 +73,30 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             self.add_callback(BAdamCallback)
 
         print(f"[PPL Trainer] Using PPL loss type: {self.finetuning_args.ppl_loss_type}")
+
+        print(f"[PPL Trainer] Prior head modeling: {finetuning_args.ppl_prior_modeling}")
+        print(f"[PPL Trainer] Use prior head loss: {finetuning_args.use_prior_head_loss}")
+
+        if finetuning_args.ppl_prior_modeling == 'mlp_head':
+            # Initialize a 2-layer MLP head of shape [h]
+            input_dim = self.model.config.hidden_size
+            proj_dim = finetuning_args.ppl_prior_head_proj_dim
+
+            mlp_layers = []
+            for i in range(finetuning_args.ppl_prior_head_num_of_layers - 1):
+                mlp_layers.append(nn.Linear(input_dim, proj_dim))
+                mlp_layers.append(nn.ReLU())
+                input_dim = proj_dim
+            mlp_layers.append(nn.Linear(input_dim, 1))
+
+            self.prior_head = nn.Sequential(*mlp_layers)
+            self.prior_head.to(self.model.device)
+            print(f"[PPL Trainer - Prior Head] Prior head number of layers: {finetuning_args.ppl_prior_head_num_of_layers}")
+            print(f"[PPL Trainer - Prior Head] Prior head projection dimension: {proj_dim}")
+            print(f"[PPL Trainer - Prior Head] Prior head parameters: {sum(p.numel() for p in self.prior_head.parameters())}")
+        else:
+            self.prior_head = None
+            print(f"[PPL Trainer - Prior Head] No Prior head")
         # if finetuning_args.use_ppl_loss:
             # print("Using PPL training with Posterior Loss.")
         # else:
@@ -85,12 +110,35 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         The first instance of the batch is the GT passage.
         NOTE: only batch size = 1 for the collator is supported currently.
         """
-        outputs = model(**batch, return_dict=True, use_cache=False)
+        outputs = model(**batch, return_dict=True, use_cache=False, output_hidden_states=True)
         all_logits = outputs["logits"]
-        all_logps, lengths = get_batch_logps(logits=all_logits, labels=batch["labels"])
+        labels = batch["labels"]
+        all_logps, lengths = get_batch_logps(logits=all_logits, labels=labels)
 
         pos_logps, neg_logps = all_logps[:1], all_logps[1:]
-        return pos_logps, neg_logps, all_logits, outputs, lengths[0]
+        
+        # Extract last-layer hidden states at position just before the first label
+        hidden_states = outputs["hidden_states"]
+        # Get the last layer hidden states
+        last_hidden_states = hidden_states[-1]  # Shape: [batch_size, seq_len, hidden_size]
+        
+        # Find the position just before the first label token using efficient tensor operations
+        batch_size = labels.size(0)
+        
+        # Find last IGNORE_INDEX position for each batch (this is the position just before first label)
+        last_negative_indices = (labels == IGNORE_INDEX).nonzero(as_tuple=False)
+        
+        # Extract the last IGNORE_INDEX index for each batch
+        last_negative_per_batch = [
+            last_negative_indices[last_negative_indices[:, 0] == i, 1].max().item()
+            for i in range(batch_size)
+        ]
+        last_negative_tensor = torch.tensor(last_negative_per_batch, device=labels.device)
+        
+        # Get hidden states at position just before first label
+        hidden_at_pre_label = last_hidden_states[torch.arange(batch_size, device=labels.device), last_negative_tensor, :]
+        
+        return pos_logps, neg_logps, all_logits, outputs, lengths[0], hidden_at_pre_label
 
 
     def compute_loss(self, model, inputs, num_items_in_batch=None, return_outputs=False, eval_mode=False):
@@ -98,35 +146,49 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         Override `compute_loss` in `transformers.trainer`. Below is the original code. 
         """
 
-        pos_logps, neg_logps, all_logits, outputs, ans_len = self.concatenated_forward(model, inputs)
+        pos_logps, neg_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward(model, inputs)
+        prior_logits = None
+        if self.prior_head is not None and hidden_at_pre_label is not None:
+            prior_logits = self.prior_head(hidden_at_pre_label)  # Shape: [batch_size, 1]
 
         if self.finetuning_args.ppl_loss_type == "joint":
-            loss, posterior_loss, llk_loss, posterior_logprob = compute_joint_loss(pos_logps, all_logits, inputs["labels"])
+            loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_joint_loss(pos_logps, all_logits, inputs["labels"], prior_logits)
         elif self.finetuning_args.ppl_loss_type == "posterior":
-            loss, posterior_loss, llk_loss, posterior_logprob = compute_ppl_loss(pos_logps, neg_logps)
+            loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ppl_loss(pos_logps, neg_logps, prior_logits)
         elif self.finetuning_args.ppl_loss_type == "ensemble":
-            loss, posterior_loss, llk_loss, posterior_logprob = compute_ensemble_loss(all_logits, inputs["labels"])
+            loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ensemble_loss(all_logits, inputs["labels"], prior_logits)
         elif self.finetuning_args.ppl_loss_type == "llk":
-            loss, posterior_loss, llk_loss, posterior_logprob = compute_ppl_loss(pos_logps, neg_logps)
+            loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ppl_loss(pos_logps, neg_logps, prior_logits)
             loss = llk_loss
         else:
             raise NotImplementedError(f"PPL loss type {self.finetuning_args.ppl_loss_type} is not implemented")
+
+        prior_loss = torch.tensor(0.0)
+        if self.finetuning_args.use_prior_head_loss:
+            prior_loss = -prior_logprob[0]
+            loss += prior_loss
 
         # Logging
         # posterior_logprob.shape = [K, # ans tokens]
         map_passage_idx = torch.argmax(posterior_logprob, dim=0) # shape (# ans tokens,)
         posterior_entropy = -torch.sum(torch.exp(posterior_logprob)*posterior_logprob, dim=0) # shape (# ans tokens,)
+        prior_passage_idx = torch.argmax(prior_logprob, dim=0) # shape (# ans tokens,)
+        prior_entropy = -torch.sum(torch.exp(prior_logprob)*prior_logprob, dim=0) # shape (1, )
 
         posterior_hitrate_over_steps = (map_passage_idx == 0).sum(-1) / map_passage_idx.shape[-1]
+        prior_hitrate = (prior_passage_idx == 0)
 
 
         self._metrics["posterior_loss"].append(posterior_loss.item())
         self._metrics["llk_loss"].append(llk_loss.item())
+        self._metrics["prior_loss"].append(prior_loss.item())
         self._metrics["total_loss"].append(loss.item())
         self._metrics["posterior_hit_at_first"].append(map_passage_idx[0].item() == 0)
         self._metrics["posterior_hit_at_mid"].append(map_passage_idx[ans_len//2].item() == 0)
         self._metrics["posterior_hit_at_last"].append(map_passage_idx[-1].item() == 0)
         self._metrics["posterior_hit_over_steps"].append(posterior_hitrate_over_steps.item())
+        self._metrics["prior_hit"].append(prior_hitrate.item())
+        self._metrics["prior_entropy"].append(prior_entropy.item())
 
         self._metrics["posterior_entropy_mean"].append(posterior_entropy.mean().item())
         self._metrics["posterior_entropy_at_first"].append(posterior_entropy[1].item())
@@ -134,13 +196,12 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         self._metrics["posterior_entropy_at_last"].append(posterior_entropy[-1].item())
 
         #DEBUG
-        # print(f"[PPL Trainer] Loss: {loss.item()}, Posterior Loss: {posterior_loss.item()}, LLK Loss: {llk_loss.item()}")
+        # print(f"[PPL Trainer] Loss: {loss.item()}, Posterior Loss: {posterior_loss.item()}, LLK Loss: {llk_loss.item()}, Prior Loss: {prior_loss}")
         # print(f"[PPL Trainer] Posterior Hit (mean over steps): {posterior_hitrate_over_steps.item()}, Posterior Entropy (mean over steps): {posterior_entropy.mean().item()}")
+        # print(f"[PPL Trainer] Prior Hit: {prior_hitrate.item()}")
         # print(f"[PPL Trainer] Posterior Hit (at first): {map_passage_idx[0].item() == 0}, Posterior Entropy (at first): {posterior_entropy[0].item()}")
         # print(f"[PPL Trainer] Posterior Hit (at mid): {map_passage_idx[ans_len//2].item() == 0}, Posterior Entropy (at mid): {posterior_entropy[ans_len//2].item()}")
         # print(f"[PPL Trainer] Posterior Hit (at last): {map_passage_idx[-1].item() == 0}, Posterior Entropy (at last): {posterior_entropy[-1].item()}")
-        # breakpoint()
- #
         return (loss, outputs) if return_outputs else loss
     
     @override
@@ -240,6 +301,10 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             metrics["posterior_loss"] = sum(self._metrics["posterior_loss"]) / len(self._metrics["posterior_loss"])
         if self._metrics["llk_loss"]:
             metrics["llk_loss"] = sum(self._metrics["llk_loss"]) / len(self._metrics["llk_loss"])
+        if self._metrics["prior_loss"]:
+            metrics["prior_loss"] = sum(self._metrics["prior_loss"]) / len(self._metrics["prior_loss"])
+        if self._metrics["prior_hit"]:
+            metrics["prior_hit"] = sum(self._metrics["prior_hit"]) / len(self._metrics["prior_hit"])
         if self._metrics["total_loss"]:
             metrics["total_loss"] = sum(self._metrics["total_loss"]) / len(self._metrics["total_loss"])
         if self._metrics["posterior_hit_at_first"]:
@@ -258,6 +323,8 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             metrics["posterior_entropy_at_mid"] = sum(self._metrics["posterior_entropy_at_mid"]) / len(self._metrics["posterior_entropy_at_mid"])
         if self._metrics["posterior_entropy_at_last"]:
             metrics["posterior_entropy_at_last"] = sum(self._metrics["posterior_entropy_at_last"]) / len(self._metrics["posterior_entropy_at_last"])
+        if self._metrics["prior_entropy"]:
+            metrics["prior_entropy"] = sum(self._metrics["prior_entropy"]) / len(self._metrics["prior_entropy"])
         # Merge with existing logs
         logs = {**logs, **metrics}
         
@@ -266,3 +333,20 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         
         # Clear metrics for next cycle
         self._metrics.clear()
+
+    @override
+    def save_model(self, output_dir: Optional[str] = None, _internal_call: bool = False):
+        """
+        Override save_model to save prior_head (mlp_head) as a separate .pt file.
+        """
+        # Call parent save_model first
+        super().save_model(output_dir, _internal_call)
+        
+        # Save prior_head separately if it exists
+        if hasattr(self, 'prior_head') and self.prior_head is not None:
+            if output_dir is None:
+                output_dir = self.args.output_dir
+            
+            prior_head_path = os.path.join(output_dir, "prior_head.pt")
+            torch.save(self.prior_head.state_dict(), prior_head_path)
+            logger.info(f"Saved prior_head to {prior_head_path}")

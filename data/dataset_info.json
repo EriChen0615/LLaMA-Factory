@@ -1,4 +1,21 @@
 {
+  "evqa-rag2-answer-ppl-size=0-max=2048":{
+    "file_name": "jinghong_chen/evqa/rag2-answer-ppl-size=0-max=2048",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images",
+      "gt_passage_idx": "gt_passage_idx",
+      "passages": "passages",
+      "passage_scores": "passage_scores"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
   "evqa-rag4-answer-ppl-size=10-max=2048":{
     "file_name": "jinghong_chen/evqa/rag4-answer-ppl-size=10-max=2048/train_sharegpt.json",
     "formatting": "sharegpt",
