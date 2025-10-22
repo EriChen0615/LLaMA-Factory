@@ -73,9 +73,14 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             self.add_callback(BAdamCallback)
 
         print(f"[PPL Trainer] Using PPL loss type: {self.finetuning_args.ppl_loss_type}")
-
         print(f"[PPL Trainer] Prior head modeling: {finetuning_args.ppl_prior_modeling}")
+
+        print(f"[PPL Trainer] Use Ensemble Loss: {finetuning_args.use_ensemble_loss}")
         print(f"[PPL Trainer] Use prior head loss: {finetuning_args.use_prior_head_loss}")
+
+        print(f"[PPL Trainer] Hidden state offset: {finetuning_args.ppl_hidden_state_offset}")
+
+        print(f"[PPL Trainer] Prior head loss factor: {finetuning_args.ppl_prior_loss_factor}")
 
         if finetuning_args.ppl_prior_modeling == 'mlp_head':
             # Initialize a 2-layer MLP head of shape [h]
@@ -90,13 +95,37 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             mlp_layers.append(nn.Linear(input_dim, 1))
 
             self.prior_head = nn.Sequential(*mlp_layers)
-            self.prior_head.to(self.model.device)
             print(f"[PPL Trainer - Prior Head] Prior head number of layers: {finetuning_args.ppl_prior_head_num_of_layers}")
             print(f"[PPL Trainer - Prior Head] Prior head projection dimension: {proj_dim}")
             print(f"[PPL Trainer - Prior Head] Prior head parameters: {sum(p.numel() for p in self.prior_head.parameters())}")
+            if finetuning_args.ppl_prior_head_path is not None:
+                self.prior_head.load_state_dict(torch.load(finetuning_args.ppl_prior_head_path))
+                print(f"[PPL Trainer - Prior Head] Prior head loaded from {finetuning_args.ppl_prior_head_path}")
+            else:
+                print(f"[PPL Trainer - Prior Head] No prior head path provided, initializing a new prior head")
+            self.prior_head.to(self.model.device)
         else:
             self.prior_head = None
             print(f"[PPL Trainer - Prior Head] No Prior head")
+        
+        if self.finetuning_args.ppl_prior_loss_type == 'logistic':
+            self.prior_loss_fn = nn.BCEWithLogitsLoss()
+
+        print(f"[PPL Trainer - Prior Loss] Prior loss type: {self.finetuning_args.ppl_prior_loss_type}")
+        
+        # Freeze VLM weights if specified
+        if finetuning_args.freeze_vlm_weights:
+            print(f"[PPL Trainer] Freezing VLM weights...")
+            for name, param in self.model.named_parameters():
+                param.requires_grad = False
+            
+            # Unfreeze prior_head if it exists
+            if self.prior_head is not None:
+                for param in self.prior_head.parameters():
+                    param.requires_grad = True
+        else:
+            print(f"[PPL Trainer] VLM weights are trainable")
+        
         # if finetuning_args.use_ppl_loss:
             # print("Using PPL training with Posterior Loss.")
         # else:
@@ -105,7 +134,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             # print(f"Using PPL prior: {self.finetuning_args.ppl_prior}")
             # print(f"Using PPL llk factor: {self.finetuning_args.ppl_llk_factor}")
     
-    def concatenated_forward(self, model, batch):
+    def concatenated_forward(self, model, batch, hidden_state_offset=0):
         r"""
         The first instance of the batch is the GT passage.
         NOTE: only batch size = 1 for the collator is supported currently.
@@ -130,7 +159,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         
         # Extract the last IGNORE_INDEX index for each batch
         last_negative_per_batch = [
-            last_negative_indices[last_negative_indices[:, 0] == i, 1].max().item()
+            last_negative_indices[last_negative_indices[:, 0] == i, 1].max().item() - hidden_state_offset
             for i in range(batch_size)
         ]
         last_negative_tensor = torch.tensor(last_negative_per_batch, device=labels.device)
@@ -146,26 +175,42 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         Override `compute_loss` in `transformers.trainer`. Below is the original code. 
         """
 
-        pos_logps, neg_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward(model, inputs)
+        pos_logps, neg_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset)
         prior_logits = None
         if self.prior_head is not None and hidden_at_pre_label is not None:
             prior_logits = self.prior_head(hidden_at_pre_label)  # Shape: [batch_size, 1]
 
         if self.finetuning_args.ppl_loss_type == "joint":
-            loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_joint_loss(pos_logps, all_logits, inputs["labels"], prior_logits)
+            beft_loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_joint_loss(pos_logps, all_logits, inputs["labels"], prior_logits)
         elif self.finetuning_args.ppl_loss_type == "posterior":
-            loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ppl_loss(pos_logps, neg_logps, prior_logits)
+            beft_loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ppl_loss(pos_logps, neg_logps, prior_logits)
         elif self.finetuning_args.ppl_loss_type == "ensemble":
-            loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ensemble_loss(all_logits, inputs["labels"], prior_logits)
+            beft_loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ensemble_loss(all_logits, inputs["labels"], prior_logits)
         elif self.finetuning_args.ppl_loss_type == "llk":
-            loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ppl_loss(pos_logps, neg_logps, prior_logits)
-            loss = llk_loss
+            beft_loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ppl_loss(pos_logps, neg_logps, prior_logits)
+            beft_loss = llk_loss
         else:
             raise NotImplementedError(f"PPL loss type {self.finetuning_args.ppl_loss_type} is not implemented")
+        
+        loss = torch.tensor(0.0, device=self.model.device)
+        if self.finetuning_args.use_ensemble_loss:
+            loss = beft_loss
 
         prior_loss = torch.tensor(0.0)
         if self.finetuning_args.use_prior_head_loss:
-            prior_loss = -prior_logprob[0]
+            prior_lambda = None
+            if self.finetuning_args.ppl_prior_loss_factor < 0:
+                prior_lambda = posterior_logprob.shape[-1] # = number of answer tokens
+            else:
+                prior_lambda = self.finetuning_args.ppl_prior_loss_factor
+            if self.finetuning_args.ppl_prior_loss_type == 'softmax':
+                prior_loss = -prior_logprob[0] * prior_lambda
+            elif self.finetuning_args.ppl_prior_loss_type == 'logistic':
+                prior_labels = torch.zeros_like(prior_logits)
+                prior_labels[0] = 1
+                prior_loss = self.prior_loss_fn(prior_logits, prior_labels) * prior_lambda
+            else:
+                raise NotImplementedError(f"Prior loss type {self.finetuning_args.ppl_prior_loss_type} is not implemented")
             loss += prior_loss
 
         # Logging

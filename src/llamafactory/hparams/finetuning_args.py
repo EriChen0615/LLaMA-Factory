@@ -345,6 +345,12 @@ class PPLArguments:
             "help": "Whether or not to use the Posterior Loss in PPL training."
         },
     )
+    use_ensemble_loss: bool = field(
+        default=True,
+        metadata={
+            "help": "Whether or not to use the Ensemble Loss in PPL training."
+        },
+    )
     ppl_loss_type: Literal["joint", "posterior", "llk", "ensemble"] = field(
         default="joint",
         metadata={
@@ -369,17 +375,46 @@ class PPLArguments:
             "help": "The projection dimension in the prior head."
         },
     )
+    ppl_hidden_state_offset: int = field(
+        default=0,
+        metadata={
+            "help": "The position offset of hidden states to be used for prior head in the PPL training."
+        },
+    )
     use_prior_head_loss: bool = field(
         default=False,
         metadata={
             "help": "Whether or not to use the prior head loss in PPL training."
         },
     )
-
+    ppl_prior_head_path: str = field(
+        default=None,
+        metadata={
+            "help": "path to the prior head pt file."
+        }
+    )
+    ppl_prior_loss_factor: float = field(
+        default=1.0,
+        metadata={
+            "help": "The factor of the prior head loss in PPL training."
+        },
+    )
+    ppl_prior_loss_type: Literal["softmax", "logistic"] = field(
+        default="softmax",
+        metadata={
+            "help": "The type of the prior head loss in PPL training."
+        },
+    )
     ppl_tau: float = field(
         default=1.0,
         metadata={
             "help": "The temperature parameter in the PPL training."
+        },
+    )
+    freeze_vlm_weights: bool = field(
+        default=False,
+        metadata={
+            "help": "Whether or not to freeze the weights of the VLM."
         },
     )
 
