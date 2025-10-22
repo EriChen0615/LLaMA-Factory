@@ -17,6 +17,7 @@ from .collator import (
     MultiModalDataCollatorForSeq2Seq,
     PairwiseDataCollatorWithPadding,
     SFTDataCollatorWith4DAttentionMask,
+    BEPODataCollatorWithPadding,
 )
 from .data_utils import Role, split_dataset
 from .loader import get_dataset
@@ -28,6 +29,7 @@ __all__ = [
     "MultiModalDataCollatorForSeq2Seq",
     "PairwiseDataCollatorWithPadding",
     "SFTDataCollatorWith4DAttentionMask",
+    "BEPODataCollatorWithPadding",
     "Role",
     "split_dataset",
     "get_dataset",

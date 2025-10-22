@@ -47,6 +47,38 @@ from .ppl_loss import compute_ppl_loss, compute_joint_loss, compute_ensemble_los
 logger = get_logger(__name__)
 
 
+def initialize_prior_head(finetuning_args: "FinetuningArguments", hidden_size: int):
+    print(f"[PPL Trainer] Prior head modeling: {finetuning_args.ppl_prior_modeling}")
+    print(f"[PPL Trainer] Use prior head loss: {finetuning_args.use_prior_head_loss}")
+    print(f"[PPL Trainer] Hidden state offset: {finetuning_args.ppl_hidden_state_offset}")
+    print(f"[PPL Trainer] Prior head loss factor: {finetuning_args.ppl_prior_loss_factor}")
+
+    prior_head = None
+    if finetuning_args.ppl_prior_modeling == 'mlp_head':
+        # Initialize a 2-layer MLP head of shape [h]
+        input_dim = hidden_size
+        proj_dim = finetuning_args.ppl_prior_head_proj_dim
+
+        mlp_layers = []
+        for i in range(finetuning_args.ppl_prior_head_num_of_layers - 1):
+            mlp_layers.append(nn.Linear(input_dim, proj_dim))
+            mlp_layers.append(nn.ReLU())
+            input_dim = proj_dim
+        mlp_layers.append(nn.Linear(input_dim, 1))
+
+        prior_head = nn.Sequential(*mlp_layers)
+        print(f"[PPL Trainer - Prior Head] Prior head number of layers: {finetuning_args.ppl_prior_head_num_of_layers}")
+        print(f"[PPL Trainer - Prior Head] Prior head projection dimension: {proj_dim}")
+        print(f"[PPL Trainer - Prior Head] Prior head parameters: {sum(p.numel() for p in prior_head.parameters())}")
+        if finetuning_args.ppl_prior_head_path is not None:
+            prior_head.load_state_dict(torch.load(finetuning_args.ppl_prior_head_path))
+            print(f"[PPL Trainer - Prior Head] Prior head loaded from {finetuning_args.ppl_prior_head_path}")
+        else:
+            print(f"[PPL Trainer - Prior Head] No prior head path provided, initializing a new prior head")
+    else:
+        print(f"[PPL Trainer - Prior Head] No Prior head")
+    return prior_head
+
 class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
     r"""
     Inherits Seq2SeqTrainer to compute generative metrics such as BLEU and ROUGE.
@@ -72,14 +104,12 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             self.accelerator.clip_grad_norm_ = MethodType(clip_grad_norm_old_version, self.accelerator)
             self.add_callback(BAdamCallback)
 
+        print(f"[PPL Trainer] Use Ensemble Loss: {finetuning_args.use_ensemble_loss}")
+
         print(f"[PPL Trainer] Using PPL loss type: {self.finetuning_args.ppl_loss_type}")
         print(f"[PPL Trainer] Prior head modeling: {finetuning_args.ppl_prior_modeling}")
-
-        print(f"[PPL Trainer] Use Ensemble Loss: {finetuning_args.use_ensemble_loss}")
         print(f"[PPL Trainer] Use prior head loss: {finetuning_args.use_prior_head_loss}")
-
         print(f"[PPL Trainer] Hidden state offset: {finetuning_args.ppl_hidden_state_offset}")
-
         print(f"[PPL Trainer] Prior head loss factor: {finetuning_args.ppl_prior_loss_factor}")
 
         if finetuning_args.ppl_prior_modeling == 'mlp_head':

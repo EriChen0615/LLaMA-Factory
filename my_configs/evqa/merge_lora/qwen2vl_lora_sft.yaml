@@ -13,8 +13,11 @@
 # model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_EVQA-RAG1_LoRA-SFT
 # adapter_name_or_path: "saves/qwen2_vl-7b/lora/evqa/rag5_answer-sft_max=4096/checkpoint-995" 
 
+# model_name_or_path: Qwen/Qwen2-VL-2B-Instruct
+# adapter_name_or_path: saves/qwen2_vl-2b/lora/evqa/ppl/rag2-answer-ppl[ensemble]-wprior-size=0-max=2048/checkpoint-5204/
+
 model_name_or_path: Qwen/Qwen2-VL-2B-Instruct
-adapter_name_or_path: saves/qwen2_vl-2b/lora/evqa/ppl/rag2-answer-ppl[ensemble]-wprior-size=0-max=2048/checkpoint-5204/
+adapter_name_or_path: saves/qwen2_vl-2b/lora/evqa/beft/beft[K=2*]-prior=l0h4-size=64000-max=2048
 
 template: qwen2_vl
 finetuning_type: lora
@@ -27,7 +30,8 @@ finetuning_type: lora
 # export_dir: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_EVQA-RAG1_LoRA-SFT
 
 # export_dir: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_EVQA-RAG5_LoRA-SFT
-export_dir: ../../data/jinghong_chen/Qwen2-VL-2B-Instruct_EVQA-RAG2_LoRA-BEFT
+# export_dir: ../../data/jinghong_chen/Qwen2-VL-2B-Instruct_EVQA-RAG2_LoRA-BEFT
+export_dir: ../../data/jinghong_chen/Qwen2-VL-2B-Instruct_EVQA-BEFT[K=2*]-l0h4-size=64000-max=2048
 
 export_size: 2
 export_device: cpu

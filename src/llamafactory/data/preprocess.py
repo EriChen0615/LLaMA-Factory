@@ -26,6 +26,7 @@ from .processors.supervised import (
 )
 from .processors.unsupervised import preprocess_unsupervised_dataset, print_unsupervised_dataset_example
 from .processors.ppl_contrastive import preprocess_ppl_contrastive_dataset, print_ppl_contrastive_dataset_example
+from .processors.bepo_pairwise import preprocess_bepo_pairwise_dataset, print_bepo_pairwise_dataset_example
 
 
 if TYPE_CHECKING:
@@ -37,7 +38,7 @@ if TYPE_CHECKING:
 
 def get_preprocess_and_print_func(
     data_args: "DataArguments",
-    stage: Literal["pt", "sft", "rm", "ppo", "kto", "attn_sft"],
+    stage: Literal["pt", "sft", "rm", "ppo", "kto", "attn_sft", "ppl", "bepo"],
     template: "Template",
     tokenizer: "PreTrainedTokenizer",
     processor: Optional["ProcessorMixin"],
@@ -118,6 +119,15 @@ def get_preprocess_and_print_func(
             data_args=data_args,
         )
         print_function = partial(print_ppl_contrastive_dataset_example, tokenizer=tokenizer)
+    elif stage == "bepo":
+        preprocess_func = partial(
+            preprocess_bepo_pairwise_dataset,
+            template=template,
+            tokenizer=tokenizer,
+            processor=processor,
+            data_args=data_args,
+        )
+        print_function = partial(print_bepo_pairwise_dataset_example, tokenizer=tokenizer)
     else:
         raise NotImplementedError(f"Stage {stage} is not implemented")
         # preprocess_func = partial(

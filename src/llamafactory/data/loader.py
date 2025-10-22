@@ -159,7 +159,7 @@ def _get_merged_dataset(
     model_args: "ModelArguments",
     data_args: "DataArguments",
     training_args: "Seq2SeqTrainingArguments",
-    stage: Literal["pt", "sft", "rm", "ppo", "kto", "attn_sft", "ppl"],
+    stage: Literal["pt", "sft", "rm", "ppo", "kto", "attn_sft", "ppl", "bepo"],
 ) -> Optional[Union["Dataset", "IterableDataset"]]:
     r"""
     Gets the merged datasets in the standard format.
@@ -169,7 +169,7 @@ def _get_merged_dataset(
 
     datasets = []
     for dataset_attr in get_dataset_list(dataset_names, data_args.dataset_dir):
-        if (stage == "rm" and dataset_attr.ranking is False) or (stage != "rm" and dataset_attr.ranking is True):
+        if (stage == "rm" and dataset_attr.ranking is False) or (stage != "rm" and dataset_attr.ranking is True) and (stage != "bepo"):
             raise ValueError("The dataset is not applicable in the current training stage.")
 
         datasets.append(_load_single_dataset(dataset_attr, model_args, data_args, training_args))
@@ -181,7 +181,7 @@ def _get_preprocessed_dataset(
     dataset: Optional[Union["Dataset", "IterableDataset"]],
     data_args: "DataArguments",
     training_args: "Seq2SeqTrainingArguments",
-    stage: Literal["pt", "sft", "rm", "ppo", "kto", "attn_sft", "ppl"],
+    stage: Literal["pt", "sft", "rm", "ppo", "kto", "attn_sft", "ppl", "bepo"],
     template: "Template",
     tokenizer: "PreTrainedTokenizer",
     processor: Optional["ProcessorMixin"] = None,
@@ -231,7 +231,7 @@ def get_dataset(
     model_args: "ModelArguments",
     data_args: "DataArguments",
     training_args: "Seq2SeqTrainingArguments",
-    stage: Literal["pt", "sft", "rm", "ppo", "kto", "attn_sft", "ppl"],
+    stage: Literal["pt", "sft", "rm", "ppo", "kto", "attn_sft", "ppl", "bepo"],
     tokenizer: "PreTrainedTokenizer",
     processor: Optional["ProcessorMixin"] = None,
 ) -> "DatasetModule":
