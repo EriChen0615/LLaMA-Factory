@@ -357,7 +357,7 @@ class PPLArguments:
             "help": "The type of the PPL loss to use."
         },
     )
-    ppl_prior_modeling: Literal["mlp_head", "none"] = field(
+    ppl_prior_modeling: Literal["mlp_head", "prompted_vlm+mlp_head", "none"] = field(
         default="none",
         metadata={
             "help": "The type of the prior head modeling to use."

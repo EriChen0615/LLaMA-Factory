@@ -222,6 +222,7 @@ def convert_sharegpt(
         "_passages": example.get("passages", []),
         "_gt_passage_idx": example.get("gt_passage_idx", -1),
         "_passage_scores": example.get("passage_scores", []),
+        "_prior_prompt": example.get("prior_prompt", []),
     }
     # print(output) # NOTE checked. worked correctly. 
     return output

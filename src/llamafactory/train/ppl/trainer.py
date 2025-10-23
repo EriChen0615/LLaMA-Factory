@@ -54,7 +54,7 @@ def initialize_prior_head(finetuning_args: "FinetuningArguments", hidden_size: i
     print(f"[PPL Trainer] Prior head loss factor: {finetuning_args.ppl_prior_loss_factor}")
 
     prior_head = None
-    if finetuning_args.ppl_prior_modeling == 'mlp_head':
+    if finetuning_args.ppl_prior_modeling in ['mlp_head', 'prompted_vlm+mlp_head']:
         # Initialize a 2-layer MLP head of shape [h]
         input_dim = hidden_size
         proj_dim = finetuning_args.ppl_prior_head_proj_dim
