@@ -53,6 +53,19 @@ class PPLDataCollator(MultiModalDataCollatorForSeq2Seq):
             expanded_features[0], expanded_features[gt_passage_idx] = expanded_features[gt_passage_idx], expanded_features[0] # make sure that the first passage corresponds to the gt passage.
             concatenated_features.extend(expanded_features)
 
+            if 'all_prior_input_ids' in feature:
+                prior_expanded_features = [None] * K
+                for idx, (prior_input_ids, prior_attention_mask, prior_labels) in enumerate(zip(feature["all_prior_input_ids"], feature["all_prior_attention_mask"], feature["all_prior_labels"])):
+                    prior_expanded_features[idx] = {
+                        "input_ids": prior_input_ids,
+                        "attention_mask": prior_attention_mask,
+                        "labels": prior_labels,
+                        "images": feature["images"],
+                        "videos": feature["videos"],
+                    }
+                prior_expanded_features[0], prior_expanded_features[gt_passage_idx] = prior_expanded_features[gt_passage_idx], prior_expanded_features[0] # make sure that the first passage corresponds to the gt passage.
+                concatenated_features.extend(prior_expanded_features)
+
         return super().__call__(concatenated_features)
 
 def run_ppl(

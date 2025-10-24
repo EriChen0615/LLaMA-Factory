@@ -13,4 +13,4 @@ export WANDB_RUN_GROUP="HPC-PPL"
 
 which python
 
-llamafactory-cli train my_configs/evqa/beft/beft[K=2*]-prior=l0h4_qwen2vl-2B_lora.yaml
+llamafactory-cli train my_configs/evqa/beft/beft[K=2*]-prior=sepl1h0_qwen2vl-2B_lora.yaml

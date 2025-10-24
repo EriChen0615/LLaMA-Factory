@@ -277,6 +277,7 @@ def print_ppl_contrastive_dataset_example(example: Dict[str, List[int]], tokeniz
     print(f"\tgt_passage_idx: {example['gt_passage_idx']}")
     print(f"\tgt_input: {tokenizer.decode(example['all_input_ids'][0], skip_special_tokens=True)}")
     # print(f"\tall_labels: {tokenizer.decode(example['all_labels'][0], skip_special_tokens=False)}")
-    print(f"\tprior_input_ids: {tokenizer.decode(example['all_prior_input_ids'][0], skip_special_tokens=True)}")
+    if 'all_prior_input_ids' in example:
+        print(f"\tprior_input_ids: {tokenizer.decode(example['all_prior_input_ids'][0], skip_special_tokens=True)}")
     # print(f"\tprior_attention_mask: {example['all_prior_attention_mask']}")
     # print(f"\tprior_labels: {tokenizer.decode(example['all_prior_labels'][0], skip_special_tokens=False)}")

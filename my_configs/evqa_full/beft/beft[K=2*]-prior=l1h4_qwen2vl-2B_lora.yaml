@@ -7,14 +7,13 @@ stage: ppl
 do_train: true
 finetuning_type: lora
 lora_target: all
-use_prior_head_loss: false
+lora_rank: 32
 ppl_hidden_state_offset: 4
 ppl_prior_loss_factor: 1.0
 ppl_prior_loss_type: logistic
-ppl_prior_modeling: prompted_vlm+mlp_head
 
 ### dataset
-dataset: evqa-beft[K=2*]-prior=separate_prompt-size=256-max=2048 # video: mllm_video_demo
+dataset: evqa-rag2-answer-ppl-size=0-max=2048 # video: mllm_video_demo
 template: qwen2_vl
 cutoff_len: 4096 # set to 8192 for long context 
 max_samples: 200000
@@ -22,7 +21,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: saves/qwen2_vl-2b/lora/evqa/beft/beft[K=2*]-prior=sepl1h4-size=64000-max=2048
+output_dir: saves/qwen2_vl-2b/lora/evqa/beft/beft[K=2*]-prior=l1h4-rank=32-size=0-max=2048
 logging_steps: 10 # 10
 save_steps: 500
 plot_loss: true
@@ -30,7 +29,7 @@ overwrite_output_dir: true
 
 ### train
 per_device_train_batch_size: 1
-gradient_accumulation_steps: 32 # 32
+gradient_accumulation_steps: 16 # 32
 learning_rate: 1.0e-5
 num_train_epochs: 1.0
 lr_scheduler_type: cosine
@@ -40,6 +39,8 @@ ddp_timeout: 180000000
 
 use_ppl_loss: true
 ppl_loss_type: ensemble
+ppl_prior_modeling: mlp_head
+use_prior_head_loss: true
 ppl_prior_head_num_of_layers: 2
 ppl_prior_head_proj_dim: 1024
 

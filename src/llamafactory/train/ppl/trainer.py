@@ -32,6 +32,7 @@ from ..callbacks import PissaConvertCallback, SaveProcessorCallback
 from ..trainer_utils import create_custom_optimizer, create_custom_scheduler, get_batch_logps
 
 from collections import defaultdict
+import os
 
 
 if TYPE_CHECKING:
@@ -79,6 +80,21 @@ def initialize_prior_head(finetuning_args: "FinetuningArguments", hidden_size: i
         print(f"[PPL Trainer - Prior Head] No Prior head")
     return prior_head
 
+def get_last_hidden_state_before_label(hidden_states: "torch.Tensor", labels: "torch.Tensor", hidden_state_offset: int = 0) -> "torch.Tensor":
+    label_indices = (labels != IGNORE_INDEX).nonzero(as_tuple=False)
+    
+    # Extract the last IGNORE_INDEX index for each batch
+    pre_label_indices_per_batch = [
+        label_indices[label_indices[:, 0] == i, 1].min().item() - hidden_state_offset - 1
+        for i in range(labels.size(0))
+    ]
+    pre_label_indices_tensor = torch.tensor(pre_label_indices_per_batch, device=labels.device)
+    
+    # Get hidden states at position just before first label
+    hidden_at_pre_label = hidden_states[torch.arange(labels.size(0), device=labels.device), pre_label_indices_tensor, :]
+    return hidden_at_pre_label
+
+
 class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
     r"""
     Inherits Seq2SeqTrainer to compute generative metrics such as BLEU and ROUGE.
@@ -112,33 +128,35 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         print(f"[PPL Trainer] Hidden state offset: {finetuning_args.ppl_hidden_state_offset}")
         print(f"[PPL Trainer] Prior head loss factor: {finetuning_args.ppl_prior_loss_factor}")
 
-        if finetuning_args.ppl_prior_modeling == 'mlp_head':
-            # Initialize a 2-layer MLP head of shape [h]
-            input_dim = self.model.config.hidden_size
-            proj_dim = finetuning_args.ppl_prior_head_proj_dim
+        # if finetuning_args.ppl_prior_modeling == 'mlp_head':
+        #     # Initialize a 2-layer MLP head of shape [h]
+        #     input_dim = self.model.config.hidden_size
+        #     proj_dim = finetuning_args.ppl_prior_head_proj_dim
 
-            mlp_layers = []
-            for i in range(finetuning_args.ppl_prior_head_num_of_layers - 1):
-                mlp_layers.append(nn.Linear(input_dim, proj_dim))
-                mlp_layers.append(nn.ReLU())
-                input_dim = proj_dim
-            mlp_layers.append(nn.Linear(input_dim, 1))
+        #     mlp_layers = []
+        #     for i in range(finetuning_args.ppl_prior_head_num_of_layers - 1):
+        #         mlp_layers.append(nn.Linear(input_dim, proj_dim))
+        #         mlp_layers.append(nn.ReLU())
+        #         input_dim = proj_dim
+        #     mlp_layers.append(nn.Linear(input_dim, 1))
 
-            self.prior_head = nn.Sequential(*mlp_layers)
-            print(f"[PPL Trainer - Prior Head] Prior head number of layers: {finetuning_args.ppl_prior_head_num_of_layers}")
-            print(f"[PPL Trainer - Prior Head] Prior head projection dimension: {proj_dim}")
-            print(f"[PPL Trainer - Prior Head] Prior head parameters: {sum(p.numel() for p in self.prior_head.parameters())}")
-            if finetuning_args.ppl_prior_head_path is not None:
-                self.prior_head.load_state_dict(torch.load(finetuning_args.ppl_prior_head_path))
-                print(f"[PPL Trainer - Prior Head] Prior head loaded from {finetuning_args.ppl_prior_head_path}")
-            else:
-                print(f"[PPL Trainer - Prior Head] No prior head path provided, initializing a new prior head")
-            self.prior_head.to(self.model.device)
-        else:
-            self.prior_head = None
-            print(f"[PPL Trainer - Prior Head] No Prior head")
+        #     self.prior_head = nn.Sequential(*mlp_layers)
+        #     print(f"[PPL Trainer - Prior Head] Prior head number of layers: {finetuning_args.ppl_prior_head_num_of_layers}")
+        #     print(f"[PPL Trainer - Prior Head] Prior head projection dimension: {proj_dim}")
+        #     print(f"[PPL Trainer - Prior Head] Prior head parameters: {sum(p.numel() for p in self.prior_head.parameters())}")
+        #     if finetuning_args.ppl_prior_head_path is not None:
+        #         self.prior_head.load_state_dict(torch.load(finetuning_args.ppl_prior_head_path))
+        #         print(f"[PPL Trainer - Prior Head] Prior head loaded from {finetuning_args.ppl_prior_head_path}")
+        #     else:
+        #         print(f"[PPL Trainer - Prior Head] No prior head path provided, initializing a new prior head")
+        #     self.prior_head.to(self.model.device)
+        # else:
+        #     self.prior_head = None
+        #     print(f"[PPL Trainer - Prior Head] No Prior head")
+        self.prior_head = initialize_prior_head(finetuning_args, hidden_size=self.model.config.hidden_size)
+        self.prior_head.to(self.model.device)
         
-        if self.finetuning_args.ppl_prior_loss_type == 'logistic':
+        if self.finetuning_args.ppl_prior_loss_type in ['logistic', 'logistic+llk']:
             self.prior_loss_fn = nn.BCEWithLogitsLoss()
 
         print(f"[PPL Trainer - Prior Loss] Prior loss type: {self.finetuning_args.ppl_prior_loss_type}")
@@ -164,12 +182,12 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             # print(f"Using PPL prior: {self.finetuning_args.ppl_prior}")
             # print(f"Using PPL llk factor: {self.finetuning_args.ppl_llk_factor}")
     
-    def concatenated_forward(self, model, batch, hidden_state_offset=0):
+    def concatenated_forward(self, model, batch, hidden_state_offset=0, return_hidden_states=True):
         r"""
         The first instance of the batch is the GT passage.
         NOTE: only batch size = 1 for the collator is supported currently.
         """
-        outputs = model(**batch, return_dict=True, use_cache=False, output_hidden_states=True)
+        outputs = model(**batch, return_dict=True, use_cache=False, output_hidden_states=return_hidden_states)
         all_logits = outputs["logits"]
         labels = batch["labels"]
         all_logps, lengths = get_batch_logps(logits=all_logits, labels=labels)
@@ -177,38 +195,52 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         pos_logps, neg_logps = all_logps[:1], all_logps[1:]
         
         # Extract last-layer hidden states at position just before the first label
-        hidden_states = outputs["hidden_states"]
-        # Get the last layer hidden states
-        last_hidden_states = hidden_states[-1]  # Shape: [batch_size, seq_len, hidden_size]
-        
-        # Find the position just before the first label token using efficient tensor operations
-        batch_size = labels.size(0)
-        
-        # Find last IGNORE_INDEX position for each batch (this is the position just before first label)
-        last_negative_indices = (labels == IGNORE_INDEX).nonzero(as_tuple=False)
-        
-        # Extract the last IGNORE_INDEX index for each batch
-        last_negative_per_batch = [
-            last_negative_indices[last_negative_indices[:, 0] == i, 1].max().item() - hidden_state_offset
-            for i in range(batch_size)
-        ]
-        last_negative_tensor = torch.tensor(last_negative_per_batch, device=labels.device)
-        
-        # Get hidden states at position just before first label
-        hidden_at_pre_label = last_hidden_states[torch.arange(batch_size, device=labels.device), last_negative_tensor, :]
+        hidden_at_pre_label = None
+        if return_hidden_states:
+            hidden_states = outputs["hidden_states"]
+            last_hidden_states = hidden_states[-1]  # Shape: [batch_size, seq_len, hidden_size]
+            hidden_at_pre_label = get_last_hidden_state_before_label(last_hidden_states, labels, hidden_state_offset=hidden_state_offset)
         
         return pos_logps, neg_logps, all_logits, outputs, lengths[0], hidden_at_pre_label
 
 
     def compute_loss(self, model, inputs, num_items_in_batch=None, return_outputs=False, eval_mode=False):
         """
-        Override `compute_loss` in `transformers.trainer`. Below is the original code. 
+        Override `compute_loss` in `transformers.trainer`.
         """
 
-        pos_logps, neg_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset)
+        prior_inputs = None
+        bs = inputs["input_ids"].size(0)
+        if self.finetuning_args.ppl_prior_modeling == 'prompted_vlm+mlp_head':
+            prior_inputs = {
+                "input_ids": inputs["input_ids"][bs//2:],
+                "attention_mask": inputs["attention_mask"][bs//2:],
+                "labels": inputs["labels"][bs//2:],
+                "pixel_values": inputs["pixel_values"][inputs['pixel_values'].size(0)//2:],
+                "image_grid_thw": inputs["image_grid_thw"][bs//2:],
+            }
+            inputs = {
+                "input_ids": inputs["input_ids"][:bs//2],
+                "attention_mask": inputs["attention_mask"][:bs//2],
+                "labels": inputs["labels"][:bs//2],
+                "pixel_values": inputs["pixel_values"][:inputs['pixel_values'].size(0)//2],
+                "image_grid_thw": inputs["image_grid_thw"][:bs//2],
+            }
+
+        pos_logps, neg_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling == 'mlp_head')
         prior_logits = None
-        if self.prior_head is not None and hidden_at_pre_label is not None:
-            prior_logits = self.prior_head(hidden_at_pre_label)  # Shape: [batch_size, 1]
+        if self.prior_head is not None:
+            if self.finetuning_args.ppl_prior_modeling == 'mlp_head':
+                prior_logits = self.prior_head(hidden_at_pre_label)  # Shape: [batch_size, 1]
+            elif self.finetuning_args.ppl_prior_modeling == 'prompted_vlm+mlp_head':
+                prior_outputs = model(**prior_inputs, return_dict=True, use_cache=False, output_hidden_states=True)
+                prior_llk_loss = prior_outputs["loss"]
+                prior_hidden_states = prior_outputs["hidden_states"]
+                prior_last_hidden_states = prior_hidden_states[-1]
+                hidden_states_for_prior_head = get_last_hidden_state_before_label(prior_last_hidden_states, prior_inputs["labels"], hidden_state_offset=self.finetuning_args.ppl_hidden_state_offset)
+                prior_logits = self.prior_head(hidden_states_for_prior_head)
+            else:
+                raise NotImplementedError(f"Prior modeling type {self.finetuning_args.ppl_prior_modeling} is not implemented")
 
         if self.finetuning_args.ppl_loss_type == "joint":
             beft_loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_joint_loss(pos_logps, all_logits, inputs["labels"], prior_logits)
@@ -239,6 +271,11 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
                 prior_labels = torch.zeros_like(prior_logits)
                 prior_labels[0] = 1
                 prior_loss = self.prior_loss_fn(prior_logits, prior_labels) * prior_lambda
+            elif self.finetuning_args.ppl_prior_loss_type == 'logistic+llk':
+                prior_labels = torch.zeros_like(prior_logits)
+                prior_labels[0] = 1
+                prior_loss = self.prior_loss_fn(prior_logits, prior_labels) * prior_lambda
+                prior_loss += prior_llk_loss
             else:
                 raise NotImplementedError(f"Prior loss type {self.finetuning_args.ppl_prior_loss_type} is not implemented")
             loss += prior_loss

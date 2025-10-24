@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -A BYRNE-SL2-GPU
+#SBATCH -A BYRNE-SL3-GPU
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1

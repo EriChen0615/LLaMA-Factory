@@ -20,7 +20,8 @@ pref_loss: sigmoid
 dataset: debug-evqa-bepo[K=2]-model=beft[K=2*]-l0h4 # video: mllm_video_demo
 template: qwen2_vl
 cutoff_len: 8192 # set to 8192 for long context 
-max_samples: 200000 # 200000
+# max_samples: 200000 # 200000
+max_samples: 10 # 200000
 overwrite_cache: true
 preprocessing_num_workers: 16
 

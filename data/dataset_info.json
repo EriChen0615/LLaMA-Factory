@@ -1,4 +1,22 @@
 {
+  "evqa-beft[K=2*]-prior=separate_prompt-size=64000-max=2048":{
+    "file_name": "jinghong_chen/evqa/beft_K=2star_rand=Top5-prior=separate_prompt-size=64000-max=2048",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images",
+      "gt_passage_idx": "gt_passage_idx",
+      "passages": "passages",
+      "passage_scores": "passage_scores",
+      "prior_prompt": "prior_prompt"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant"
+    }
+  },
   "evqa-beft[K=2*]-prior=separate_prompt-size=256-max=2048":{
     "file_name": "jinghong_chen/evqa/beft_K=2star_rand=Top5-prior=separate_prompt-size=256-max=2048",
     "formatting": "sharegpt",
@@ -18,7 +36,7 @@
     }
   },
   "debug-evqa-bepo[K=2]-model=beft[K=2*]-l0h4":{
-    "file_name": "jinghong_chen/evqa/BEFT-K=2-l0h4-bepo-K=2-size=0-max=2048",
+    "file_name": "jinghong_chen/evqa/BEFT-K=2-l0h4-bepo-K=2-size=30000-max=2048",
     "ranking": true,
     "formatting": "sharegpt",
     "columns": {

@@ -32,7 +32,8 @@ from ...extras.constants import IGNORE_INDEX
 from ..callbacks import PissaConvertCallback, SaveProcessorCallback
 from ..trainer_utils import create_custom_optimizer, create_custom_scheduler, get_batch_logps
 from ..ppl.ppl_loss import compute_ensemble_loss
-from ..ppl.trainer import initialize_prior_head
+from ..ppl.trainer import initialize_prior_head, get_last_hidden_state_before_label
+import os
 
 
 if TYPE_CHECKING:
@@ -215,16 +216,7 @@ class CustomBEPOTrainer(DPOTrainer):
 
         hidden_states = outputs["hidden_states"]
         last_hidden_states = hidden_states[-1]
-
-        labels = batch["labels"]
-        total_bs = labels.size(0)
-        last_negative_indices = (labels == IGNORE_INDEX).nonzero(as_tuple=False)
-        last_negative_per_batch = [
-            last_negative_indices[last_negative_indices[:, 0] == i, 1].max().item() - hidden_state_offset
-            for i in range(total_bs)
-        ]
-        last_negative_tensor = torch.tensor(last_negative_per_batch, device=labels.device)
-        hidden_states_for_prior_head = last_hidden_states[torch.arange(total_bs, device=labels.device), last_negative_tensor, :]
+        hidden_states_for_prior_head = get_last_hidden_state_before_label(last_hidden_states, batch["labels"], hidden_state_offset=hidden_state_offset)
 
         return chosen_logps, rejected_logps, chosen_logits, rejected_logits, chosen_logps / chosen_length, hidden_states_for_prior_head
 
@@ -304,9 +296,9 @@ class CustomBEPOTrainer(DPOTrainer):
         reward_accuracies = (chosen_rewards > rejected_rewards).float()
 
         # DEBUG
-        print(f"chosen_rewards: {chosen_rewards.detach().mean().cpu()}, rejected_rewards: {rejected_rewards.detach().mean().cpu()}")
-        print(f"policy_chosen_posterior: {policy_chosen_posterior.detach().mean().cpu()}, policy_rejected_posterior: {policy_rejected_posterior.detach().mean().cpu()}")
-        print(f"losses: {losses.detach().mean().cpu()}")
+        # print(f"chosen_rewards: {chosen_rewards.detach().mean().cpu()}, rejected_rewards: {rejected_rewards.detach().mean().cpu()}")
+        # print(f"policy_chosen_posterior: {policy_chosen_posterior.detach().mean().cpu()}, policy_rejected_posterior: {policy_rejected_posterior.detach().mean().cpu()}")
+        # print(f"losses: {losses.detach().mean().cpu()}")
 
         prefix = "eval_" if train_eval == "eval" else ""
         metrics["{}rewards/chosen".format(prefix)] = chosen_rewards.mean().cpu()
@@ -324,3 +316,16 @@ class CustomBEPOTrainer(DPOTrainer):
             metrics["{}odds_ratio_loss".format(prefix)] = ((losses - sft_loss) / self.beta).detach().mean().cpu()
 
         return losses.mean(), metrics
+    
+    @override
+    def save_model(self, output_dir: Optional[str] = None, _internal_call: bool = False):
+        """
+        Override save_model to save prior_head (mlp_head) as a separate .pt file.
+        """
+        # Call parent save_model first
+        super().save_model(output_dir, _internal_call)
+        
+        # Save prior_head separately
+        prior_head_path = os.path.join(output_dir, "prior_head.pt")
+        torch.save(self.prior_head.state_dict(), prior_head_path)
+        logger.info(f"Saved prior_head to {prior_head_path}")
