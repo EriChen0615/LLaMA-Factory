@@ -16,8 +16,7 @@ ppl_prior_loss_type: logistic
 dataset: evqa-rag2-answer-ppl-size=64000-max=2048 # video: mllm_video_demo
 template: qwen2_vl
 cutoff_len: 4096 # set to 8192 for long context 
-# max_samples: 200000
-max_samples: 4096
+max_samples: 200000
 overwrite_cache: true
 preprocessing_num_workers: 16
 

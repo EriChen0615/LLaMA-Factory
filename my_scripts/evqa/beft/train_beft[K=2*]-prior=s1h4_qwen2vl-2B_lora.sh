@@ -2,7 +2,7 @@
 #SBATCH -A BYRNE-SL3-GPU
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:1
 #SBATCH --time=12:00:00
 #SBATCH --mail-type=BEGIN,END,FAIL
 #! Uncomment this to prevent the job from being requeued (e.g. if
@@ -13,4 +13,4 @@ export WANDB_RUN_GROUP="HPC-PPL"
 
 which python
 
-llamafactory-cli train my_configs/evqa/beft/beft[K=4*]-prior=l0h4_qwen2vl-2B_lora.yaml
+llamafactory-cli train my_configs/evqa/beft/beft[K=2*]-prior=s1h4_qwen2vl-2B_lora.yaml
