@@ -29,11 +29,14 @@ from trl.trainer import disable_dropout_in_model
 from typing_extensions import override
 
 from ...extras.constants import IGNORE_INDEX
+from ...extras.logging import get_logger
 from ..callbacks import PissaConvertCallback, SaveProcessorCallback
 from ..trainer_utils import create_custom_optimizer, create_custom_scheduler, get_batch_logps
 from ..ppl.ppl_loss import compute_ensemble_loss
 from ..ppl.trainer import initialize_prior_head, get_last_hidden_state_before_label
 import os
+
+logger = get_logger(__name__)
 
 
 if TYPE_CHECKING:
@@ -116,6 +119,14 @@ class CustomBEPOTrainer(DPOTrainer):
         self.ref_prior_head = initialize_prior_head(finetuning_args, hidden_size=self.ref_model.config.hidden_size)
         self.ref_prior_head = self.accelerator.prepare_model(self.ref_prior_head, evaluation_mode=True)
         self.ref_prior_head.eval()
+        
+        # Initialize prior loss function if using logistic loss
+        if finetuning_args.ppl_prior_loss_type in ['logistic', 'logistic+llk']:
+            self.prior_loss_fn = torch.nn.BCEWithLogitsLoss()
+        
+        print(f"[BEPO Trainer - Prior Loss] Prior loss type: {finetuning_args.ppl_prior_loss_type}")
+        print(f"[BEPO Trainer - Prior Loss] Use prior head loss: {finetuning_args.use_prior_head_loss}")
+        print(f"[BEPO Trainer - Prior Loss] Prior head loss factor: {finetuning_args.ppl_prior_loss_factor}")
 
     @override
     def create_optimizer(self) -> "torch.optim.Optimizer":
@@ -151,6 +162,45 @@ class CustomBEPOTrainer(DPOTrainer):
         logits = pi_logratios - gamma_logratios
         simpo_loss = -F.logsigmoid(self.beta * logits)
         return simpo_loss
+    
+    def compute_prior_loss(
+        self,
+        policy_prior_logits: "torch.Tensor",
+        prior_logprob: Optional["torch.Tensor"] = None,
+    ) -> "torch.Tensor":
+        r"""
+        Computes auxiliary prior loss to train the prior head.
+        Assumes idx=0 in the batch holds the ground-truth passage.
+        """
+        if not self.finetuning_args.use_prior_head_loss:
+            return torch.tensor(0.0, device=self.accelerator.device)
+        
+        # Determine loss factor
+        prior_lambda = self.finetuning_args.ppl_prior_loss_factor
+        if prior_lambda < 0:
+            # Use a default value or compute dynamically if needed
+            prior_lambda = 1.0
+        
+        prior_loss = torch.tensor(0.0, device=self.accelerator.device)
+        
+        if self.finetuning_args.ppl_prior_loss_type == 'softmax':
+            # Use log probability from softmax (requires prior_logprob)
+            if prior_logprob is not None:
+                prior_loss = -prior_logprob[0] * prior_lambda
+        elif self.finetuning_args.ppl_prior_loss_type == 'logistic':
+            # Binary classification: idx=0 is positive (GT passage), rest are negative
+            prior_labels = torch.zeros_like(policy_prior_logits)
+            prior_labels[0] = 1.0  # Ground-truth passage is at index 0
+            prior_loss = self.prior_loss_fn(policy_prior_logits, prior_labels) * prior_lambda
+            # print(f"prior_loss: {prior_loss.detach().cpu()}")
+            # print(f"policy_prior_logits: {policy_prior_logits.detach().cpu()}")
+            # print(f"prior_labels: {prior_labels.detach().cpu()}")
+            # breakpoint()
+        else:
+            # Default: no prior loss
+            pass
+        
+        return prior_loss
 
     def compute_bepo_preference_loss(
         self,
@@ -292,6 +342,16 @@ class CustomBEPOTrainer(DPOTrainer):
         sft_loss = -policy_chosen_logps_avg
         if self.ftx_gamma > 1e-6:
             losses += self.ftx_gamma * sft_loss
+        
+        # Compute prior loss for the chosen examples (first half of batch)
+        # Assumes idx=0 holds the GT passage in chosen examples
+        K = policy_chosen_logits.shape[0]
+        prior_loss = self.compute_prior_loss(
+            policy_prior_logits[:K],  # Only use chosen examples for prior loss
+            prior_logprob=None  # Can add softmax prior_logprob if needed
+        )
+        if self.finetuning_args.use_prior_head_loss:
+            losses += prior_loss
 
         reward_accuracies = (chosen_rewards > rejected_rewards).float()
 
@@ -311,6 +371,14 @@ class CustomBEPOTrainer(DPOTrainer):
         metrics["{}logits/chosen".format(prefix)] = policy_chosen_logits.detach().mean().cpu()
         metrics["{}posterior/chosen".format(prefix)] = policy_chosen_posterior.detach().mean().cpu()
         metrics["{}posterior/rejected".format(prefix)] = policy_rejected_posterior.detach().mean().cpu()
+        metrics["{}prior_loss".format(prefix)] = prior_loss.detach().mean().cpu()
+        
+        # Compute prior head accuracy (whether GT passage at idx=0 has highest score)
+        if self.finetuning_args.use_prior_head_loss:
+            prior_pred = torch.argmax(policy_prior_logits[:K].squeeze(-1), dim=0)
+            prior_accuracy = (prior_pred == 0).float()
+            metrics["{}prior_accuracy".format(prefix)] = prior_accuracy.cpu()
+        
         if self.loss_type == "orpo":
             metrics["{}sft_loss".format(prefix)] = sft_loss.detach().mean().cpu()
             metrics["{}odds_ratio_loss".format(prefix)] = ((losses - sft_loss) / self.beta).detach().mean().cpu()
@@ -325,7 +393,11 @@ class CustomBEPOTrainer(DPOTrainer):
         # Call parent save_model first
         super().save_model(output_dir, _internal_call)
         
-        # Save prior_head separately
-        prior_head_path = os.path.join(output_dir, "prior_head.pt")
-        torch.save(self.prior_head.state_dict(), prior_head_path)
-        logger.info(f"Saved prior_head to {prior_head_path}")
+        # Save prior_head separately if it exists
+        if hasattr(self, 'prior_head') and self.prior_head is not None:
+            if output_dir is None:
+                output_dir = self.args.output_dir
+            
+            prior_head_path = os.path.join(output_dir, "prior_head.pt")
+            torch.save(self.prior_head.state_dict(), prior_head_path)
+            logger.info(f"Saved prior_head to {prior_head_path}")

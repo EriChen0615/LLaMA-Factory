@@ -79,6 +79,8 @@ def run_ppl(
     #TODO
     tokenizer_module = load_tokenizer(model_args)
     tokenizer = tokenizer_module["tokenizer"]
+    # ENFORCE LEFT PADDING
+    tokenizer.padding_side = "left"
     template = get_template_and_fix_tokenizer(tokenizer, data_args)
     dataset_module = get_dataset(template, model_args, data_args, training_args, stage=finetuning_args.stage, **tokenizer_module)
     model = load_model(tokenizer, model_args, finetuning_args, training_args.do_train)
