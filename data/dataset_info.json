@@ -1,4 +1,18 @@
 {
+  "evqa-bepo_K=2-size=20000-max=2048":{
+    "file_name": "jinghong_chen/evqa/BEFT-K=2-cont-K=4-l1h4-n4beams-bepo-K=2and4-size=20000-max=2048",
+    "ranking": true,
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "chosen": "chosen",
+      "rejected": "rejected",
+      "images": "images",
+      "gt_passage_idx": "gt_passage_idx",
+      "passages": "passages",
+      "passage_scores": "passage_scores"
+    }
+  },
   "evqa-beft[K=2*]-prior=separate_prompt-size=64000-max=2048":{
     "file_name": "jinghong_chen/evqa/beft_K=2star_rand=Top5-prior=separate_prompt-size=64000-max=2048",
     "formatting": "sharegpt",

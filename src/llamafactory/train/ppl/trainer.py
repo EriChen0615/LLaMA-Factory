@@ -154,7 +154,9 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         #     self.prior_head = None
         #     print(f"[PPL Trainer - Prior Head] No Prior head")
         self.prior_head = initialize_prior_head(finetuning_args, hidden_size=self.model.config.hidden_size)
-        self.prior_head.to(self.model.device)
+        if self.prior_head is not None:
+            # Prepare prior_head with accelerator for proper distributed training and mixed precision
+            self.prior_head = self.accelerator.prepare_model(self.prior_head, evaluation_mode=False)
         
         if self.finetuning_args.ppl_prior_loss_type in ['logistic', 'logistic+llk']:
             self.prior_loss_fn = nn.BCEWithLogitsLoss()
@@ -173,6 +175,12 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
                     param.requires_grad = True
         else:
             print(f"[PPL Trainer] VLM weights are trainable")
+        
+        # After training starts, check if prior_head params are in optimizer
+        # param_ids_in_optimizer = {id(p) for group in self.optimizer.param_groups for p in group['params']}
+        # param_ids_in_prior_head = {id(p) for p in self.prior_head.parameters()}
+        # print(f"[PPL Trainer] Prior head params in optimizer: {param_ids_in_prior_head.issubset(param_ids_in_optimizer)}")
+        # breakpoint()
         
         # if finetuning_args.use_ppl_loss:
             # print("Using PPL training with Posterior Loss.")
@@ -320,7 +328,74 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
     def create_optimizer(self) -> "torch.optim.Optimizer":
         if self.optimizer is None:
             self.optimizer = create_custom_optimizer(self.model, self.args, self.finetuning_args)
-        return super().create_optimizer()
+        
+        # Call parent to create optimizer if create_custom_optimizer returned None
+        optimizer = super().create_optimizer()
+        
+        # Add prior_head parameters to the optimizer if it exists and is trainable
+        if self.prior_head is not None and hasattr(self, 'optimizer'):
+            prior_head_params = list(self.prior_head.parameters())
+            if prior_head_params and prior_head_params[0].requires_grad:
+                # Check if prior_head params are already in optimizer
+                optimizer_params = set()
+                for group in self.optimizer.param_groups:
+                    optimizer_params.update(id(p) for p in group['params'])
+                
+                prior_head_param_ids = set(id(p) for p in prior_head_params)
+                
+                if not prior_head_param_ids.issubset(optimizer_params):
+                    # Add prior_head parameters as a new param group
+                    logger.info(f"Adding {len(prior_head_params)} prior_head parameters to optimizer")
+                    self.optimizer.add_param_group({
+                        'params': prior_head_params,
+                        'lr': self.args.learning_rate,
+                        'weight_decay': self.args.weight_decay,
+                    })
+                else:
+                    logger.info("Prior_head parameters already in optimizer")
+        
+        # Report total trainable parameters in optimizer
+        logger.info("=" * 80)
+        logger.info("OPTIMIZER PARAMETER SUMMARY")
+        logger.info("=" * 80)
+        
+        total_params = 0
+        total_trainable = 0
+        
+        for group_idx, param_group in enumerate(self.optimizer.param_groups):
+            group_params = param_group['params']
+            group_total = sum(p.numel() for p in group_params)
+            group_trainable = sum(p.numel() for p in group_params if p.requires_grad)
+            
+            logger.info(f"Param Group {group_idx}:")
+            logger.info(f"  Total parameters: {group_total:,}")
+            logger.info(f"  Trainable parameters: {group_trainable:,}")
+            logger.info(f"  Learning rate: {param_group.get('lr', 'N/A')}")
+            logger.info(f"  Weight decay: {param_group.get('weight_decay', 'N/A')}")
+            
+            total_params += group_total
+            total_trainable += group_trainable
+        
+        logger.info("-" * 80)
+        logger.info(f"TOTAL PARAMETERS IN OPTIMIZER: {total_params:,}")
+        logger.info(f"TOTAL TRAINABLE PARAMETERS: {total_trainable:,}")
+        
+        # Verify prior_head parameters are included
+        if self.prior_head is not None:
+            prior_head_params_count = sum(p.numel() for p in self.prior_head.parameters())
+            prior_head_param_ids = {id(p) for p in self.prior_head.parameters()}
+            optimizer_param_ids = {id(p) for group in self.optimizer.param_groups for p in group['params']}
+            prior_head_in_optimizer = prior_head_param_ids.issubset(optimizer_param_ids)
+            
+            logger.info(f"Prior head total parameters: {prior_head_params_count:,}")
+            logger.info(f"Prior head parameters in optimizer: {prior_head_in_optimizer}")
+            
+            if not prior_head_in_optimizer:
+                logger.warning("⚠️  WARNING: Prior head parameters are NOT in optimizer!")
+        
+        logger.info("=" * 80)
+        
+        return optimizer
 
     @override
     def create_scheduler(
@@ -454,11 +529,16 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         # Call parent save_model first
         super().save_model(output_dir, _internal_call)
         
-        # Save prior_head separately if it exists
-        if hasattr(self, 'prior_head') and self.prior_head is not None:
+        # Save prior_head separately if it exists (only on main process)
+        if self.accelerator.is_main_process and hasattr(self, 'prior_head') and self.prior_head is not None:
             if output_dir is None:
                 output_dir = self.args.output_dir
             
+            # Ensure output directory exists (important for distributed training)
+            os.makedirs(output_dir, exist_ok=True)
+            
             prior_head_path = os.path.join(output_dir, "prior_head.pt")
-            torch.save(self.prior_head.state_dict(), prior_head_path)
+            # Unwrap the model if it's wrapped by accelerator (e.g., DDP)
+            prior_head_to_save = self.accelerator.unwrap_model(self.prior_head)
+            torch.save(prior_head_to_save.state_dict(), prior_head_path)
             logger.info(f"Saved prior_head to {prior_head_path}")
