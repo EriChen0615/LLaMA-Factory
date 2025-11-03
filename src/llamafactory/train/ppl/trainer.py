@@ -76,6 +76,18 @@ def initialize_prior_head(finetuning_args: "FinetuningArguments", hidden_size: i
             print(f"[PPL Trainer - Prior Head] Prior head loaded from {finetuning_args.ppl_prior_head_path}")
         else:
             print(f"[PPL Trainer - Prior Head] No prior head path provided, initializing a new prior head")
+    elif finetuning_args.ppl_prior_modeling == 'linear_head':
+        input_dim = hidden_size
+        proj_dim = finetuning_args.ppl_prior_head_proj_dim
+        layers = []
+        for _ in range(finetuning_args.ppl_prior_head_num_of_layers - 1):
+            layers.append(nn.Linear(input_dim, proj_dim))
+            input_dim = proj_dim
+        layers.append(nn.Linear(input_dim, 1))
+        prior_head = nn.Sequential(*layers)
+        print(f"[PPL Trainer - Prior Head] Prior head number of layers: {finetuning_args.ppl_prior_head_num_of_layers}")
+        print(f"[PPL Trainer - Prior Head] Prior head projection dimension: {proj_dim}")
+        print(f"[PPL Trainer - Prior Head] Prior head parameters: {sum(p.numel() for p in prior_head.parameters())}")
     else:
         print(f"[PPL Trainer - Prior Head] No Prior head")
     return prior_head
@@ -176,6 +188,13 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         else:
             print(f"[PPL Trainer] VLM weights are trainable")
         
+        if self.prior_head is not None and self.finetuning_args.freeze_prior_head_weights:
+            print(f"[PPL Trainer] Freezing prior head weights...")
+            for param in self.prior_head.parameters():
+                param.requires_grad = False
+        else:
+            print(f"[PPL Trainer] Prior head weights are trainable")
+        
         # After training starts, check if prior_head params are in optimizer
         # param_ids_in_optimizer = {id(p) for group in self.optimizer.param_groups for p in group['params']}
         # param_ids_in_prior_head = {id(p) for p in self.prior_head.parameters()}
@@ -211,6 +230,94 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         
         return pos_logps, neg_logps, all_logits, outputs, lengths[0], hidden_at_pre_label
 
+    def concatenated_forward_chunk_checkpointing(self, model, batch, hidden_state_offset=0, return_hidden_states=True):
+        r"""
+        Chunked version of concatenated_forward with gradient checkpointing.
+        Processes K passages in chunks to reduce memory while maintaining exact gradients.
+        
+        The first instance of the batch is the GT passage.
+        NOTE: only batch size = 1 for the collator is supported currently.
+        """
+        from torch.utils.checkpoint import checkpoint
+        
+        K = batch["input_ids"].size(0)
+        chunk_size = self.finetuning_args.ppl_forward_chunk_size
+        
+        logger.info(f"[PPL Trainer] Using chunked forward with checkpointing: K={K}, chunk_size={chunk_size}")
+        
+        # Process K passages in chunks
+        all_logits_list = []
+        all_hidden_states_list = []
+        last_outputs = None
+        
+        for start_idx in range(0, K, chunk_size):
+            end_idx = min(start_idx + chunk_size, K)
+            
+            # Slice inputs for this chunk
+            chunk_batch = {
+                "input_ids": batch["input_ids"][start_idx:end_idx],
+                "attention_mask": batch["attention_mask"][start_idx:end_idx],
+                "labels": batch["labels"][start_idx:end_idx],
+                "image_grid_thw": batch["image_grid_thw"][start_idx:end_idx],
+            }
+            
+            # Handle pixel_values slicing (concatenated patches)
+            if "pixel_values" in batch:
+                # Calculate patch boundaries using image_grid_thw
+                image_grid_thw = batch["image_grid_thw"]
+                patches_per_passage = (image_grid_thw[:, 0] * image_grid_thw[:, 1] * image_grid_thw[:, 2]).long()
+                cumsum_patches = torch.cumsum(patches_per_passage, dim=0)
+                
+                patch_start = 0 if start_idx == 0 else cumsum_patches[start_idx - 1].item()
+                patch_end = cumsum_patches[end_idx - 1].item()
+                
+                chunk_batch["pixel_values"] = batch["pixel_values"][patch_start:patch_end]
+            
+            # Define forward function for checkpointing
+            def forward_chunk(chunk_batch_dict):
+                """Forward function to be checkpointed. Must be deterministic."""
+                return model(
+                    **chunk_batch_dict,
+                    return_dict=True,
+                    use_cache=False,
+                    output_hidden_states=return_hidden_states
+                )
+            
+            # Use checkpoint: activations are recomputed during backward
+            outputs_chunk = checkpoint(
+                forward_chunk,
+                chunk_batch,
+                use_reentrant=False
+            )
+            
+            # Collect logits
+            all_logits_list.append(outputs_chunk.logits)
+            last_outputs = outputs_chunk  # Keep last for return
+            
+            # Collect hidden states if needed
+            if return_hidden_states and outputs_chunk.hidden_states is not None:
+                last_hidden_states_chunk = outputs_chunk.hidden_states[-1]
+                hidden_at_pre_label_chunk = get_last_hidden_state_before_label(
+                    last_hidden_states_chunk,
+                    chunk_batch["labels"],
+                    hidden_state_offset=hidden_state_offset
+                )
+                all_hidden_states_list.append(hidden_at_pre_label_chunk)
+        
+        # Concatenate all logits
+        all_logits = torch.cat(all_logits_list, dim=0)  # Shape: [K, seq_len, vocab_size]
+        
+        # Compute log probabilities from concatenated logits
+        labels = batch["labels"]
+        all_logps, lengths = get_batch_logps(logits=all_logits, labels=labels)
+        pos_logps, neg_logps = all_logps[:1], all_logps[1:]
+        
+        # Concatenate hidden states
+        hidden_at_pre_label = None
+        if return_hidden_states and all_hidden_states_list:
+            hidden_at_pre_label = torch.cat(all_hidden_states_list, dim=0)  # Shape: [K, hidden_size]
+        
+        return pos_logps, neg_logps, all_logits, last_outputs, lengths[0], hidden_at_pre_label
 
     def compute_loss(self, model, inputs, num_items_in_batch=None, return_outputs=False, eval_mode=False):
         """
@@ -219,6 +326,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
 
         prior_inputs = None
         bs = inputs["input_ids"].size(0)
+        K = bs
         if self.finetuning_args.ppl_prior_modeling == 'prompted_vlm+mlp_head':
             prior_inputs = {
                 "input_ids": inputs["input_ids"][bs//2:],
@@ -234,11 +342,17 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
                 "pixel_values": inputs["pixel_values"][:inputs['pixel_values'].size(0)//2],
                 "image_grid_thw": inputs["image_grid_thw"][:bs//2],
             }
+            K = bs//2
 
-        pos_logps, neg_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling == 'mlp_head')
+        # Use chunked forward with checkpointing if K exceeds chunk size
+        if self.finetuning_args.ppl_enable_chunked_checkpoint and self.finetuning_args.ppl_forward_chunk_size is not None and K > self.finetuning_args.ppl_forward_chunk_size:
+            pos_logps, neg_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward_chunk_checkpointing(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
+        else:
+            pos_logps, neg_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
+
         prior_logits = None
         if self.prior_head is not None:
-            if self.finetuning_args.ppl_prior_modeling == 'mlp_head':
+            if self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head']:
                 prior_logits = self.prior_head(hidden_at_pre_label)  # Shape: [batch_size, 1]
             elif self.finetuning_args.ppl_prior_modeling == 'prompted_vlm+mlp_head':
                 prior_outputs = model(**prior_inputs, return_dict=True, use_cache=False, output_hidden_states=True)
@@ -297,8 +411,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
 
         posterior_hitrate_over_steps = (map_passage_idx == 0).sum(-1) / map_passage_idx.shape[-1]
         prior_hitrate = (prior_passage_idx == 0)
-
-
+        
         self._metrics["posterior_loss"].append(posterior_loss.item())
         self._metrics["llk_loss"].append(llk_loss.item())
         self._metrics["prior_loss"].append(prior_loss.item())
@@ -326,14 +439,14 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
     
     @override
     def create_optimizer(self) -> "torch.optim.Optimizer":
-        if self.optimizer is None:
+        if self.optimizer is None and not self.finetuning_args.freeze_vlm_weights:
             self.optimizer = create_custom_optimizer(self.model, self.args, self.finetuning_args)
         
         # Call parent to create optimizer if create_custom_optimizer returned None
-        optimizer = super().create_optimizer()
+        super().create_optimizer()
         
         # Add prior_head parameters to the optimizer if it exists and is trainable
-        if self.prior_head is not None and hasattr(self, 'optimizer'):
+        if self.prior_head is not None and self.optimizer is not None:
             prior_head_params = list(self.prior_head.parameters())
             if prior_head_params and prior_head_params[0].requires_grad:
                 # Check if prior_head params are already in optimizer
@@ -348,7 +461,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
                     logger.info(f"Adding {len(prior_head_params)} prior_head parameters to optimizer")
                     self.optimizer.add_param_group({
                         'params': prior_head_params,
-                        'lr': self.args.learning_rate,
+                        'lr': self.finetuning_args.prior_head_lr,
                         'weight_decay': self.args.weight_decay,
                     })
                 else:
@@ -395,7 +508,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         
         logger.info("=" * 80)
         
-        return optimizer
+        return self.optimizer
 
     @override
     def create_scheduler(

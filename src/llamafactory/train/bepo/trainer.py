@@ -137,10 +137,10 @@ class CustomBEPOTrainer(DPOTrainer):
             self.optimizer = create_custom_optimizer(self.model, self.args, self.finetuning_args)
         
         # Call parent to create optimizer if create_custom_optimizer returned None
-        optimizer = super().create_optimizer()
+        super().create_optimizer()
         
         # Add prior_head parameters to the optimizer if it exists and is trainable
-        if self.prior_head is not None and hasattr(self, 'optimizer'):
+        if self.prior_head is not None and self.optimizer is not None:
             prior_head_params = list(self.prior_head.parameters())
             if prior_head_params and prior_head_params[0].requires_grad:
                 # Check if prior_head params are already in optimizer
@@ -202,7 +202,7 @@ class CustomBEPOTrainer(DPOTrainer):
         
         logger.info("=" * 80)
         
-        return optimizer
+        return self.optimizer
 
     @override
     def create_scheduler(

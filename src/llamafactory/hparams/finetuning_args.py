@@ -357,7 +357,7 @@ class PPLArguments:
             "help": "The type of the PPL loss to use."
         },
     )
-    ppl_prior_modeling: Literal["mlp_head", "prompted_vlm+mlp_head", "none"] = field(
+    ppl_prior_modeling: Literal["mlp_head", "prompted_vlm+mlp_head", "linear_head", "none"] = field(
         default="none",
         metadata={
             "help": "The type of the prior head modeling to use."
@@ -415,6 +415,33 @@ class PPLArguments:
         default=False,
         metadata={
             "help": "Whether or not to freeze the weights of the VLM."
+        },
+    )
+    freeze_prior_head_weights: bool = field(
+        default=False,
+        metadata={
+            "help": "Whether or not to freeze the weights of the prior head."
+        },
+    )
+    prior_head_lr: float = field(
+        default=1.0e-5,
+        metadata={
+            "help": "The learning rate of the prior head."
+        },
+    )
+    ppl_enable_chunked_checkpoint: bool = field(
+        default=False,
+        metadata={
+            "help": "Enable chunked forward pass with gradient checkpointing to train with larger K values. "
+                    "Trades compute time (2x slower) for memory (K/chunk_size reduction)."
+        },
+    )
+    ppl_forward_chunk_size: Optional[int] = field(
+        default=None,
+        metadata={
+            "help": "Number of passages to process per forward chunk when ppl_enable_chunked_checkpoint is True. "
+                    "If None or >= K, processes all passages at once (standard behavior). "
+                    "Recommended values: 4-8 for typical use cases."
         },
     )
 
