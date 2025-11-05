@@ -12,8 +12,8 @@ ppl_hidden_state_offset: 4
 ppl_prior_loss_factor: 1.0
 ppl_prior_loss_type: logistic
 prior_head_lr: 1.0e-6
-ppl_enable_chunked_checkpoint: false
-# ppl_forward_chunk_size: 4
+ppl_enable_chunked_checkpoint: true
+ppl_forward_chunk_size: 4
 
 use_ppl_loss: true
 ppl_loss_type: ensemble
@@ -24,7 +24,7 @@ ppl_prior_head_proj_dim: 1024
 
 ### dataset
 # dataset: evqa-rag2-answer-ppl-size=64000-max=2048 # video: mllm_video_demo
-dataset: evqa-rag8-answer-ppl-offset=128000-max=2048 # video: mllm_video_demo
+dataset: evqa-rag16-answer-ppl-offset=128000-max=2048 # video: mllm_video_demo
 template: qwen2_vl
 cutoff_len: 4096 # set to 8192 for long context 
 # max_samples: 200000

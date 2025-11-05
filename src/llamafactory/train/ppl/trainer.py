@@ -195,6 +195,9 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         else:
             print(f"[PPL Trainer] Prior head weights are trainable")
         
+        print(f"[PPL Trainer] ppl_enable_chunked_checkpoint: {self.finetuning_args.ppl_enable_chunked_checkpoint}")
+        print(f"[PPL Trainer] ppl_forward_chunk_size: {self.finetuning_args.ppl_forward_chunk_size}")
+        
         # After training starts, check if prior_head params are in optimizer
         # param_ids_in_optimizer = {id(p) for group in self.optimizer.param_groups for p in group['params']}
         # param_ids_in_prior_head = {id(p) for p in self.prior_head.parameters()}
@@ -228,7 +231,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             last_hidden_states = hidden_states[-1]  # Shape: [batch_size, seq_len, hidden_size]
             hidden_at_pre_label = get_last_hidden_state_before_label(last_hidden_states, labels, hidden_state_offset=hidden_state_offset)
         
-        return pos_logps, neg_logps, all_logits, outputs, lengths[0], hidden_at_pre_label
+        return pos_logps, neg_logps, all_logps, all_logits, outputs, lengths[0], hidden_at_pre_label
 
     def concatenated_forward_chunk_checkpointing(self, model, batch, hidden_state_offset=0, return_hidden_states=True):
         r"""
@@ -243,11 +246,12 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         K = batch["input_ids"].size(0)
         chunk_size = self.finetuning_args.ppl_forward_chunk_size
         
-        logger.info(f"[PPL Trainer] Using chunked forward with checkpointing: K={K}, chunk_size={chunk_size}")
+        # logger.info(f"[PPL Trainer] Using chunked forward with checkpointing: K={K}, chunk_size={chunk_size}")
         
         # Process K passages in chunks
         all_logits_list = []
         all_hidden_states_list = []
+        all_per_token_logps_list = []
         last_outputs = None
         
         for start_idx in range(0, K, chunk_size):
@@ -291,7 +295,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             )
             
             # Collect logits
-            all_logits_list.append(outputs_chunk.logits)
+            # all_logits_list.append(outputs_chunk.logits)
             last_outputs = outputs_chunk  # Keep last for return
             
             # Collect hidden states if needed
@@ -303,21 +307,34 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
                     hidden_state_offset=hidden_state_offset
                 )
                 all_hidden_states_list.append(hidden_at_pre_label_chunk)
+            
+            labels_shifted = chunk_batch["labels"][:, 1:].clone()
+            logits_shifted = outputs_chunk.logits[:, :-1, :]
+            loss_mask = labels_shifted != IGNORE_INDEX
+            labels_shifted[labels_shifted == IGNORE_INDEX] = 0  # dummy token
+            per_token_logps_chunk = torch.gather(logits_shifted.log_softmax(-1), dim=2, index=labels_shifted.unsqueeze(2)).squeeze(2)
+            per_token_logps_chunk = per_token_logps_chunk * loss_mask  # Zero out ignored positions
+            all_per_token_logps_list.append(per_token_logps_chunk)
         
         # Concatenate all logits
-        all_logits = torch.cat(all_logits_list, dim=0)  # Shape: [K, seq_len, vocab_size]
+        # all_logits = torch.cat(all_logits_list, dim=0)  # Shape: [K, seq_len, vocab_size]
+        all_per_token_logps = torch.cat(all_per_token_logps_list, dim=0)  # Shape: [K, seq_len, vocab_size]
         
         # Compute log probabilities from concatenated logits
         labels = batch["labels"]
-        all_logps, lengths = get_batch_logps(logits=all_logits, labels=labels)
-        pos_logps, neg_logps = all_logps[:1], all_logps[1:]
+        pos_logps, neg_logps = all_per_token_logps[0].sum(-1), all_per_token_logps[1:].sum(-1)
+        lengths = (labels != IGNORE_INDEX).sum(-1)
+        # all_logps, lengths = get_batch_logps(logits=all_logits, labels=labels)
+        # pos_logps, neg_logps = all_logps[:1], all_logps[1:]
         
         # Concatenate hidden states
         hidden_at_pre_label = None
         if return_hidden_states and all_hidden_states_list:
             hidden_at_pre_label = torch.cat(all_hidden_states_list, dim=0)  # Shape: [K, hidden_size]
+
         
-        return pos_logps, neg_logps, all_logits, last_outputs, lengths[0], hidden_at_pre_label
+        
+        return pos_logps, neg_logps, all_per_token_logps, None, last_outputs, lengths[0], hidden_at_pre_label
 
     def compute_loss(self, model, inputs, num_items_in_batch=None, return_outputs=False, eval_mode=False):
         """
@@ -346,9 +363,10 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
 
         # Use chunked forward with checkpointing if K exceeds chunk size
         if self.finetuning_args.ppl_enable_chunked_checkpoint and self.finetuning_args.ppl_forward_chunk_size is not None and K > self.finetuning_args.ppl_forward_chunk_size:
-            pos_logps, neg_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward_chunk_checkpointing(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
+            pos_logps, neg_logps, per_token_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward_chunk_checkpointing(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
         else:
-            pos_logps, neg_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
+            pos_logps, neg_logps, _, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
+            per_token_logps = None
 
         prior_logits = None
         if self.prior_head is not None:
@@ -369,7 +387,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         elif self.finetuning_args.ppl_loss_type == "posterior":
             beft_loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ppl_loss(pos_logps, neg_logps, prior_logits)
         elif self.finetuning_args.ppl_loss_type == "ensemble":
-            beft_loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ensemble_loss(all_logits, inputs["labels"], prior_logits)
+            beft_loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ensemble_loss(all_logits, inputs["labels"], prior_logits, per_token_logps=per_token_logps)
         elif self.finetuning_args.ppl_loss_type == "llk":
             beft_loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ppl_loss(pos_logps, neg_logps, prior_logits)
             beft_loss = llk_loss
@@ -429,12 +447,12 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         self._metrics["posterior_entropy_at_last"].append(posterior_entropy[-1].item())
 
         #DEBUG
-        # print(f"[PPL Trainer] Loss: {loss.item()}, Posterior Loss: {posterior_loss.item()}, LLK Loss: {llk_loss.item()}, Prior Loss: {prior_loss}")
-        # print(f"[PPL Trainer] Posterior Hit (mean over steps): {posterior_hitrate_over_steps.item()}, Posterior Entropy (mean over steps): {posterior_entropy.mean().item()}")
-        # print(f"[PPL Trainer] Prior Hit: {prior_hitrate.item()}")
-        # print(f"[PPL Trainer] Posterior Hit (at first): {map_passage_idx[0].item() == 0}, Posterior Entropy (at first): {posterior_entropy[0].item()}")
-        # print(f"[PPL Trainer] Posterior Hit (at mid): {map_passage_idx[ans_len//2].item() == 0}, Posterior Entropy (at mid): {posterior_entropy[ans_len//2].item()}")
-        # print(f"[PPL Trainer] Posterior Hit (at last): {map_passage_idx[-1].item() == 0}, Posterior Entropy (at last): {posterior_entropy[-1].item()}")
+        print(f"[PPL Trainer] Loss: {loss.item()}, Posterior Loss: {posterior_loss.item()}, LLK Loss: {llk_loss.item()}, Prior Loss: {prior_loss}")
+        print(f"[PPL Trainer] Posterior Hit (mean over steps): {posterior_hitrate_over_steps.item()}, Posterior Entropy (mean over steps): {posterior_entropy.mean().item()}")
+        print(f"[PPL Trainer] Prior Hit: {prior_hitrate.item()}")
+        print(f"[PPL Trainer] Posterior Hit (at first): {map_passage_idx[0].item() == 0}, Posterior Entropy (at first): {posterior_entropy[0].item()}")
+        print(f"[PPL Trainer] Posterior Hit (at mid): {map_passage_idx[ans_len//2].item() == 0}, Posterior Entropy (at mid): {posterior_entropy[ans_len//2].item()}")
+        print(f"[PPL Trainer] Posterior Hit (at last): {map_passage_idx[-1].item() == 0}, Posterior Entropy (at last): {posterior_entropy[-1].item()}")
         return (loss, outputs) if return_outputs else loss
     
     @override
