@@ -444,6 +444,13 @@ class PPLArguments:
                     "Recommended values: 4-8 for typical use cases."
         },
     )
+    beft_debug: bool = field(
+        default=False,
+        metadata={
+            "help": "Whether or not to enable debug mode for BEFT training. "
+                    "When enabled, prints detailed batch information including passages, questions, answers, and image paths."
+        },
+    )
 
     
 
@@ -457,7 +464,7 @@ class FinetuningArguments(FreezeArguments, LoraArguments, RLHFArguments, GaloreA
         default=False,
         metadata={"help": "Whether or not to train model in purely bf16 precision (without AMP)."},
     )
-    stage: Literal["pt", "sft", "rm", "ppo", "dpo", "kto", "attn_sft", "ppl", "bepo"] = field(
+    stage: Literal["pt", "sft", "rm", "ppo", "dpo", "kto", "attn_sft", "ppl", "bepo", "beft"] = field(
         default="sft",
         metadata={"help": "Which stage will be performed in training."},
     )

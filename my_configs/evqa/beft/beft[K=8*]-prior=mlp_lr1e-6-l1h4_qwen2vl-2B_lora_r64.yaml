@@ -1,7 +1,14 @@
 ### model
 # model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_EVQA-RAG1_LoRA-SFT
-model_name_or_path: Qwen/Qwen2-VL-7B-Instruct
+# model_name_or_path: Qwen/Qwen2-VL-7B-Instruct
+# model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-2B-Instruct_EVQA-BEFT[K=2*]-prior=mlp[lr1e-6]-l1h4-r64_bs8-epoch1-max=2048
+# ppl_prior_head_path: ../../data/jinghong_chen/Qwen2-VL-2B-Instruct_EVQA-BEFT[K=2*]-prior=mlp[lr1e-6]-l1h4-r64_bs8-epoch1-max=2048/prior_head.pt
 
+model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-2B-Instruct_EVQA-BEFT[K=2*]-prior=mlp[lr1e-6]-l1h4-r64_bs8-epoch1-max=2048
+ppl_prior_head_path: ../../data/jinghong_chen/Qwen2-VL-2B-Instruct_EVQA-BEFT[K=2*]-prior=mlp[lr1e-6]-l1h4-r64_bs8-epoch1-max=2048/prior_head.pt
+
+# model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-2B-Instruct_EVQA-BEFT[K=2*]-prior=mlp[lr1e-6]-l1h4-r64_bs8-step=140000-max=2048 
+# ppl_prior_head_path: ../../data/jinghong_chen/Qwen2-VL-2B-Instruct_EVQA-BEFT[K=2*]-prior=mlp[lr1e-6]-l1h4-r64_bs8-step=140000-max=2048/prior_head.pt
 ### method
 stage: ppl
 do_train: true
@@ -12,8 +19,8 @@ ppl_hidden_state_offset: 4
 ppl_prior_loss_factor: 1.0
 ppl_prior_loss_type: logistic
 prior_head_lr: 1.0e-6
-ppl_enable_chunked_checkpoint: false
-# ppl_forward_chunk_size: 4
+ppl_enable_chunked_checkpoint: true
+ppl_forward_chunk_size: 4
 
 use_ppl_loss: true
 ppl_loss_type: ensemble
@@ -27,22 +34,23 @@ ppl_prior_head_proj_dim: 1024
 dataset: evqa-rag8-answer-ppl-offset=128000-max=2048 # video: mllm_video_demo
 template: qwen2_vl
 cutoff_len: 4096 # set to 8192 for long context 
-# max_samples: 200000
-max_samples: 64
+max_samples: 200000
+# max_samples: 64
 overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: saves/qwen2_vl-2b/lora/evqa/beft/beft[K=8*]-prior=mlp-lr1e-6-l1h4-r64-offset=128000-max=2048
-logging_steps: 10 # 10
+output_dir: saves/qwen2_vl-2b/lora/evqa/beft/beft[K=8*]-cont_epoch1-prior=mlp-lr1e-6-l1h4-r64-offset=128000-max=2048
+# output_dir: saves/qwen2_vl-2b/lora/evqa/beft/beft[K=8*]-cont_step140000-prior=mlp-lr1e-6-l1h4-r64-offset=128000-max=2048
 # save_steps: 5 # 500
+logging_steps: 10 # 10
 save_steps: 500 # 500
 plot_loss: true
 overwrite_output_dir: true
 
 ### train
 per_device_train_batch_size: 1
-gradient_accumulation_steps: 2  # effective batch size = 32
+gradient_accumulation_steps: 4  # effective batch size = 32
 # gradient_accumulation_steps: 32  # effective batch size = 32
 learning_rate: 1.0e-5
 num_train_epochs: 1.0

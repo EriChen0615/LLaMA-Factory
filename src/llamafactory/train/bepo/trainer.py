@@ -152,10 +152,10 @@ class CustomBEPOTrainer(DPOTrainer):
                 
                 if not prior_head_param_ids.issubset(optimizer_params):
                     # Add prior_head parameters as a new param group
-                    logger.info(f"Adding {len(prior_head_params)} prior_head parameters to optimizer")
+                    logger.info(f"Adding {len(prior_head_params)} prior_head parameters to optimizer. LR={self.finetuning_args.prior_head_lr}")
                     self.optimizer.add_param_group({
                         'params': prior_head_params,
-                        'lr': self.args.learning_rate,
+                        'lr': self.finetuning_args.prior_head_lr,
                         'weight_decay': self.args.weight_decay,
                     })
                 else:

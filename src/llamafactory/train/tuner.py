@@ -34,6 +34,7 @@ from .sft import run_sft
 from .attn_sft import run_attn_sft
 from .ppl import run_ppl
 from .bepo import run_bepo
+from .beft import run_beft
 
 if TYPE_CHECKING:
     from transformers import TrainerCallback
@@ -64,6 +65,8 @@ def run_exp(args: Optional[Dict[str, Any]] = None, callbacks: List["TrainerCallb
         run_ppl(model_args, data_args, training_args, finetuning_args, generating_args, callbacks)
     elif finetuning_args.stage == "bepo":
         run_bepo(model_args, data_args, training_args, finetuning_args, callbacks)
+    elif finetuning_args.stage == "beft":
+        run_beft(model_args, data_args, training_args, finetuning_args, generating_args, callbacks)
     else:
         raise ValueError("Unknown task: {}.".format(finetuning_args.stage))
 

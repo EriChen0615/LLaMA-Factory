@@ -6,15 +6,15 @@ ppl_prior_modeling: mlp_head
 ppl_prior_head_num_of_layers: 2
 ppl_prior_head_proj_dim: 1024
 ppl_hidden_state_offset: 4
-prior_head_lr: 1.0e-6
+prior_head_lr: 5.0e-7
 
 ### method
 stage: bepo
 do_train: true
 finetuning_type: lora
 lora_target: all
-lora_rank: 64
-pref_beta: 0.3
+lora_rank: 8
+pref_beta: 0.7
 pref_loss: sigmoid
 
 ppl_prior_loss_type: logistic
@@ -22,7 +22,7 @@ ppl_prior_loss_factor: 0.0
 use_prior_head_loss: false
 
 ### dataset
-dataset: evqa-bepo_K=2-size=64000-max=2048 # video: mllm_video_demo
+dataset: evqa-bepo_K=2-mostllk-size=64000-max=2048 # video: mllm_video_demo
 template: qwen2_vl
 cutoff_len: 8192 # set to 8192 for long context 
 max_samples: 200000 # 200000
@@ -31,7 +31,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: saves/qwen2_vl-2b/lora/evqa/bepo/bepo[K=2]_l0_prior=mlp[lr1e-6]-r64_bs8-epoch1-beta=0.3
+output_dir: saves/qwen2_vl-2b/lora/evqa/bepo/bepo[K=2]_l0_prior=mlp[lr1e-6]-r8_bs8-epoch1-mostllk-beta=0.7
 logging_steps: 1
 save_steps: 500
 plot_loss: true
@@ -41,7 +41,7 @@ overwrite_output_dir: true
 per_device_train_batch_size: 1
 # gradient_accumulation_steps: 32
 gradient_accumulation_steps: 4 
-learning_rate: 1.0e-5
+learning_rate: 5.0e-6
 num_train_epochs: 1.0
 lr_scheduler_type: cosine
 warmup_ratio: 0.1

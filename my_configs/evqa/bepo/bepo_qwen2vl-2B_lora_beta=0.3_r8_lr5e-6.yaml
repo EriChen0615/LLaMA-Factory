@@ -13,7 +13,7 @@ stage: bepo
 do_train: true
 finetuning_type: lora
 lora_target: all
-lora_rank: 64
+lora_rank: 8
 pref_beta: 0.3
 pref_loss: sigmoid
 
@@ -31,7 +31,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: saves/qwen2_vl-2b/lora/evqa/bepo/bepo[K=2]_l0_prior=mlp[lr1e-6]-r64_bs8-epoch1-beta=0.3
+output_dir: saves/qwen2_vl-2b/lora/evqa/bepo/bepo[K=2]_l0_prior=mlp[lr1e-6]-r8_bs8-epoch1-beta=0.3
 logging_steps: 1
 save_steps: 500
 plot_loss: true
@@ -41,7 +41,7 @@ overwrite_output_dir: true
 per_device_train_batch_size: 1
 # gradient_accumulation_steps: 32
 gradient_accumulation_steps: 4 
-learning_rate: 1.0e-5
+learning_rate: 5.0e-6
 num_train_epochs: 1.0
 lr_scheduler_type: cosine
 warmup_ratio: 0.1
