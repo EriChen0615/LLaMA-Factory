@@ -1,0 +1,74 @@
+### model
+model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-BEFT[K=2]-data=64000-LoRA
+# model_name_or_path: Qwen/Qwen2-VL-7B-Instruct
+
+### method
+stage: beft
+do_train: true
+finetuning_type: lora
+lora_target: all
+lora_rank: 64
+
+### PPL/BEFT configuration
+use_ppl_loss: true
+ppl_loss_type: ensemble
+use_ensemble_loss: true
+
+### Prior head configuration
+ppl_prior_modeling: mlp_head
+use_prior_head_loss: true
+ppl_prior_head_num_of_layers: 2
+ppl_prior_head_proj_dim: 1024
+ppl_prior_head_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-BEFT[K=2]-data=64000-LoRA/prior_head.pt
+ppl_prior_loss_factor: 1.0
+ppl_prior_loss_type: logistic
+ppl_hidden_state_offset: 4
+prior_head_lr: 1.0e-6
+freeze_prior_head_weights: false
+
+### Deflection head configuration
+ppl_deflection_modeling: mlp_head
+use_deflection_head_loss: true
+ppl_deflection_head_num_of_layers: 2
+ppl_deflection_head_proj_dim: 1024
+ppl_deflection_head_path: null
+ppl_deflection_loss_factor: 1.0
+
+### Chunked checkpointing (optional)
+ppl_enable_chunked_checkpoint: false
+ppl_forward_chunk_size: null
+
+### BEFT debug
+beft_debug: false
+
+### dataset
+dataset: infoseek-rag2-answer-controlled-deflection-ratio=0.5-size=64000-max=4096
+template: qwen2_vl
+# cutoff_len: 4096
+max_samples: 200000
+overwrite_cache: true
+preprocessing_num_workers: 8
+
+### output
+output_dir: saves/qwen2_vl-7b/lora/infoseek_new/beft/cont-beft-d[K=2*]-prior=mlp-lr1e-6-l1h4-r64-deflection-size=64000-max=4096
+logging_steps: 10 
+# logging_steps: 2 
+save_steps: 500
+plot_loss: true
+overwrite_output_dir: true
+
+### train
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 4  # effective batch size = 8
+learning_rate: 1.0e-5
+num_train_epochs: 1.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+bf16: true
+ddp_timeout: 180000000
+
+### eval
+val_size: 0.0001
+per_device_eval_batch_size: 1
+eval_strategy: steps
+eval_steps: 500

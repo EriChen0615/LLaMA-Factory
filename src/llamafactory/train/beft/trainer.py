@@ -79,12 +79,31 @@ class CustomSeq2SeqBEFTTrainer(CustomSeq2SeqPPLTrainer):
         
         bs = inputs["input_ids"].size(0)
         K = bs
+        
+        # Extract deflection labels from inputs
+        deflection_labels = inputs.pop("deflection", None)
+        if deflection_labels is not None:
+            # Deflection is per example, not per passage. In BEFT, we typically have batch_size=1 per feature with K passages
+            # So we need to expand deflection_label to match K passages (all passages from same example have same deflection)
+            if deflection_labels.dim() == 0:
+                deflection_labels = deflection_labels.unsqueeze(0)
+            # Ensure deflection_labels is on the correct device
+            device = inputs["input_ids"].device
+            deflection_labels = deflection_labels.to(device)
+            # For now, assume one deflection label per feature, and we have K passages from that feature
+            # So we repeat the deflection label K times
+            if len(deflection_labels) == 1 and K > 1:
+                deflection_labels = deflection_labels.repeat(K)
+            elif len(deflection_labels) != K:
+                # If mismatch, use first label for all passages
+                deflection_labels = deflection_labels[0:1].repeat(K)
 
         # Use chunked forward with checkpointing if K exceeds chunk size
+        return_hidden_states = self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'] or self.finetuning_args.ppl_deflection_modeling in ['mlp_head', 'linear_head']
         if self.finetuning_args.ppl_enable_chunked_checkpoint and self.finetuning_args.ppl_forward_chunk_size is not None and K > self.finetuning_args.ppl_forward_chunk_size:
-            pos_logps, neg_logps, per_token_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward_chunk_checkpointing(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
+            pos_logps, neg_logps, per_token_logps, all_logits, outputs, ans_len, hidden_at_pre_label, hidden_at_eos = self.concatenated_forward_chunk_checkpointing(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=return_hidden_states)
         else:
-            pos_logps, neg_logps, _, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
+            pos_logps, neg_logps, _, all_logits, outputs, ans_len, hidden_at_pre_label, hidden_at_eos = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=return_hidden_states)
             per_token_logps = None
 
         prior_logits = None
@@ -94,10 +113,20 @@ class CustomSeq2SeqBEFTTrainer(CustomSeq2SeqPPLTrainer):
             else:
                 raise NotImplementedError(f"Prior modeling type {self.finetuning_args.ppl_prior_modeling} is not implemented")
 
+        # Compute deflection logits from hidden states at EOS token
+        deflection_logits = None
+        if self.deflection_head is not None and hidden_at_eos is not None:
+            deflection_logits = self.deflection_head(hidden_at_eos)  # Shape: [K, 1]
+
         from ..ppl.ppl_loss import compute_ensemble_loss
         
-        # Only use ensemble loss
-        beft_loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ensemble_loss(all_logits, inputs["labels"], prior_logits, per_token_logps=per_token_logps)
+        # Only use ensemble loss, pass deflection_logits and deflection_labels if available
+        beft_loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ensemble_loss(
+            all_logits, inputs["labels"], prior_logits, 
+            per_token_logps=per_token_logps,
+            deflection_logits=deflection_logits,
+            deflection_labels=deflection_labels
+        )
         
         loss = torch.tensor(0.0, device=self.model.device)
         if self.finetuning_args.use_ensemble_loss:
@@ -125,6 +154,38 @@ class CustomSeq2SeqBEFTTrainer(CustomSeq2SeqPPLTrainer):
             else:
                 raise NotImplementedError(f"Prior loss type {self.finetuning_args.ppl_prior_loss_type} is not implemented")
             loss += prior_loss
+
+        # Compute deflection loss if deflection head is enabled
+        deflection_loss = torch.tensor(0.0, device=self.model.device)
+        deflection_accuracy = torch.tensor(0.0, device=self.model.device)
+        deflection_hit_rate = torch.tensor(0.0, device=self.model.device)
+        if self.deflection_head is not None and deflection_logits is not None and deflection_labels is not None and self.finetuning_args.use_deflection_head_loss:
+            import torch.nn.functional as F
+            deflection_lambda = self.finetuning_args.ppl_deflection_loss_factor
+            # Compute binary cross entropy loss
+            deflection_loss = F.binary_cross_entropy_with_logits(
+                deflection_logits.squeeze(-1), 
+                deflection_labels.float()
+            ) * deflection_lambda
+            loss += deflection_loss
+            
+            # Compute deflection accuracy (binary classification accuracy)
+            deflection_probs = torch.sigmoid(deflection_logits.squeeze(-1))
+            deflection_preds = (deflection_probs > 0.5).float()
+            deflection_accuracy = (deflection_preds == deflection_labels.float()).float().mean()
+            
+            # Compute deflection hit rate: when label=1 (should deflect), what fraction is predicted as 1
+            # This is recall/true positive rate: TP / (TP + FN)
+            deflection_labels_float = deflection_labels.float()
+            positive_mask = deflection_labels_float == 1.0
+            if positive_mask.any():
+                # Only compute hit rate when there are positive examples
+                true_positives = (deflection_preds * deflection_labels_float).sum()
+                total_positives = deflection_labels_float.sum()
+                deflection_hit_rate = true_positives / total_positives
+            else:
+                # No positive examples in this batch, set hit rate to 0 or NaN
+                deflection_hit_rate = torch.tensor(0.0, device=self.model.device)
 
         # Logging
         # posterior_logprob.shape = [K, # ans tokens]
@@ -156,6 +217,9 @@ class CustomSeq2SeqBEFTTrainer(CustomSeq2SeqPPLTrainer):
         self._metrics["posterior_loss"].append(posterior_loss.item())
         self._metrics["llk_loss"].append(llk_loss.item())
         self._metrics["prior_loss"].append(prior_loss.item())
+        self._metrics["deflection_loss"].append(deflection_loss.item())
+        self._metrics["deflection_accuracy"].append(deflection_accuracy.item())
+        self._metrics["deflection_hit_rate"].append(deflection_hit_rate.item())
         self._metrics["total_loss"].append(loss.item())
         self._metrics["posterior_hit_at_first"].append(any(map_passage_idx[0].item() == idx for idx in gt_passage_idx_list))
         self._metrics["posterior_hit_at_mid"].append(any(map_passage_idx[ans_len//2].item() == idx for idx in gt_passage_idx_list))
@@ -302,6 +366,12 @@ class CustomSeq2SeqBEFTTrainer(CustomSeq2SeqPPLTrainer):
             metrics["llk_loss"] = sum(self._metrics["llk_loss"]) / len(self._metrics["llk_loss"])
         if self._metrics["prior_loss"]:
             metrics["prior_loss"] = sum(self._metrics["prior_loss"]) / len(self._metrics["prior_loss"])
+        if self._metrics.get("deflection_loss"):
+            metrics["deflection_loss"] = sum(self._metrics["deflection_loss"]) / len(self._metrics["deflection_loss"])
+        if self._metrics.get("deflection_accuracy"):
+            metrics["deflection_accuracy"] = sum(self._metrics["deflection_accuracy"]) / len(self._metrics["deflection_accuracy"])
+        if self._metrics.get("deflection_hit_rate"):
+            metrics["deflection_hit_rate"] = sum(self._metrics["deflection_hit_rate"]) / len(self._metrics["deflection_hit_rate"])
         if self._metrics["prior_hit"]:
             metrics["prior_hit"] = sum(self._metrics["prior_hit"]) / len(self._metrics["prior_hit"])
         if self._metrics.get("prior_accuracy_threshold_0.5"):

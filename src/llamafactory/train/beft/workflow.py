@@ -46,11 +46,15 @@ class BEFTDataCollator(MultiModalDataCollatorForSeq2Seq):
     def __call__(self, features):
         concatenated_features = []
         passage_image_paths_batch = []  # Store image paths for each feature
+        deflection_labels = []  # Store deflection labels (one per feature)
         
         for feature in features:
             K = len(feature["all_input_ids"])
             expanded_features = [None] * K
             gt_passage_idx = feature["gt_passage_idx"]
+            # Extract deflection label (default to 0 if not present)
+            deflection_label = feature.get("deflection", 0)
+            deflection_labels.append(deflection_label)
             
             # Normalize gt_passage_idx to list format
             if isinstance(gt_passage_idx, list):
@@ -61,7 +65,6 @@ class BEFTDataCollator(MultiModalDataCollatorForSeq2Seq):
             
             # Get passage-specific images if available, otherwise use main images
             all_passage_images = feature.get("all_passage_images", None)
-            # print("all_passage_images:", all_passage_images)
             # Store image paths for this feature (for debugging)
             feature_image_paths = []
             
@@ -69,7 +72,6 @@ class BEFTDataCollator(MultiModalDataCollatorForSeq2Seq):
             # Add is_gt_passage flag to each expanded feature (as int, will be converted to tensor by parent)
             for idx, (input_ids, attention_mask, labels) in enumerate(zip(feature["all_input_ids"], feature["all_attention_mask"], feature["all_labels"])):
                 passage_images = all_passage_images[idx] if idx < len(all_passage_images) else feature["images"]
-                print("passage_images:", passage_images)
                 # Extract image paths (images can be list of paths or single path)
                 passage_image_paths = []
                 if isinstance(passage_images, list):
@@ -130,6 +132,11 @@ class BEFTDataCollator(MultiModalDataCollatorForSeq2Seq):
             # Convert string to bytes and then to tensor (can be moved to device safely)
             path_bytes = all_paths_str.encode('utf-8')
             batch["_passage_image_paths_tokenized"] = torch.tensor(list(path_bytes), dtype=torch.long)
+        
+        # Store deflection labels in batch (one per original feature, not per passage)
+        # In BEFT, typically batch_size=1 per feature, so we have one deflection label for K passages
+        if deflection_labels:
+            batch["deflection"] = torch.tensor(deflection_labels, dtype=torch.long)
         
         return batch
 

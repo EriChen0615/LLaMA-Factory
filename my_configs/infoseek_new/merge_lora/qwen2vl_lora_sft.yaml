@@ -8,9 +8,14 @@
 # adapter_name_or_path: "saves/qwen2_vl-7b/lora/infoseek_new/rag1_answer/checkpoint-2000" # QWen/QWen2-VL-2B-Instruct
 # export_dir: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-RAG1_LoRA-SFT
 
-model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-RAG1_LoRA-SFT
-adapter_name_or_path: "saves/qwen2_vl-7b/lora/infoseek_new/rag5_answer-sft_max=16384=1e-5/checkpoint-1349" 
-export_dir: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-RAG5_LoRA-SFT
+# model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-RAG1_LoRA-SFT
+# adapter_name_or_path: "saves/qwen2_vl-7b/lora/infoseek_new/rag5_answer-sft_max=16384=1e-5/checkpoint-1349" 
+# export_dir: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-RAG5_LoRA-SFT
+
+model_name_or_path: Qwen/Qwen2-VL-7B-Instruct
+adapter_name_or_path: "saves/qwen2_vl-7b/lora/infoseek_new/beft/beft[K=2*]-prior=mlp-lr1e-6-l1h4-r64-size=64000-max=4096/checkpoint-7950" 
+export_dir: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-BEFT[K=2]-data=64000-LoRA
+
 
 template: qwen2_vl
 finetuning_type: lora

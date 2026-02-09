@@ -92,6 +92,49 @@ def initialize_prior_head(finetuning_args: "FinetuningArguments", hidden_size: i
         print(f"[PPL Trainer - Prior Head] No Prior head")
     return prior_head
 
+def initialize_deflection_head(finetuning_args: "FinetuningArguments", hidden_size: int):
+    print(f"[PPL Trainer] Deflection head modeling: {finetuning_args.ppl_deflection_modeling}")
+    print(f"[PPL Trainer] Use deflection head loss: {finetuning_args.use_deflection_head_loss}")
+    print(f"[PPL Trainer] Deflection head loss factor: {finetuning_args.ppl_deflection_loss_factor}")
+
+    deflection_head = None
+    if finetuning_args.ppl_deflection_modeling in ['mlp_head']:
+        # Initialize a 2-layer MLP head of shape [h]
+        input_dim = hidden_size
+        proj_dim = finetuning_args.ppl_deflection_head_proj_dim
+
+        mlp_layers = []
+        for i in range(finetuning_args.ppl_deflection_head_num_of_layers - 1):
+            mlp_layers.append(nn.Linear(input_dim, proj_dim))
+            mlp_layers.append(nn.ReLU())
+            input_dim = proj_dim
+        mlp_layers.append(nn.Linear(input_dim, 1))
+
+        deflection_head = nn.Sequential(*mlp_layers)
+        print(f"[PPL Trainer - Deflection Head] Deflection head number of layers: {finetuning_args.ppl_deflection_head_num_of_layers}")
+        print(f"[PPL Trainer - Deflection Head] Deflection head projection dimension: {proj_dim}")
+        print(f"[PPL Trainer - Deflection Head] Deflection head parameters: {sum(p.numel() for p in deflection_head.parameters())}")
+        if finetuning_args.ppl_deflection_head_path is not None:
+            deflection_head.load_state_dict(torch.load(finetuning_args.ppl_deflection_head_path))
+            print(f"[PPL Trainer - Deflection Head] Deflection head loaded from {finetuning_args.ppl_deflection_head_path}")
+        else:
+            print(f"[PPL Trainer - Deflection Head] No deflection head path provided, initializing a new deflection head")
+    elif finetuning_args.ppl_deflection_modeling == 'linear_head':
+        input_dim = hidden_size
+        proj_dim = finetuning_args.ppl_deflection_head_proj_dim
+        layers = []
+        for _ in range(finetuning_args.ppl_deflection_head_num_of_layers - 1):
+            layers.append(nn.Linear(input_dim, proj_dim))
+            input_dim = proj_dim
+        layers.append(nn.Linear(input_dim, 1))
+        deflection_head = nn.Sequential(*layers)
+        print(f"[PPL Trainer - Deflection Head] Deflection head number of layers: {finetuning_args.ppl_deflection_head_num_of_layers}")
+        print(f"[PPL Trainer - Deflection Head] Deflection head projection dimension: {proj_dim}")
+        print(f"[PPL Trainer - Deflection Head] Deflection head parameters: {sum(p.numel() for p in deflection_head.parameters())}")
+    else:
+        print(f"[PPL Trainer - Deflection Head] No Deflection head")
+    return deflection_head
+
 def get_last_hidden_state_before_label(hidden_states: "torch.Tensor", labels: "torch.Tensor", hidden_state_offset: int = 0) -> "torch.Tensor":
     label_indices = (labels != IGNORE_INDEX).nonzero(as_tuple=False)
     
@@ -105,6 +148,24 @@ def get_last_hidden_state_before_label(hidden_states: "torch.Tensor", labels: "t
     # Get hidden states at position just before first label
     hidden_at_pre_label = hidden_states[torch.arange(labels.size(0), device=labels.device), pre_label_indices_tensor, :]
     return hidden_at_pre_label
+
+def get_last_hidden_state_at_eos(hidden_states: "torch.Tensor", input_ids: "torch.Tensor", tokenizer) -> "torch.Tensor":
+    """
+    Extract hidden states at the last token position for each sequence.
+    Since left padding is enforced, the last token (-1 position) is the actual last token of the sequence.
+    Args:
+        hidden_states: [batch_size, seq_len, hidden_size]
+        input_ids: [batch_size, seq_len]
+        tokenizer: tokenizer to verify left padding is enforced
+    Returns:
+        hidden_at_eos: [batch_size, hidden_size]
+    """
+    # Verify left padding is enforced
+    assert tokenizer.padding_side == "left", "This method requires left padding. Set tokenizer.padding_side = 'left'"
+    
+    # With left padding, the last token position (-1) is the actual last token (EOS)
+    # Simply extract hidden states at the last position for all sequences
+    return hidden_states[:, -1, :]
 
 
 class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
@@ -140,6 +201,17 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         print(f"[PPL Trainer] Hidden state offset: {finetuning_args.ppl_hidden_state_offset}")
         print(f"[PPL Trainer] Prior head loss factor: {finetuning_args.ppl_prior_loss_factor}")
 
+        self.prior_head = initialize_prior_head(finetuning_args, hidden_size=self.model.config.hidden_size)
+        if self.prior_head is not None:
+            # Prepare prior_head with accelerator for proper distributed training and mixed precision
+            self.prior_head = self.accelerator.prepare_model(self.prior_head, evaluation_mode=False)
+        
+        # Initialize deflection head
+        self.deflection_head = initialize_deflection_head(finetuning_args, hidden_size=self.model.config.hidden_size)
+        if self.deflection_head is not None:
+            # Prepare deflection_head with accelerator for proper distributed training and mixed precision
+            self.deflection_head = self.accelerator.prepare_model(self.deflection_head, evaluation_mode=False)
+
         # if finetuning_args.ppl_prior_modeling == 'mlp_head':
         #     # Initialize a 2-layer MLP head of shape [h]
         #     input_dim = self.model.config.hidden_size
@@ -158,18 +230,6 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         #     print(f"[PPL Trainer - Prior Head] Prior head parameters: {sum(p.numel() for p in self.prior_head.parameters())}")
         #     if finetuning_args.ppl_prior_head_path is not None:
         #         self.prior_head.load_state_dict(torch.load(finetuning_args.ppl_prior_head_path))
-        #         print(f"[PPL Trainer - Prior Head] Prior head loaded from {finetuning_args.ppl_prior_head_path}")
-        #     else:
-        #         print(f"[PPL Trainer - Prior Head] No prior head path provided, initializing a new prior head")
-        #     self.prior_head.to(self.model.device)
-        # else:
-        #     self.prior_head = None
-        #     print(f"[PPL Trainer - Prior Head] No Prior head")
-        self.prior_head = initialize_prior_head(finetuning_args, hidden_size=self.model.config.hidden_size)
-        if self.prior_head is not None:
-            # Prepare prior_head with accelerator for proper distributed training and mixed precision
-            self.prior_head = self.accelerator.prepare_model(self.prior_head, evaluation_mode=False)
-        
         if self.finetuning_args.ppl_prior_loss_type in ['logistic', 'logistic+llk']:
             self.prior_loss_fn = nn.BCEWithLogitsLoss()
 
@@ -194,6 +254,9 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
                 param.requires_grad = False
         else:
             print(f"[PPL Trainer] Prior head weights are trainable")
+        
+        if self.deflection_head is not None:
+            print(f"[PPL Trainer] Deflection head weights are trainable")
         
         print(f"[PPL Trainer] ppl_enable_chunked_checkpoint: {self.finetuning_args.ppl_enable_chunked_checkpoint}")
         print(f"[PPL Trainer] ppl_forward_chunk_size: {self.finetuning_args.ppl_forward_chunk_size}")
@@ -226,12 +289,15 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         
         # Extract last-layer hidden states at position just before the first label
         hidden_at_pre_label = None
+        hidden_at_eos = None
         if return_hidden_states:
             hidden_states = outputs["hidden_states"]
             last_hidden_states = hidden_states[-1]  # Shape: [batch_size, seq_len, hidden_size]
             hidden_at_pre_label = get_last_hidden_state_before_label(last_hidden_states, labels, hidden_state_offset=hidden_state_offset)
+            # Extract hidden states at EOS token for deflection head
+            hidden_at_eos = get_last_hidden_state_at_eos(last_hidden_states, batch["input_ids"], self.tokenizer)
         
-        return pos_logps, neg_logps, all_logps, all_logits, outputs, lengths[0], hidden_at_pre_label
+        return pos_logps, neg_logps, all_logps, all_logits, outputs, lengths[0], hidden_at_pre_label, hidden_at_eos
 
     def concatenated_forward_chunk_checkpointing(self, model, batch, hidden_state_offset=0, return_hidden_states=True):
         r"""
@@ -251,6 +317,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         # Process K passages in chunks
         all_logits_list = []
         all_hidden_states_list = []
+        all_hidden_at_eos_list = []
         all_per_token_logps_list = []
         last_outputs = None
         
@@ -307,6 +374,14 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
                     hidden_state_offset=hidden_state_offset
                 )
                 all_hidden_states_list.append(hidden_at_pre_label_chunk)
+                
+                # Extract hidden states at EOS token for deflection head
+                hidden_at_eos_chunk = get_last_hidden_state_at_eos(
+                    last_hidden_states_chunk,
+                    chunk_batch["input_ids"],
+                    self.tokenizer
+                )
+                all_hidden_at_eos_list.append(hidden_at_eos_chunk)
             
             labels_shifted = chunk_batch["labels"][:, 1:].clone()
             logits_shifted = outputs_chunk.logits[:, :-1, :]
@@ -329,12 +404,14 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         
         # Concatenate hidden states
         hidden_at_pre_label = None
+        hidden_at_eos = None
         if return_hidden_states and all_hidden_states_list:
             hidden_at_pre_label = torch.cat(all_hidden_states_list, dim=0)  # Shape: [K, hidden_size]
-
+            # Concatenate EOS hidden states
+            if all_hidden_at_eos_list:
+                hidden_at_eos = torch.cat(all_hidden_at_eos_list, dim=0)  # Shape: [K, hidden_size]
         
-        
-        return pos_logps, neg_logps, all_per_token_logps, None, last_outputs, lengths[0], hidden_at_pre_label
+        return pos_logps, neg_logps, all_per_token_logps, None, last_outputs, lengths[0], hidden_at_pre_label, hidden_at_eos
 
     def compute_loss(self, model, inputs, num_items_in_batch=None, return_outputs=False, eval_mode=False):
         """
@@ -362,10 +439,11 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             K = bs//2
 
         # Use chunked forward with checkpointing if K exceeds chunk size
+        return_hidden_states = self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'] or self.finetuning_args.ppl_deflection_modeling in ['mlp_head', 'linear_head']
         if self.finetuning_args.ppl_enable_chunked_checkpoint and self.finetuning_args.ppl_forward_chunk_size is not None and K > self.finetuning_args.ppl_forward_chunk_size:
-            pos_logps, neg_logps, per_token_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward_chunk_checkpointing(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
+            pos_logps, neg_logps, per_token_logps, all_logits, outputs, ans_len, hidden_at_pre_label, hidden_at_eos = self.concatenated_forward_chunk_checkpointing(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=return_hidden_states)
         else:
-            pos_logps, neg_logps, _, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
+            pos_logps, neg_logps, _, all_logits, outputs, ans_len, hidden_at_pre_label, hidden_at_eos = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=return_hidden_states)
             per_token_logps = None
 
         prior_logits = None
@@ -484,6 +562,29 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
                     })
                 else:
                     logger.info("Prior_head parameters already in optimizer")
+        
+        # Add deflection_head parameters to the optimizer if it exists and is trainable
+        if self.deflection_head is not None and self.optimizer is not None:
+            deflection_head_params = list(self.deflection_head.parameters())
+            if deflection_head_params and deflection_head_params[0].requires_grad:
+                # Check if deflection_head params are already in optimizer
+                optimizer_params = set()
+                for group in self.optimizer.param_groups:
+                    optimizer_params.update(id(p) for p in group['params'])
+                
+                deflection_head_param_ids = set(id(p) for p in deflection_head_params)
+                
+                if not deflection_head_param_ids.issubset(optimizer_params):
+                    # Add deflection_head parameters as a new param group
+                    # Use same learning rate as prior head
+                    logger.info(f"Adding {len(deflection_head_params)} deflection_head parameters to optimizer. LR={self.finetuning_args.prior_head_lr}")
+                    self.optimizer.add_param_group({
+                        'params': deflection_head_params,
+                        'lr': self.finetuning_args.prior_head_lr,
+                        'weight_decay': self.args.weight_decay,
+                    })
+                else:
+                    logger.info("Deflection_head parameters already in optimizer")
         
         # Report total trainable parameters in optimizer
         logger.info("=" * 80)
@@ -655,21 +756,29 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
     @override
     def save_model(self, output_dir: Optional[str] = None, _internal_call: bool = False):
         """
-        Override save_model to save prior_head (mlp_head) as a separate .pt file.
+        Override save_model to save prior_head and deflection_head (mlp_head) as separate .pt files.
         """
         # Call parent save_model first
         super().save_model(output_dir, _internal_call)
         
+        if output_dir is None:
+            output_dir = self.args.output_dir
+        
+        # Ensure output directory exists (important for distributed training)
+        os.makedirs(output_dir, exist_ok=True)
+        
         # Save prior_head separately if it exists (only on main process)
         if self.accelerator.is_main_process and hasattr(self, 'prior_head') and self.prior_head is not None:
-            if output_dir is None:
-                output_dir = self.args.output_dir
-            
-            # Ensure output directory exists (important for distributed training)
-            os.makedirs(output_dir, exist_ok=True)
-            
             prior_head_path = os.path.join(output_dir, "prior_head.pt")
             # Unwrap the model if it's wrapped by accelerator (e.g., DDP)
             prior_head_to_save = self.accelerator.unwrap_model(self.prior_head)
             torch.save(prior_head_to_save.state_dict(), prior_head_path)
             logger.info(f"Saved prior_head to {prior_head_path}")
+        
+        # Save deflection_head separately if it exists (only on main process)
+        if self.accelerator.is_main_process and hasattr(self, 'deflection_head') and self.deflection_head is not None:
+            deflection_head_path = os.path.join(output_dir, "deflection_head.pt")
+            # Unwrap the model if it's wrapped by accelerator (e.g., DDP)
+            deflection_head_to_save = self.accelerator.unwrap_model(self.deflection_head)
+            torch.save(deflection_head_to_save.state_dict(), deflection_head_path)
+            logger.info(f"Saved deflection_head to {deflection_head_path}")

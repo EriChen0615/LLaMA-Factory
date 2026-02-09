@@ -49,12 +49,17 @@ def compute_joint_loss(pos_logps, logits, labels, prior_logits=None):
 
     return total_loss.squeeze(0), posterior_loss.squeeze(0), llk_loss.squeeze(0), posterior_logprob, log_passage_prior
 
-def compute_ensemble_loss(logits, labels, prior_logits=None, per_token_logps=None):
+def compute_ensemble_loss(logits, labels, prior_logits=None, per_token_logps=None, deflection_logits=None, deflection_labels=None):
     """
     Let pk(i) denotes the i-th answer token probability when conditioned on the k-th passage.
     qk(i) denotes the cumulative log-probability of the answer tokens up to the i-th token (not included) when conditioned on the k-th passage.
     Let mk denote the prior probability of the k-th passage.
     loss = - sum_i log(sum_k exp(log[pk(i)] + log[qk(i)]+log[mk] + sum_k' log[qk'(i)]+log[mk']))
+    
+    For deflection (step N+1):
+    - p_k,N+1 = s_k^d * (1-s_k)^(1-d) where s_k = sigmoid(deflection_logits[k]) and d is deflection label
+    - logp_k,N+1 = d * log(s_k) + (1-d) * log(1-s_k)
+    - Uses passage posterior computed from all N answer tokens
     """
     device = per_token_logps.device if per_token_logps is not None else logits.device
     if prior_logits is not None:
@@ -75,6 +80,37 @@ def compute_ensemble_loss(logits, labels, prior_logits=None, per_token_logps=Non
 
     step_marginalized = torch.logsumexp(step_passage_marginalized, dim=0) # logsumexp over all K , shape (N, )
     loss = -step_marginalized.sum(dim=0) # sum over all N
+    
+    # Add deflection step (N+1) if deflection_logits and deflection_labels are provided
+    if deflection_logits is not None and deflection_labels is not None:
+        # Compute deflection probabilities: s_k = sigmoid(deflection_logits[k])
+        # logp_k,N+1 = d * log(s_k) + (1-d) * log(1-s_k)
+        deflection_logits_flat = deflection_logits.squeeze(-1)  # shape (K,)
+        deflection_labels_flat = deflection_labels.float()  # shape (K,)
+        
+        # Compute s_k = sigmoid(deflection_logits[k]) in log-space for numerical stability
+        # log(s_k) = -log(1 + exp(-deflection_logits[k]))
+        # log(1-s_k) = -log(1 + exp(deflection_logits[k]))
+        log_s_k = -torch.nn.functional.softplus(-deflection_logits_flat)  # log(sigmoid(deflection_logits))
+        log_one_minus_s_k = -torch.nn.functional.softplus(deflection_logits_flat)  # log(1 - sigmoid(deflection_logits))
+        
+        # logp_k,N+1 = d * log(s_k) + (1-d) * log(1-s_k)
+        logp_deflection = deflection_labels_flat * log_s_k + (1 - deflection_labels_flat) * log_one_minus_s_k  # shape (K,)
+        
+        # Compute passage posterior at step N+1 using cumulative logps from all N answer tokens
+        # logq_k,N+1 = cumulative_token_logps[:, N-1] (last cumulative logp, i.e., sum of all N tokens)
+        logq_N_plus_1 = cumulative_token_logps[:, N-1] if N > 0 else torch.zeros((K,), device=device)  # shape (K,)
+        
+        # Passage posterior at step N+1
+        log_passage_posterior_N_plus_1 = logq_N_plus_1.unsqueeze(-1) + logm - torch.logsumexp(logq_N_plus_1.unsqueeze(-1) + logm, dim=0)  # shape (K, 1)
+        log_passage_posterior_N_plus_1 = log_passage_posterior_N_plus_1.squeeze(-1)  # shape (K,)
+        
+        # Marginalized deflection probability: sum over passages
+        step_marginalized_N_plus_1 = torch.logsumexp(logp_deflection + log_passage_posterior_N_plus_1, dim=0)  # scalar
+        
+        # Add to loss
+        loss = loss - step_marginalized_N_plus_1
+    
     return loss, -log_passage_posterior[0].sum(-1), -logp.sum(dim=0).sum(dim=0), log_passage_posterior, log_passage_prior.squeeze(1)
 
 def _get_token_cumulative_logps(

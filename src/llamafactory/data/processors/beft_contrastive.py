@@ -41,8 +41,26 @@ def _expand_prompt_with_passages(prompt: Sequence[Dict[str, str]], passages: Seq
     for psg_idx, psg in enumerate(passages):
         this_prompt = deepcopy(prompt)
         prompt_content = this_prompt[-1]['content']
+        
+        # Ensure prompt_content is a string
+        if not isinstance(prompt_content, str):
+            raise TypeError(f"Prompt content at index {psg_idx} is not a string. Got type: {type(prompt_content)}, value: {prompt_content}")
+        
         # Extract text from passage dictionary
-        passage_text = psg.get("text", "") if isinstance(psg, dict) else str(psg)
+        if isinstance(psg, dict):
+            if "text" not in psg:
+                raise ValueError(f"Passage at index {psg_idx} is a dict but missing 'text' key. Passage: {psg}")
+            passage_text = psg["text"]
+            if not isinstance(passage_text, str):
+                raise TypeError(f"Passage at index {psg_idx} has 'text' key but value is not a string. Got type: {type(passage_text)}, value: {passage_text}")
+        else:
+            # If it's not a dict, convert to string
+            passage_text = str(psg)
+        
+        # Ensure passage_text is a string before replace
+        if not isinstance(passage_text, str):
+            raise TypeError(f"passage_text is not a string after processing. Got type: {type(passage_text)}, value: {passage_text}")
+        
         prompt_content_with_passage = prompt_content.replace("<<<EVIDENCE>>>", passage_text)
         this_prompt[-1]['content'] = prompt_content_with_passage
 
@@ -67,8 +85,7 @@ def _encode_beft_contrastive_example(
     mask_history: bool,
 ) -> Tuple[List[int], List[int], List[int], List[List["ImageInput"]]]:
     """
-    Encode BEFT contrastive example. Each passage has its own images list: only passage-specific images.
-    No main images are used in this setup - each passage has its own distinct image.
+    Encode BEFT contrastive example. Each passage has its own images list: main images + passage-specific images.
     Returns all_input_ids, all_attention_masks, all_labels, and all_passage_images.
     """
     prompt_with_passages, exploded_responses = _expand_prompt_with_passages(prompt, passages, response)
@@ -78,9 +95,6 @@ def _encode_beft_contrastive_example(
     all_passage_images = []
 
     for psg_idx, (prompt, response) in enumerate(zip(prompt_with_passages, exploded_responses)):
-        # For each passage, use only passage-specific images (no main images)
-        # In this setup, each passage has its own image, and there's no shared main image
-        
         passage = passages[psg_idx]
         passage_images = list(images)
         
@@ -182,6 +196,12 @@ def preprocess_beft_contrastive_dataset(
         model_inputs["videos"].append(examples["_videos"][i])
         model_inputs["all_labels"].append(all_labels)
         model_inputs["gt_passage_idx"].append(examples["_gt_passage_idx"][i])
+        # Add deflection label if present (default to 0 if not provided)
+        deflection_value = examples.get("_deflection", [0] * len(examples["_prompt"]))
+        if isinstance(deflection_value, list):
+            model_inputs["deflection"].append(deflection_value[i] if i < len(deflection_value) else 0)
+        else:
+            model_inputs["deflection"].append(deflection_value)
 
     return model_inputs
 

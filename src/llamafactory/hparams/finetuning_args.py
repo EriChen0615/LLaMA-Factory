@@ -451,6 +451,42 @@ class PPLArguments:
                     "When enabled, prints detailed batch information including passages, questions, answers, and image paths."
         },
     )
+    ppl_deflection_modeling: Literal["mlp_head", "linear_head", "none"] = field(
+        default="none",
+        metadata={
+            "help": "The type of the deflection head modeling to use."
+        },
+    )
+    ppl_deflection_head_num_of_layers: int = field(
+        default=2,
+        metadata={
+            "help": "The number of layers in the deflection head."
+        },
+    )
+    ppl_deflection_head_proj_dim: int = field(
+        default=1024,
+        metadata={
+            "help": "The projection dimension in the deflection head."
+        },
+    )
+    ppl_deflection_head_path: str = field(
+        default=None,
+        metadata={
+            "help": "path to the deflection head pt file."
+        }
+    )
+    ppl_deflection_loss_factor: float = field(
+        default=1.0,
+        metadata={
+            "help": "The factor of the deflection head loss in PPL training."
+        },
+    )
+    use_deflection_head_loss: bool = field(
+        default=True,
+        metadata={
+            "help": "Whether or not to use the deflection head loss in PPL training."
+        },
+    )
 
     
 
