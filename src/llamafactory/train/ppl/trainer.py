@@ -712,7 +712,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
 
             writer.write("\n".join(res))
 
-    def log(self, logs: Dict[str, float]) -> None:
+    def log(self, logs: Dict[str, float], *args, **kwargs) -> None:
         """Override log method to include custom metrics."""
         # Calculate averaged metrics
         metrics = {}
@@ -748,7 +748,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         logs = {**logs, **metrics}
         
         # Call parent log method
-        super().log(logs)
+        super().log(logs, *args, **kwargs)
         
         # Clear metrics for next cycle
         self._metrics.clear()

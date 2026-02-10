@@ -278,6 +278,60 @@ class PairwiseDataCollatorWithPadding(MultiModalDataCollatorForSeq2Seq):
 
 
 @dataclass
+class BEPODataCollatorWithPadding(MultiModalDataCollatorForSeq2Seq):
+    r"""Data collator for BEPO pairwise data."""
+
+    def __call__(self, features: list[dict[str, Any]]) -> dict[str, "torch.Tensor"]:
+        r"""Pad batched data to the longest sequence in the batch.
+
+        We generate 2 * K * n examples where the first K * n examples represent chosen examples and
+        the last K * n examples represent rejected examples.
+        """
+        concatenated_features = []
+        for feature in features:
+            K = len(feature["chosen_input_ids"])
+            expanded_features = [None] * (2 * K)
+            gt_passage_idx = feature["gt_passage_idx"]
+            for idx, (
+                chosen_input_ids,
+                chosen_attention_mask,
+                chosen_labels,
+                rejected_input_ids,
+                rejected_attention_mask,
+                rejected_labels,
+            ) in enumerate(
+                zip(
+                    feature["chosen_input_ids"],
+                    feature["chosen_attention_mask"],
+                    feature["chosen_labels"],
+                    feature["rejected_input_ids"],
+                    feature["rejected_attention_mask"],
+                    feature["rejected_labels"],
+                )
+            ):
+                expanded_features[idx] = {
+                    "input_ids": chosen_input_ids,
+                    "attention_mask": chosen_attention_mask,
+                    "labels": chosen_labels,
+                    "images": feature["images"],
+                    "videos": feature["videos"],
+                    "audios": feature["audios"],
+                    "is_gt_passage": idx == gt_passage_idx,
+                }
+                expanded_features[idx + K] = {
+                    "input_ids": rejected_input_ids,
+                    "attention_mask": rejected_attention_mask,
+                    "labels": rejected_labels,
+                    "images": feature["images"],
+                    "videos": feature["videos"],
+                    "audios": feature["audios"],
+                    "is_gt_passage": idx == gt_passage_idx,
+                }
+            concatenated_features.extend(expanded_features)
+        return super().__call__(concatenated_features)
+
+
+@dataclass
 class KTODataCollatorWithPadding(MultiModalDataCollatorForSeq2Seq):
     r"""Data collator for KTO data."""
 

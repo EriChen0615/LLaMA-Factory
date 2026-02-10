@@ -355,6 +355,142 @@ class BAdamArgument:
 
 
 @dataclass
+class AttnSFTArguments:
+    r"""Arguments pertaining to the attention-based SFT training."""
+
+    use_attn_sft: bool = field(
+        default=True,
+        metadata={"help": "Whether or not to use the attention-based SFT training."},
+    )
+    attn_aggregate: Literal["sum", "max", "late-interaction"] = field(
+        default="sum",
+        metadata={"help": "The mode of aggregation for the attention-based SFT training."},
+    )
+    remove_small_attn: bool = field(
+        default=False,
+        metadata={"help": "Whether or not to remove small attention values."},
+    )
+
+
+@dataclass
+class PPLArguments:
+    r"""Arguments pertaining to the Passage Posterior Learning (PPL) training."""
+
+    use_ppl_loss: bool = field(
+        default=True,
+        metadata={"help": "Whether or not to use the Posterior Loss in PPL training."},
+    )
+    use_ensemble_loss: bool = field(
+        default=True,
+        metadata={"help": "Whether or not to use the Ensemble Loss in PPL training."},
+    )
+    ppl_loss_type: Literal["joint", "posterior", "llk", "ensemble"] = field(
+        default="joint",
+        metadata={"help": "The type of the PPL loss to use."},
+    )
+    ppl_prior_modeling: Literal["mlp_head", "prompted_vlm+mlp_head", "linear_head", "none"] = field(
+        default="none",
+        metadata={"help": "The type of the prior head modeling to use."},
+    )
+    ppl_prior_head_num_of_layers: int = field(
+        default=2,
+        metadata={"help": "The number of layers in the prior head."},
+    )
+    ppl_prior_head_proj_dim: int = field(
+        default=1024,
+        metadata={"help": "The projection dimension in the prior head."},
+    )
+    ppl_hidden_state_offset: int = field(
+        default=0,
+        metadata={"help": "The position offset of hidden states to be used for prior head in the PPL training."},
+    )
+    use_prior_head_loss: bool = field(
+        default=False,
+        metadata={"help": "Whether or not to use the prior head loss in PPL training."},
+    )
+    ppl_prior_head_path: Optional[str] = field(
+        default=None,
+        metadata={"help": "path to the prior head pt file."},
+    )
+    ppl_prior_loss_factor: float = field(
+        default=1.0,
+        metadata={"help": "The factor of the prior head loss in PPL training."},
+    )
+    ppl_prior_loss_type: Literal["softmax", "logistic"] = field(
+        default="softmax",
+        metadata={"help": "The type of the prior head loss in PPL training."},
+    )
+    ppl_tau: float = field(
+        default=1.0,
+        metadata={"help": "The temperature parameter in the PPL training."},
+    )
+    freeze_vlm_weights: bool = field(
+        default=False,
+        metadata={"help": "Whether or not to freeze the weights of the VLM."},
+    )
+    freeze_prior_head_weights: bool = field(
+        default=False,
+        metadata={"help": "Whether or not to freeze the weights of the prior head."},
+    )
+    prior_head_lr: float = field(
+        default=1.0e-5,
+        metadata={"help": "The learning rate of the prior head."},
+    )
+    ppl_enable_chunked_checkpoint: bool = field(
+        default=False,
+        metadata={
+            "help": (
+                "Enable chunked forward pass with gradient checkpointing to train with larger K values. "
+                "Trades compute time (2x slower) for memory (K/chunk_size reduction)."
+            )
+        },
+    )
+    ppl_forward_chunk_size: Optional[int] = field(
+        default=None,
+        metadata={
+            "help": (
+                "Number of passages to process per forward chunk when ppl_enable_chunked_checkpoint is True. "
+                "If None or >= K, processes all passages at once (standard behavior). "
+                "Recommended values: 4-8 for typical use cases."
+            )
+        },
+    )
+    beft_debug: bool = field(
+        default=False,
+        metadata={
+            "help": (
+                "Whether or not to enable debug mode for BEFT training. "
+                "When enabled, prints detailed batch information including passages, questions, answers, and image paths."
+            )
+        },
+    )
+    ppl_deflection_modeling: Literal["mlp_head", "linear_head", "none"] = field(
+        default="none",
+        metadata={"help": "The type of the deflection head modeling to use."},
+    )
+    ppl_deflection_head_num_of_layers: int = field(
+        default=2,
+        metadata={"help": "The number of layers in the deflection head."},
+    )
+    ppl_deflection_head_proj_dim: int = field(
+        default=1024,
+        metadata={"help": "The projection dimension in the deflection head."},
+    )
+    ppl_deflection_head_path: Optional[str] = field(
+        default=None,
+        metadata={"help": "path to the deflection head pt file."},
+    )
+    ppl_deflection_loss_factor: float = field(
+        default=1.0,
+        metadata={"help": "The factor of the deflection head loss in PPL training."},
+    )
+    use_deflection_head_loss: bool = field(
+        default=True,
+        metadata={"help": "Whether or not to use the deflection head loss in PPL training."},
+    )
+
+
+@dataclass
 class SwanLabArguments:
     use_swanlab: bool = field(
         default=False,
@@ -396,7 +532,15 @@ class SwanLabArguments:
 
 @dataclass
 class FinetuningArguments(
-    SwanLabArguments, BAdamArgument, ApolloArguments, GaloreArguments, RLHFArguments, LoraArguments, FreezeArguments
+    SwanLabArguments,
+    PPLArguments,
+    AttnSFTArguments,
+    BAdamArgument,
+    ApolloArguments,
+    GaloreArguments,
+    RLHFArguments,
+    LoraArguments,
+    FreezeArguments,
 ):
     r"""Arguments pertaining to which techniques we are going to fine-tuning with."""
 
@@ -404,7 +548,7 @@ class FinetuningArguments(
         default=False,
         metadata={"help": "Whether or not to train model in purely bf16 precision (without AMP)."},
     )
-    stage: Literal["pt", "sft", "rm", "ppo", "dpo", "kto"] = field(
+    stage: Literal["pt", "sft", "rm", "ppo", "dpo", "kto", "attn_sft", "ppl", "bepo", "beft"] = field(
         default="sft",
         metadata={"help": "Which stage will be performed in training."},
     )

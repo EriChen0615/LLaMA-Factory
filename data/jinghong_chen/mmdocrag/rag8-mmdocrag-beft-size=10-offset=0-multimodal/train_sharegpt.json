@@ -6,7 +6,7 @@
         "role": "system"
       },
       {
-        "content": "<image> You are a helpful question-answering assistant. Your task is to generate a interleaved text and image response based on provided questions and quotes. Here‘s how to refine your process:\n\n1. **Evidence Selection**:\n   - From both text and image quotes, pinpoint those really relevant for answering the question. Focus on significance and direct relevance.\n\n2. **Answer Construction**:\n   - Use Markdown to embed text and images in your response.\n   - Conclude with a direct and concise answer to the question in a simple and clear sentence.\n\n3. **Quote Citation**:\n   - Cite text by adding []; for example, quote from the first text should be [1].\n   - Cite images using the format `![{conclusion}]()`; for the first image, use `![{conclusion}](image1)`;The {conclusion} should be a concise one-sentence summary of the image’s content.\n   - Note the cite of the image must strict follow `![{conclusion}]()` instead of simply stating “See image1,” or“image1 shows,”\n\n- Do not cite irrelevant quotes.\n- Compose a detailed and articulate interleaved answer to the question.\n- Ensure that your answer is logical, informative, and directly ties back to the evidence provided by the quotes.\n- Interleaved answer must contain both text and image response.\n\n[QUESTION] How did the costs associated with 'Subscription and Support' and 'Professional Services and Other' change from 2019 to 2020?\n<<<EVIDENCE>>>",
+        "content": "[QUESTION] How did the costs associated with 'Subscription and Support' and 'Professional Services and Other' change from 2019 to 2020?\n<<<EVIDENCE>>>",
         "role": "user"
       },
       {
@@ -55,18 +55,18 @@
         ]
       },
       {
+        "quote_id": "text5",
+        "type": "text",
+        "text": "[5] Fiscal Year Ended January 31, 2020 2019 2018 Revenues: Subscription and support . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \\$16,043 \\$12,413 \\$ 9,766 Professional services and other . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 1,055 869 774 Total revenues . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17,098 13,282 10,540 Cost of revenues (1)(2): Subscription and support . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3,198 2,604 2,033 Professional services and other . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 1,037 847 740 Total cost of revenues . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4,235 3,451 2,773 Gross profit . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12,863 9,831 7,767 Operating expenses (1)(2): Research and development . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2,766 1,886 1,553 Marketing and sales . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7,930 6,064 4,671 General and administrative . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 1,704 1,346 1,089 Loss on settlement of Salesforce.org reseller agreement (Note 7) . . . . . . . . . 166 0 0 Total operating expenses . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12,566 9,296 7,313 Income from operations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 297 535 454 Gains on strategic investments, net . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 427 542 19 Other expense . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . (18) (94) (53) Income before benefit from (provision for) income taxes . . . . . . . . . . . . . . . . . . . . 706 983 420 Benefit from (provision for) income taxes (3) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . (580) 127 (60) Net income . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \\$ 126 \\$ 1,110 \\$ 360 Basic net income per share . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \\$ 0.15 \\$ 1.48 \\$ 0.50 Diluted net income per share . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \\$ 0.15 \\$ 1.43 \\$ 0.49 Shares used in computing basic net income per share . . . . . . . . . . . . . . . . . . . . . . . 829 751 715 Shares used in computing diluted net income per share . . . . . . . . . . . . . . . . . . . . . 850 775 735 ",
+        "images": []
+      },
+      {
         "quote_id": "image8",
         "type": "image",
         "text": "(image 8) The table presents financial data for a company in millions of dollars, focusing on the costs associated with \"Subscription and support\" and \"Professional services and other\" for the fiscal years ending January 31, 2020, and 2019. It includes the variance in dollars between these two years. The specific details are as follows:\n\n1. **Subscription and Support:**\n   - 2020: $3,198 million\n   - 2019: $2,604 million\n   - Variance (Dollars): $594 million\n\n2. **Professional Services and Other:**\n   - 2020: $1,037 million\n   - 2019: $847 million\n   - Variance (Dollars): $190 million\n\n3. **Total Cost of Revenues:**\n   - 2020: $4,235 million\n   - 2019: $3,451 million\n   - Variance (Dollars): $784 million\n\n4. **Percent of Total Revenues:**\n   - 2020: 25%\n   - 2019: 26%\n\nThe table outlines how the company's costs in these categories have increased from 2019 to 2020, and it reports these costs as a percentage of total revenues, which decreased from 26% to 25% between these years.",
         "images": [
           "/home/jc2124/rds/rds-cvnlp-hirYTW1FQIw/shared_space/vqa_data/MMDocRAG/dataset/images/NYSE_CRM_2020_image17.jpg"
         ]
-      },
-      {
-        "quote_id": "text5",
-        "type": "text",
-        "text": "[5] Fiscal Year Ended January 31, 2020 2019 2018 Revenues: Subscription and support . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \\$16,043 \\$12,413 \\$ 9,766 Professional services and other . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 1,055 869 774 Total revenues . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17,098 13,282 10,540 Cost of revenues (1)(2): Subscription and support . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3,198 2,604 2,033 Professional services and other . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 1,037 847 740 Total cost of revenues . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4,235 3,451 2,773 Gross profit . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12,863 9,831 7,767 Operating expenses (1)(2): Research and development . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2,766 1,886 1,553 Marketing and sales . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7,930 6,064 4,671 General and administrative . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 1,704 1,346 1,089 Loss on settlement of Salesforce.org reseller agreement (Note 7) . . . . . . . . . 166 0 0 Total operating expenses . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12,566 9,296 7,313 Income from operations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 297 535 454 Gains on strategic investments, net . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 427 542 19 Other expense . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . (18) (94) (53) Income before benefit from (provision for) income taxes . . . . . . . . . . . . . . . . . . . . 706 983 420 Benefit from (provision for) income taxes (3) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . (580) 127 (60) Net income . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \\$ 126 \\$ 1,110 \\$ 360 Basic net income per share . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \\$ 0.15 \\$ 1.48 \\$ 0.50 Diluted net income per share . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . \\$ 0.15 \\$ 1.43 \\$ 0.49 Shares used in computing basic net income per share . . . . . . . . . . . . . . . . . . . . . . . 829 751 715 Shares used in computing diluted net income per share . . . . . . . . . . . . . . . . . . . . . 850 775 735 ",
-        "images": []
       },
       {
         "quote_id": "image3",
@@ -95,7 +95,7 @@
         "role": "system"
       },
       {
-        "content": "<image> You are a helpful question-answering assistant. Your task is to generate a interleaved text and image response based on provided questions and quotes. Here‘s how to refine your process:\n\n1. **Evidence Selection**:\n   - From both text and image quotes, pinpoint those really relevant for answering the question. Focus on significance and direct relevance.\n\n2. **Answer Construction**:\n   - Use Markdown to embed text and images in your response.\n   - Conclude with a direct and concise answer to the question in a simple and clear sentence.\n\n3. **Quote Citation**:\n   - Cite text by adding []; for example, quote from the first text should be [1].\n   - Cite images using the format `![{conclusion}]()`; for the first image, use `![{conclusion}](image1)`;The {conclusion} should be a concise one-sentence summary of the image’s content.\n   - Note the cite of the image must strict follow `![{conclusion}]()` instead of simply stating “See image1,” or“image1 shows,”\n\n- Do not cite irrelevant quotes.\n- Compose a detailed and articulate interleaved answer to the question.\n- Ensure that your answer is logical, informative, and directly ties back to the evidence provided by the quotes.\n- Interleaved answer must contain both text and image response.\n\n[QUESTION] How did net revenues change over the three years presented, and what might this indicate?\n<<<EVIDENCE>>>",
+        "content": "[QUESTION] How did net revenues change over the three years presented, and what might this indicate?\n<<<EVIDENCE>>>",
         "role": "user"
       },
       {
@@ -141,12 +141,6 @@
         ]
       },
       {
-        "quote_id": "text6",
-        "type": "text",
-        "text": "[6] \t Net revenues of  $\\S28.7$   billion decreased by  $3.7\\%$  . On an organic  basis, net revenues declined by  $1.6\\%$  , due primarily to unfavorable  combustible tobacco volume/mix – which was exacerbated by  pandemic-related headwinds – partly offset by higher HTU  shipment volume and favorable combustible tobacco pricing. ",
-        "images": []
-      },
-      {
         "quote_id": "image6",
         "type": "image",
         "text": "(image 6) The table presents the financial results for a company over three years, ending December 31st of 2020, 2019, and 2018. It is structured as follows:\n\n1. **Revenues including excise taxes**  \n   - 2020: $76,047 million  \n   - 2019: $77,921 million  \n   - 2018: $79,823 million  \n\n2. **Excise taxes on products**  \n   - 2020: $47,353 million  \n   - 2019: $48,116 million  \n   - 2018: $50,198 million  \n\n3. **Net revenues**  \n   - 2020: $28,694 million  \n   - 2019: $29,805 million  \n   - 2018: $29,625 million  \n\n4. **Cost of sales**  \n   - 2020: $9,569 million  \n   - 2019: $10,513 million  \n   - 2018: $10,758 million  \n\n5. **Gross profit**  \n   - 2020: $19,125 million  \n   - 2019: $19,292 million  \n   - 2018: $18,867 million  \n\n6. **Marketing, administration, and research costs**  \n   - 2020: $7,384 million  \n   - 2019: $8,695 million  \n   - 2018: $7,408 million  \n\n7. **Amortization of intangibles**  \n   - 2020: $73 million  \n   - 2019: $66 million  \n   - 2018: $82 million  \n\n8. **Operating income**  \n   - 2020: $11,668 million  \n   - 2019: $10,531 million  \n   - 2018: $11,377 million  \n\n9. **Interest expense, net**  \n   - 2020: $618 million  \n   - 2019: $570 million  \n   - 2018: $665 million  \n\n10. **Pension and other employee benefit costs**  \n    - 2020: $97 million  \n    - 2019: $89 million  \n    - 2018: $41 million  \n\n11. **Earnings before income taxes**  \n    - 2020: $10,953 million  \n    - 2019: $9,872 million  \n    - 2018: $10,671 million  \n\n12. **Provision for income taxes**  \n    - 2020: $2,377 million  \n    - 2019: $2,293 million  \n    - 2018: $2,445 million  \n\n13. **Equity investments and securities (income)/loss, net**  \n    - 2020: $(16) million  \n    - 2019: $(",
@@ -155,15 +149,21 @@
         ]
       },
       {
+        "quote_id": "text5",
+        "type": "text",
+        "text": "[5] • Net Revenues –  Net revenues of   $\\S28.7$   billion for the year ended December 31, 2020, decreased by  $\\S1.1$   billion, or   $3.7\\%$  , from  the comparable 2019 amount, and were impacted by the effects of the COVID-19 pandemic, particularly in the second quarter of  2020 and continuing throughout the second half of the year.  The change in our net revenues from the comparable 2019 amount  was driven by the following (variances not to scale):   ",
+        "images": []
+      },
+      {
         "quote_id": "text11",
         "type": "text",
         "text": "[11] The fair value of PMI’s other equity securities, which have been classified within Level 1, was \\$256 million and  $\\S332$   million for the  years ending December 31, 2020 and 2019, respectively.  Unrealized pre-tax gain (loss) of   $\\S(76)$   million and   $\\S44$   million (\\$(60)  million and   $\\S35$   million net of tax) on these equity securities was recorded in the consolidated statement of earnings for the years  ended December 31, 2020 and 2019, respectively.  For a description of the fair value hierarchy and the three levels of inputs used to  measure fair values, see Note 2 . Summary of Significant Accounting Policies .  ",
         "images": []
       },
       {
-        "quote_id": "text5",
+        "quote_id": "text6",
         "type": "text",
-        "text": "[5] • Net Revenues –  Net revenues of   $\\S28.7$   billion for the year ended December 31, 2020, decreased by  $\\S1.1$   billion, or   $3.7\\%$  , from  the comparable 2019 amount, and were impacted by the effects of the COVID-19 pandemic, particularly in the second quarter of  2020 and continuing throughout the second half of the year.  The change in our net revenues from the comparable 2019 amount  was driven by the following (variances not to scale):   ",
+        "text": "[6] \t Net revenues of  $\\S28.7$   billion decreased by  $3.7\\%$  . On an organic  basis, net revenues declined by  $1.6\\%$  , due primarily to unfavorable  combustible tobacco volume/mix – which was exacerbated by  pandemic-related headwinds – partly offset by higher HTU  shipment volume and favorable combustible tobacco pricing. ",
         "images": []
       }
     ],
@@ -185,7 +185,7 @@
         "role": "system"
       },
       {
-        "content": "<image> You are a helpful question-answering assistant. Your task is to generate a interleaved text and image response based on provided questions and quotes. Here‘s how to refine your process:\n\n1. **Evidence Selection**:\n   - From both text and image quotes, pinpoint those really relevant for answering the question. Focus on significance and direct relevance.\n\n2. **Answer Construction**:\n   - Use Markdown to embed text and images in your response.\n   - Conclude with a direct and concise answer to the question in a simple and clear sentence.\n\n3. **Quote Citation**:\n   - Cite text by adding []; for example, quote from the first text should be [1].\n   - Cite images using the format `![{conclusion}]()`; for the first image, use `![{conclusion}](image1)`;The {conclusion} should be a concise one-sentence summary of the image’s content.\n   - Note the cite of the image must strict follow `![{conclusion}]()` instead of simply stating “See image1,” or“image1 shows,”\n\n- Do not cite irrelevant quotes.\n- Compose a detailed and articulate interleaved answer to the question.\n- Ensure that your answer is logical, informative, and directly ties back to the evidence provided by the quotes.\n- Interleaved answer must contain both text and image response.\n\n[QUESTION] What are the key impacts of military conflicts on civilian areas and the economy as depicted in the images and articles?\n<<<EVIDENCE>>>",
+        "content": "[QUESTION] What are the key impacts of military conflicts on civilian areas and the economy as depicted in the images and articles?\n<<<EVIDENCE>>>",
         "role": "user"
       },
       {
@@ -215,11 +215,11 @@
         ]
       },
       {
-        "quote_id": "image2",
+        "quote_id": "image7",
         "type": "image",
-        "text": "(image 2) The image depicts a scene at what appears to be an emergency medical site, likely in a disaster or critical situation setting. In the foreground, an individual is being transported on a stretcher. They are covered with a thermal blanket, and a medical professional is holding an IV drip above them. The individuals assisting wear uniforms, suggesting they are part of an emergency response team. In the background, a large tent structure is visible, possibly set up as a temporary medical or triage station. There are several people in the vicinity, some appearing to be emergency workers and others possibly patients or additional personnel.",
+        "text": "(image 7) The image is a line graph showing year-over-year changes in the Consumer Price Index (CPI) from around 2005 to 2022. It highlights a peak in February at 7.9% CPI increase, with another line showing a 6.4% increase omitting food and energy. The data source is the Bureau of Labor Statistics, and the graph is attributed to The New York Times.",
         "images": [
-          "/home/jc2124/rds/rds-cvnlp-hirYTW1FQIw/shared_space/vqa_data/MMDocRAG/dataset/images/news_combined_image29.jpg"
+          "/home/jc2124/rds/rds-cvnlp-hirYTW1FQIw/shared_space/vqa_data/MMDocRAG/dataset/images/news_combined_image212.jpg"
         ]
       },
       {
@@ -243,11 +243,11 @@
         "images": []
       },
       {
-        "quote_id": "image7",
+        "quote_id": "image2",
         "type": "image",
-        "text": "(image 7) The image is a line graph showing year-over-year changes in the Consumer Price Index (CPI) from around 2005 to 2022. It highlights a peak in February at 7.9% CPI increase, with another line showing a 6.4% increase omitting food and energy. The data source is the Bureau of Labor Statistics, and the graph is attributed to The New York Times.",
+        "text": "(image 2) The image depicts a scene at what appears to be an emergency medical site, likely in a disaster or critical situation setting. In the foreground, an individual is being transported on a stretcher. They are covered with a thermal blanket, and a medical professional is holding an IV drip above them. The individuals assisting wear uniforms, suggesting they are part of an emergency response team. In the background, a large tent structure is visible, possibly set up as a temporary medical or triage station. There are several people in the vicinity, some appearing to be emergency workers and others possibly patients or additional personnel.",
         "images": [
-          "/home/jc2124/rds/rds-cvnlp-hirYTW1FQIw/shared_space/vqa_data/MMDocRAG/dataset/images/news_combined_image212.jpg"
+          "/home/jc2124/rds/rds-cvnlp-hirYTW1FQIw/shared_space/vqa_data/MMDocRAG/dataset/images/news_combined_image29.jpg"
         ]
       },
       {
@@ -277,7 +277,7 @@
         "role": "system"
       },
       {
-        "content": "<image> You are a helpful question-answering assistant. Your task is to generate a interleaved text and image response based on provided questions and quotes. Here‘s how to refine your process:\n\n1. **Evidence Selection**:\n   - From both text and image quotes, pinpoint those really relevant for answering the question. Focus on significance and direct relevance.\n\n2. **Answer Construction**:\n   - Use Markdown to embed text and images in your response.\n   - Conclude with a direct and concise answer to the question in a simple and clear sentence.\n\n3. **Quote Citation**:\n   - Cite text by adding []; for example, quote from the first text should be [1].\n   - Cite images using the format `![{conclusion}]()`; for the first image, use `![{conclusion}](image1)`;The {conclusion} should be a concise one-sentence summary of the image’s content.\n   - Note the cite of the image must strict follow `![{conclusion}]()` instead of simply stating “See image1,” or“image1 shows,”\n\n- Do not cite irrelevant quotes.\n- Compose a detailed and articulate interleaved answer to the question.\n- Ensure that your answer is logical, informative, and directly ties back to the evidence provided by the quotes.\n- Interleaved answer must contain both text and image response.\n\n[QUESTION] How do BiDAF and FastQA models perform on WIKIHOP and MEDHOP datasets, and how does the performance compare to baseline models like Document-cue and TF-IDF?\n<<<EVIDENCE>>>",
+        "content": "[QUESTION] How do BiDAF and FastQA models perform on WIKIHOP and MEDHOP datasets, and how does the performance compare to baseline models like Document-cue and TF-IDF?\n<<<EVIDENCE>>>",
         "role": "user"
       },
       {
@@ -305,10 +305,12 @@
         "images": []
       },
       {
-        "quote_id": "text5",
-        "type": "text",
-        "text": "[5] The presence of lexical regularities among an- swers is a problem in RC dataset assembly – a phenomenon already observed by Hermann et al. (2015). When comprehending a text, the correct an- swer should become clear from its context – rather than from an intrinsic property of the answer ex- pression. To evaluate the ability of models to rely on context alone, we created  masked  versions of the datasets: we replace any candidate expression randomly using 100 unique placeholder tokens, e.g. “Mumbai is the most populous city in  MASK7 .” Masking is consistent within one sample, but gen- erally different for the same expression across sam- ples. This not only removes answer frequency cues, it also removes statistical correlations between fre- quent answer strings and support documents. Mod- els consequently cannot base their prediction on in- trinsic properties of the answer expression, but have to rely on the context surrounding the mentions. ",
-        "images": []
+        "quote_id": "image7",
+        "type": "image",
+        "text": "(image 7) The table presents the performance results of different models on two datasets, WIKIHOP and MEDHOP. The performance is measured with two sets of test data: \"test\" and \"test*\". The models evaluated are BiDAF, BiDAF rem, FastQA, and FastQA rem. Each cell in the table contains a numerical value representing the performance score for the respective model and dataset combination. \n\nHere's a breakdown of the values:\n\n- For WIKIHOP:\n  - BiDAF: 54.5 (test), 59.8 (test*)\n  - BiDAF rem: 44.6 (test), 57.7 (test*)\n  - FastQA: 35.8 (test), 38.0 (test*)\n  - FastQA rem: 38.0 (test), 41.2 (test*)\n\n- For MEDHOP:\n  - BiDAF: 33.7 (test), 42.9 (test*)\n  - BiDAF rem: 30.4 (test), 36.7 (test*)\n  - FastQA: 31.3 (test), 30.6 (test*)\n  - FastQA rem: 28.6 (test), 24.5 (test*)\n\nThis table likely compares the effectiveness of the BiDAF and FastQA models, with and without some additional \"rem\" technique or modification, across different datasets and test conditions.",
+        "images": [
+          "/home/jc2124/rds/rds-cvnlp-hirYTW1FQIw/shared_space/vqa_data/MMDocRAG/dataset/images/Q18-1021_image6.jpg"
+        ]
       },
       {
         "quote_id": "image3",
@@ -327,19 +329,17 @@
         ]
       },
       {
+        "quote_id": "text5",
+        "type": "text",
+        "text": "[5] The presence of lexical regularities among an- swers is a problem in RC dataset assembly – a phenomenon already observed by Hermann et al. (2015). When comprehending a text, the correct an- swer should become clear from its context – rather than from an intrinsic property of the answer ex- pression. To evaluate the ability of models to rely on context alone, we created  masked  versions of the datasets: we replace any candidate expression randomly using 100 unique placeholder tokens, e.g. “Mumbai is the most populous city in  MASK7 .” Masking is consistent within one sample, but gen- erally different for the same expression across sam- ples. This not only removes answer frequency cues, it also removes statistical correlations between fre- quent answer strings and support documents. Mod- els consequently cannot base their prediction on in- trinsic properties of the answer expression, but have to rely on the context surrounding the mentions. ",
+        "images": []
+      },
+      {
         "quote_id": "image2",
         "type": "image",
         "text": "(image 2) The table presents data with three rows and two columns of numerical values. Each row is associated with a label:\n\n1. Document-cue:\n   - 74.6\n   - 36.7\n\n2. Maj. candidate:\n   - 41.2\n   - 38.8\n\n3. TF-IDF:\n   - 43.8\n   - 25.6\n\nWithout additional context or a caption, it's unclear what these numbers specifically refer to or what the labels mean. They likely represent scores or measurements related to document retrieval, ranking, or some form of text processing/analysis method.",
         "images": [
           "/home/jc2124/rds/rds-cvnlp-hirYTW1FQIw/shared_space/vqa_data/MMDocRAG/dataset/images/Q18-1021_image3.jpg"
-        ]
-      },
-      {
-        "quote_id": "image7",
-        "type": "image",
-        "text": "(image 7) The table presents the performance results of different models on two datasets, WIKIHOP and MEDHOP. The performance is measured with two sets of test data: \"test\" and \"test*\". The models evaluated are BiDAF, BiDAF rem, FastQA, and FastQA rem. Each cell in the table contains a numerical value representing the performance score for the respective model and dataset combination. \n\nHere's a breakdown of the values:\n\n- For WIKIHOP:\n  - BiDAF: 54.5 (test), 59.8 (test*)\n  - BiDAF rem: 44.6 (test), 57.7 (test*)\n  - FastQA: 35.8 (test), 38.0 (test*)\n  - FastQA rem: 38.0 (test), 41.2 (test*)\n\n- For MEDHOP:\n  - BiDAF: 33.7 (test), 42.9 (test*)\n  - BiDAF rem: 30.4 (test), 36.7 (test*)\n  - FastQA: 31.3 (test), 30.6 (test*)\n  - FastQA rem: 28.6 (test), 24.5 (test*)\n\nThis table likely compares the effectiveness of the BiDAF and FastQA models, with and without some additional \"rem\" technique or modification, across different datasets and test conditions.",
-        "images": [
-          "/home/jc2124/rds/rds-cvnlp-hirYTW1FQIw/shared_space/vqa_data/MMDocRAG/dataset/images/Q18-1021_image6.jpg"
         ]
       },
       {
@@ -367,7 +367,7 @@
         "role": "system"
       },
       {
-        "content": "<image> You are a helpful question-answering assistant. Your task is to generate a interleaved text and image response based on provided questions and quotes. Here‘s how to refine your process:\n\n1. **Evidence Selection**:\n   - From both text and image quotes, pinpoint those really relevant for answering the question. Focus on significance and direct relevance.\n\n2. **Answer Construction**:\n   - Use Markdown to embed text and images in your response.\n   - Conclude with a direct and concise answer to the question in a simple and clear sentence.\n\n3. **Quote Citation**:\n   - Cite text by adding []; for example, quote from the first text should be [1].\n   - Cite images using the format `![{conclusion}]()`; for the first image, use `![{conclusion}](image1)`;The {conclusion} should be a concise one-sentence summary of the image’s content.\n   - Note the cite of the image must strict follow `![{conclusion}]()` instead of simply stating “See image1,” or“image1 shows,”\n\n- Do not cite irrelevant quotes.\n- Compose a detailed and articulate interleaved answer to the question.\n- Ensure that your answer is logical, informative, and directly ties back to the evidence provided by the quotes.\n- Interleaved answer must contain both text and image response.\n\n[QUESTION] How many US workers are interested in a robot caregiver for themselves or a family member?\n<<<EVIDENCE>>>",
+        "content": "[QUESTION] How many US workers are interested in a robot caregiver for themselves or a family member?\n<<<EVIDENCE>>>",
         "role": "user"
       },
       {
@@ -384,9 +384,9 @@
     ],
     "passages": [
       {
-        "quote_id": "text9",
+        "quote_id": "text12",
         "type": "text",
-        "text": "[9]  $\\pmb{41\\%}$   of Americans would be interested in a robot  caregiver; reduced burden on family and improved  quality of care lead their list of motivations  ",
+        "text": "[12] Roughly four-in-ten Americans would be interested in having  a robot caregiver  ",
         "images": []
       },
       {
@@ -402,9 +402,9 @@
         "images": []
       },
       {
-        "quote_id": "text12",
+        "quote_id": "text9",
         "type": "text",
-        "text": "[12] Roughly four-in-ten Americans would be interested in having  a robot caregiver  ",
+        "text": "[9]  $\\pmb{41\\%}$   of Americans would be interested in a robot  caregiver; reduced burden on family and improved  quality of care lead their list of motivations  ",
         "images": []
       },
       {
@@ -454,7 +454,7 @@
         "role": "system"
       },
       {
-        "content": "<image> You are a helpful question-answering assistant. Your task is to generate a interleaved text and image response based on provided questions and quotes. Here‘s how to refine your process:\n\n1. **Evidence Selection**:\n   - From both text and image quotes, pinpoint those really relevant for answering the question. Focus on significance and direct relevance.\n\n2. **Answer Construction**:\n   - Use Markdown to embed text and images in your response.\n   - Conclude with a direct and concise answer to the question in a simple and clear sentence.\n\n3. **Quote Citation**:\n   - Cite text by adding []; for example, quote from the first text should be [1].\n   - Cite images using the format `![{conclusion}]()`; for the first image, use `![{conclusion}](image1)`;The {conclusion} should be a concise one-sentence summary of the image’s content.\n   - Note the cite of the image must strict follow `![{conclusion}]()` instead of simply stating “See image1,” or“image1 shows,”\n\n- Do not cite irrelevant quotes.\n- Compose a detailed and articulate interleaved answer to the question.\n- Ensure that your answer is logical, informative, and directly ties back to the evidence provided by the quotes.\n- Interleaved answer must contain both text and image response.\n\n[QUESTION] What is the target percentage for the reduction in cost of a single battery?\n<<<EVIDENCE>>>",
+        "content": "[QUESTION] What is the target percentage for the reduction in cost of a single battery?\n<<<EVIDENCE>>>",
         "role": "user"
       },
       {
@@ -541,7 +541,7 @@
         "role": "system"
       },
       {
-        "content": "<image> You are a helpful question-answering assistant. Your task is to generate a interleaved text and image response based on provided questions and quotes. Here‘s how to refine your process:\n\n1. **Evidence Selection**:\n   - From both text and image quotes, pinpoint those really relevant for answering the question. Focus on significance and direct relevance.\n\n2. **Answer Construction**:\n   - Use Markdown to embed text and images in your response.\n   - Conclude with a direct and concise answer to the question in a simple and clear sentence.\n\n3. **Quote Citation**:\n   - Cite text by adding []; for example, quote from the first text should be [1].\n   - Cite images using the format `![{conclusion}]()`; for the first image, use `![{conclusion}](image1)`;The {conclusion} should be a concise one-sentence summary of the image’s content.\n   - Note the cite of the image must strict follow `![{conclusion}]()` instead of simply stating “See image1,” or“image1 shows,”\n\n- Do not cite irrelevant quotes.\n- Compose a detailed and articulate interleaved answer to the question.\n- Ensure that your answer is logical, informative, and directly ties back to the evidence provided by the quotes.\n- Interleaved answer must contain both text and image response.\n\n[QUESTION] What is the largest category of contractual cash obligations due in the next 3-5 years?\n<<<EVIDENCE>>>",
+        "content": "[QUESTION] What is the largest category of contractual cash obligations due in the next 3-5 years?\n<<<EVIDENCE>>>",
         "role": "user"
       },
       {
@@ -631,7 +631,7 @@
         "role": "system"
       },
       {
-        "content": "<image> You are a helpful question-answering assistant. Your task is to generate a interleaved text and image response based on provided questions and quotes. Here‘s how to refine your process:\n\n1. **Evidence Selection**:\n   - From both text and image quotes, pinpoint those really relevant for answering the question. Focus on significance and direct relevance.\n\n2. **Answer Construction**:\n   - Use Markdown to embed text and images in your response.\n   - Conclude with a direct and concise answer to the question in a simple and clear sentence.\n\n3. **Quote Citation**:\n   - Cite text by adding []; for example, quote from the first text should be [1].\n   - Cite images using the format `![{conclusion}]()`; for the first image, use `![{conclusion}](image1)`;The {conclusion} should be a concise one-sentence summary of the image’s content.\n   - Note the cite of the image must strict follow `![{conclusion}]()` instead of simply stating “See image1,” or“image1 shows,”\n\n- Do not cite irrelevant quotes.\n- Compose a detailed and articulate interleaved answer to the question.\n- Ensure that your answer is logical, informative, and directly ties back to the evidence provided by the quotes.\n- Interleaved answer must contain both text and image response.\n\n[QUESTION] What is the change in total current assets from 2014 to 2015, and what contributed to this change?\n<<<EVIDENCE>>>",
+        "content": "[QUESTION] What is the change in total current assets from 2014 to 2015, and what contributed to this change?\n<<<EVIDENCE>>>",
         "role": "user"
       },
       {
@@ -717,7 +717,7 @@
         "role": "system"
       },
       {
-        "content": "<image> You are a helpful question-answering assistant. Your task is to generate a interleaved text and image response based on provided questions and quotes. Here‘s how to refine your process:\n\n1. **Evidence Selection**:\n   - From both text and image quotes, pinpoint those really relevant for answering the question. Focus on significance and direct relevance.\n\n2. **Answer Construction**:\n   - Use Markdown to embed text and images in your response.\n   - Conclude with a direct and concise answer to the question in a simple and clear sentence.\n\n3. **Quote Citation**:\n   - Cite text by adding []; for example, quote from the first text should be [1].\n   - Cite images using the format `![{conclusion}]()`; for the first image, use `![{conclusion}](image1)`;The {conclusion} should be a concise one-sentence summary of the image’s content.\n   - Note the cite of the image must strict follow `![{conclusion}]()` instead of simply stating “See image1,” or“image1 shows,”\n\n- Do not cite irrelevant quotes.\n- Compose a detailed and articulate interleaved answer to the question.\n- Ensure that your answer is logical, informative, and directly ties back to the evidence provided by the quotes.\n- Interleaved answer must contain both text and image response.\n\n[QUESTION] What trend is observed in the net sales for AWS from 2015 to 2017?\n<<<EVIDENCE>>>",
+        "content": "[QUESTION] What trend is observed in the net sales for AWS from 2015 to 2017?\n<<<EVIDENCE>>>",
         "role": "user"
       },
       {
@@ -801,7 +801,7 @@
         "role": "system"
       },
       {
-        "content": "<image> You are a helpful question-answering assistant. Your task is to generate a interleaved text and image response based on provided questions and quotes. Here‘s how to refine your process:\n\n1. **Evidence Selection**:\n   - From both text and image quotes, pinpoint those really relevant for answering the question. Focus on significance and direct relevance.\n\n2. **Answer Construction**:\n   - Use Markdown to embed text and images in your response.\n   - Conclude with a direct and concise answer to the question in a simple and clear sentence.\n\n3. **Quote Citation**:\n   - Cite text by adding []; for example, quote from the first text should be [1].\n   - Cite images using the format `![{conclusion}]()`; for the first image, use `![{conclusion}](image1)`;The {conclusion} should be a concise one-sentence summary of the image’s content.\n   - Note the cite of the image must strict follow `![{conclusion}]()` instead of simply stating “See image1,” or“image1 shows,”\n\n- Do not cite irrelevant quotes.\n- Compose a detailed and articulate interleaved answer to the question.\n- Ensure that your answer is logical, informative, and directly ties back to the evidence provided by the quotes.\n- Interleaved answer must contain both text and image response.\n\n[QUESTION] What was the trend in net cash outflow from investing activities over the years 2019 to 2021?\n<<<EVIDENCE>>>",
+        "content": "[QUESTION] What was the trend in net cash outflow from investing activities over the years 2019 to 2021?\n<<<EVIDENCE>>>",
         "role": "user"
       },
       {
@@ -857,18 +857,18 @@
         ]
       },
       {
+        "quote_id": "text2",
+        "type": "text",
+        "text": "[2] Net cash used in investing activities was RMB14,206 million in 2020, which was primarily attributable to (i) placement of term deposits with initial terms of over three months of RMB30,643 million; (ii) payments for investment in UMG and other equity investments of RMB2,002 million, (iii) purchase of financial assets of RMB919 million, (iv) payment for business combination of RMB540 million, (v) purchase of intangible assets of RMB393 million; and (iii) our purchases of property, plant and equipment of RMB108 million, partially offset by receipt from maturity of term deposits with initial terms of over three months of RMB20,332 million. ",
+        "images": []
+      },
+      {
         "quote_id": "image8",
         "type": "image",
         "text": "(image 8) The table presents a financial summary of cash flows for a company over the years ending December 31 for 2019, 2020, and 2021. It is divided into three main sections: cash flows from operating activities, investing activities, and financing activities. Each section further breaks down into specific line items showing cash inflows or outflows:\n\n1. **Cash flows from operating activities:**\n   - Cash generated from operations (Note 29(a))\n   - Interest received\n   - Income taxes paid\n   - Net cash inflow from operating activities (showcasing a positive cash flow each year).\n\n2. **Cash flows from investing activities:**\n   - Payments for business combinations\n   - Purchase of property, plant, and equipment\n   - Purchase of intangible assets and land use rights\n   - Net proceeds from short-term investments\n   - Term deposits and proceeds from disposal of subsidiaries\n   - Payments and proceeds related to financial assets and equity method investments\n   - Dividends received\n   - Net cash outflow from investing activities (highlighting negative cash flow due to higher outflows than inflows).\n\n3. **Cash flows from financing activities:**\n   - Loans from non-controlling interests\n   - Proceeds from issuance of ordinary shares and shares withheld for share award schemes\n   - Dividends paid, payments for interests and leases\n   - Net cash (outflow)/inflow from financing activities (showing variations over the years).\n\nAt the bottom, the table summarizes the net decrease in cash and cash equivalents, cash and cash equivalents at the beginning of the year, exchange differences, and cash and cash equivalents at the end of the year.\n   \nOverall, the table offers a comprehensive view of how cash was generated and used across different activities within the company for the three years listed.",
         "images": [
           "/home/jc2124/rds/rds-cvnlp-hirYTW1FQIw/shared_space/vqa_data/MMDocRAG/dataset/images/NYSE_TME_2021_image37.jpg"
         ]
-      },
-      {
-        "quote_id": "text2",
-        "type": "text",
-        "text": "[2] Net cash used in investing activities was RMB14,206 million in 2020, which was primarily attributable to (i) placement of term deposits with initial terms of over three months of RMB30,643 million; (ii) payments for investment in UMG and other equity investments of RMB2,002 million, (iii) purchase of financial assets of RMB919 million, (iv) payment for business combination of RMB540 million, (v) purchase of intangible assets of RMB393 million; and (iii) our purchases of property, plant and equipment of RMB108 million, partially offset by receipt from maturity of term deposits with initial terms of over three months of RMB20,332 million. ",
-        "images": []
       }
     ],
     "passage_scores": [

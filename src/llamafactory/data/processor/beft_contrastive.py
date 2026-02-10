@@ -13,18 +13,19 @@
 # limitations under the License.
 
 from collections import defaultdict
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Tuple, Union
 
 from ...extras.constants import IGNORE_INDEX
 from ...extras.logging import get_logger
-from .processor_utils import greedy_knapsack, infer_seqlen
+from .processor_utils import DatasetProcessor, greedy_knapsack, infer_seqlen
 
 
 if TYPE_CHECKING:
     from transformers import PreTrainedTokenizer, ProcessorMixin
 
     from ...hparams import DataArguments
-    from ..mm_plugin import ImageInput, VideoInput
+    from ..mm_plugin import AudioInput, ImageInput, VideoInput
     from ..template import Template
 
 import torch
@@ -53,6 +54,8 @@ def _expand_prompt_with_passages(prompt: Sequence[Dict[str, str]], passages: Seq
             passage_text = psg["text"]
             if not isinstance(passage_text, str):
                 raise TypeError(f"Passage at index {psg_idx} has 'text' key but value is not a string. Got type: {type(passage_text)}, value: {passage_text}")
+            if "images" in psg:
+                passage_text = " ".join(["<image>"] * len(psg["images"])) + " " + passage_text
         else:
             # If it's not a dict, convert to string
             passage_text = str(psg)
@@ -76,6 +79,7 @@ def _encode_beft_contrastive_example(
     tools: Optional[str],
     images: Sequence["ImageInput"],
     videos: Sequence["VideoInput"],
+    audios: Sequence["AudioInput"],
     gt_passage_idx: Union[int, List[int]],
     template: "Template",
     tokenizer: "PreTrainedTokenizer",
@@ -109,8 +113,12 @@ def _encode_beft_contrastive_example(
         
         all_passage_images.append(passage_images)
         
-        messages = template.mm_plugin.process_messages(prompt + response, passage_images, videos, processor)
-        input_ids, labels = template.mm_plugin.process_token_ids([], [], passage_images, videos, tokenizer, processor)
+        messages = template.mm_plugin.process_messages(
+            prompt + response, passage_images, videos, audios, processor
+        )
+        input_ids, labels = template.mm_plugin.process_token_ids(
+            [], [], passage_images, videos, audios, tokenizer, processor
+        )
         
         encoded_pairs = template.encode_multiturn(tokenizer, messages, system, tools)
         total_length = len(input_ids) + (1 if template.efficient_eos else 0)
@@ -181,6 +189,7 @@ def preprocess_beft_contrastive_dataset(
             tools=examples["_tools"][i],
             images=examples["_images"][i] or [],
             videos=examples["_videos"][i] or [],
+            audios=examples.get("_audios", [None] * len(examples["_prompt"]))[i] or [],
             gt_passage_idx=examples["_gt_passage_idx"][i],
             template=template,
             tokenizer=tokenizer,
@@ -211,4 +220,13 @@ def print_beft_contrastive_dataset_example(example: Dict[str, List[int]], tokeni
     print(f"\tNumber of input_ids: {len(example['all_input_ids'])}")
     print(f"\tgt_passage_idx: {example['gt_passage_idx']}")
     print(f"\tgt_input: {tokenizer.decode(example['all_input_ids'][0], skip_special_tokens=True)}")
+
+
+@dataclass
+class BeftContrastiveDatasetProcessor(DatasetProcessor):
+    def preprocess_dataset(self, examples: dict[str, list[Any]]) -> dict[str, list[Any]]:
+        return preprocess_beft_contrastive_dataset(examples, self.template, self.tokenizer, self.processor, self.data_args)
+
+    def print_data_example(self, example: dict[str, list[int]]) -> None:
+        print_beft_contrastive_dataset_example(example, self.tokenizer)
 

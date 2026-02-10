@@ -134,7 +134,26 @@
       "role_tag": "role",
       "content_tag": "content",
       "user_tag": "user",
-      "assistant_tag": "assistant"
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  },
+  "mmdocrag-rag8-beft-size=0-offset=0-multimodal":{
+    "file_name": "jinghong_chen/mmdocrag/rag8-mmdocrag-beft-size=0-offset=0-multimodal/train_sharegpt.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images",
+      "gt_passage_idx": "gt_passage_idx",
+      "passages": "passages",
+      "passage_scores": "passage_scores"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
     }
   },
   "slidevqa-rag4-sft-size=128-offset=0-max=2048":{

@@ -127,6 +127,11 @@ class AlpacaDatasetConverter(DatasetConverter):
             "_images": self._find_medias(example[self.dataset_attr.images]) if self.dataset_attr.images else None,
             "_videos": self._find_medias(example[self.dataset_attr.videos]) if self.dataset_attr.videos else None,
             "_audios": self._find_medias(example[self.dataset_attr.audios]) if self.dataset_attr.audios else None,
+            "_passages": example.get("passages", []),
+            "_gt_passage_idx": example.get("gt_passage_idx", -1),
+            "_passage_scores": example.get("passage_scores", []),
+            "_prior_prompt": example.get("prior_prompt", []),
+            "_deflection": example.get("deflection", 0),
         }
         return output
 
@@ -215,6 +220,9 @@ class SharegptDatasetConverter(DatasetConverter):
             prompt = aligned_messages[:-1]
             response = aligned_messages[-1:]
 
+        # print("In SharegptDatasetConverter, prompt:", prompt)
+        # print("In SharegptDatasetConverter, passages:", example.get("passages", []))
+        # print("In SharegptDatasetConverter, gt_passage_idx:", example.get("gt_passage_idx", -1))
         output = {
             "_prompt": prompt,
             "_response": response,
@@ -223,6 +231,11 @@ class SharegptDatasetConverter(DatasetConverter):
             "_images": self._find_medias(example[self.dataset_attr.images]) if self.dataset_attr.images else None,
             "_videos": self._find_medias(example[self.dataset_attr.videos]) if self.dataset_attr.videos else None,
             "_audios": self._find_medias(example[self.dataset_attr.audios]) if self.dataset_attr.audios else None,
+            "_passages": example.get("passages", []),
+            "_gt_passage_idx": example.get("gt_passage_idx", -1),
+            "_passage_scores": example.get("passage_scores", []),
+            "_prior_prompt": example.get("prior_prompt", []),
+            "_deflection": example.get("deflection", 0),
         }
         return output
 

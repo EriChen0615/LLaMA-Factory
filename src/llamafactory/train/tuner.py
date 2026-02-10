@@ -28,8 +28,12 @@ from ..extras.packages import is_ray_available
 from ..hparams import get_infer_args, get_ray_args, get_train_args, read_args
 from ..model import load_model, load_tokenizer
 from .callbacks import LogCallback, PissaConvertCallback, ReporterCallback
+from .attn_sft import run_attn_sft
+from .bepo import run_bepo
+from .beft import run_beft
 from .dpo import run_dpo
 from .kto import run_kto
+from .ppl import run_ppl
 from .ppo import run_ppo
 from .pt import run_pt
 from .rm import run_rm
@@ -78,6 +82,14 @@ def _training_function(config: dict[str, Any]) -> None:
         run_dpo(model_args, data_args, training_args, finetuning_args, callbacks)
     elif finetuning_args.stage == "kto":
         run_kto(model_args, data_args, training_args, finetuning_args, callbacks)
+    elif finetuning_args.stage == "attn_sft":
+        run_attn_sft(model_args, data_args, training_args, finetuning_args, generating_args, callbacks)
+    elif finetuning_args.stage == "ppl":
+        run_ppl(model_args, data_args, training_args, finetuning_args, generating_args, callbacks)
+    elif finetuning_args.stage == "bepo":
+        run_bepo(model_args, data_args, training_args, finetuning_args, callbacks)
+    elif finetuning_args.stage == "beft":
+        run_beft(model_args, data_args, training_args, finetuning_args, generating_args, callbacks)
     else:
         raise ValueError(f"Unknown task: {finetuning_args.stage}.")
 

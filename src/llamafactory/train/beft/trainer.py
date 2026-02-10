@@ -356,7 +356,7 @@ class CustomSeq2SeqBEFTTrainer(CustomSeq2SeqPPLTrainer):
 
         return (loss, outputs) if return_outputs else loss
 
-    def log(self, logs: Dict[str, float]) -> None:
+    def log(self, logs: Dict[str, float], *args, **kwargs) -> None:
         """Override log method to include custom metrics including prior_accuracy_threshold_0.5."""
         # Calculate averaged metrics
         metrics = {}
@@ -400,7 +400,7 @@ class CustomSeq2SeqBEFTTrainer(CustomSeq2SeqPPLTrainer):
         logs = {**logs, **metrics}
         
         # Call parent log method
-        super().log(logs)
+        super().log(logs, *args, **kwargs)
         
         # Clear metrics for next cycle
         self._metrics.clear()

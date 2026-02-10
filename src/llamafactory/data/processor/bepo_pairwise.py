@@ -13,11 +13,12 @@
 # limitations under the License.
 
 from collections import defaultdict
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Tuple
 
 from ...extras.constants import IGNORE_INDEX
 from ...extras.logging import get_logger
-from .processor_utils import infer_seqlen
+from .processor_utils import DatasetProcessor, infer_seqlen
 
 from copy import deepcopy
 
@@ -25,7 +26,7 @@ if TYPE_CHECKING:
     from transformers import PreTrainedTokenizer, ProcessorMixin
 
     from ...hparams import DataArguments
-    from ..mm_plugin import ImageInput, VideoInput
+    from ..mm_plugin import AudioInput, ImageInput, VideoInput
     from ..template import Template
 
 
@@ -56,6 +57,7 @@ def _encode_bepo_pairwise_example(
     tools: Optional[str],
     images: Sequence["ImageInput"],
     videos: Sequence["VideoInput"],
+    audios: Sequence["AudioInput"],
     gt_passage_idx: int,
     template: "Template",
     tokenizer: "PreTrainedTokenizer",
@@ -78,8 +80,8 @@ def _encode_bepo_pairwise_example(
         chosen_response = exploded_responses[i]
         rejected_response = exploded_responses[i + K]
 
-        chosen_messages = template.mm_plugin.process_messages(prompt + [chosen_response], images, videos, processor)
-        rejected_messages = template.mm_plugin.process_messages(prompt + [rejected_response], images, videos, processor)
+        chosen_messages = template.mm_plugin.process_messages(prompt + [chosen_response], images, videos, audios, processor)
+        rejected_messages = template.mm_plugin.process_messages(prompt + [rejected_response], images, videos, audios, processor)
         prompt_ids, chosen_ids = template.encode_oneturn(tokenizer, chosen_messages, system, tools)
         _, rejected_ids = template.encode_oneturn(tokenizer, rejected_messages, system, tools)
         if template.efficient_eos:
@@ -128,6 +130,7 @@ def preprocess_bepo_pairwise_dataset(
             tools=examples["_tools"][i],
             images=examples["_images"][i] or [],
             videos=examples["_videos"][i] or [],
+            audios=examples.get("_audios", [None] * len(examples["_prompt"]))[i] or [],
             gt_passage_idx=examples["_gt_passage_idx"][i] or -1,
             template=template,
             tokenizer=tokenizer,
@@ -160,3 +163,12 @@ def print_bepo_pairwise_dataset_example(example: Dict[str, List[int]], tokenizer
     print("rejected_labels:\n{}".format(tokenizer.decode(valid_rejected_labels, skip_special_tokens=False)))
     print("gt_passage_idx:\n{}".format(example["gt_passage_idx"]))
     print("number of passsages (K):\n{}".format(len(example["chosen_input_ids"])))
+
+
+@dataclass
+class BepoPairwiseDatasetProcessor(DatasetProcessor):
+    def preprocess_dataset(self, examples: dict[str, list[Any]]) -> dict[str, list[Any]]:
+        return preprocess_bepo_pairwise_dataset(examples, self.template, self.tokenizer, self.processor, self.data_args)
+
+    def print_data_example(self, example: dict[str, list[int]]) -> None:
+        print_bepo_pairwise_dataset_example(example, self.tokenizer)

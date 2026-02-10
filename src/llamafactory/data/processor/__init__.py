@@ -12,8 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .beft_contrastive import BeftContrastiveDatasetProcessor
+from .bepo_pairwise import BepoPairwiseDatasetProcessor
 from .feedback import FeedbackDatasetProcessor
 from .pairwise import PairwiseDatasetProcessor
+from .ppl_contrastive import PplContrastiveDatasetProcessor
 from .pretrain import PretrainDatasetProcessor
 from .processor_utils import DatasetProcessor
 from .supervised import PackedSupervisedDatasetProcessor, SupervisedDatasetProcessor
@@ -22,9 +25,12 @@ from .unsupervised import UnsupervisedDatasetProcessor
 
 __all__ = [
     "DatasetProcessor",
+    "BeftContrastiveDatasetProcessor",
+    "BepoPairwiseDatasetProcessor",
     "FeedbackDatasetProcessor",
     "PackedSupervisedDatasetProcessor",
     "PairwiseDatasetProcessor",
+    "PplContrastiveDatasetProcessor",
     "PretrainDatasetProcessor",
     "SupervisedDatasetProcessor",
     "UnsupervisedDatasetProcessor",
