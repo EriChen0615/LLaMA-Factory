@@ -1,0 +1,6158 @@
+[
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the height of the Flip-Chip in milimeters?",
+        "role": "user"
+      },
+      {
+        "content": "~3.2",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1352_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1352_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1352_page_20.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1352_page_13.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What percentage of Reddit users deleted Internet cookies in the last 30 days?",
+        "role": "user"
+      },
+      {
+        "content": "41%",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7798_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7798_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7798_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7798_page_12.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What did Apple want to avoid when they created the App Store approval process?",
+        "role": "user"
+      },
+      {
+        "content": "applications that degrade the core experience of the iPhone",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8407_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8407_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8407_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8407_page_3.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is a part or service that are purchased, sold, planned, manufactured, stocked, distributed or prototyped called?",
+        "role": "user"
+      },
+      {
+        "content": "Item",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9522_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9522_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9522_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9522_page_2.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Expressed in percentage terms, which domain has the lowest GPU power consumption?",
+        "role": "user"
+      },
+      {
+        "content": "Desktop and Workstation",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      3
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7499_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7499_page_16.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7499_page_20.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7499_page_4.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which is associated with a greater percentage, Tickets or Personal Care?",
+        "role": "user"
+      },
+      {
+        "content": "Tickets",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6641_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6641_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6641_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6641_page_19.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the difference (in hours) in app usage between WhatsApp and Instagram?",
+        "role": "user"
+      },
+      {
+        "content": "15.4",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4009_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4009_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4009_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4009_page_7.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the Cooling Water Line connected to?",
+        "role": "user"
+      },
+      {
+        "content": "Ozonator Generator",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3659_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3659_page_20.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3659_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3659_page_11.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many star hotels are there in Indonesia?",
+        "role": "user"
+      },
+      {
+        "content": "1623",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10111_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10111_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10111_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10111_page_3.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What percent of the venture capital investments of the country in which # of active VCs in 2012 was 86 are written off?",
+        "role": "user"
+      },
+      {
+        "content": "55",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0,
+      3
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6253_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6253_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6253_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6253_page_7.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the difference in percentage for those who are described as needing to be honest with themselves, compared to those who are described as needing transparency?",
+        "role": "user"
+      },
+      {
+        "content": "60",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0,
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3672_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3672_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3672_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3672_page_2.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      1.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What was 2/27/2014 for the BVP Index, Nasdaq, S&P, and Dow Jones?",
+        "role": "user"
+      },
+      {
+        "content": "Peak",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_985_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_985_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_985_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_985_page_4.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many arms with long sleeves can be seen in the photograph of people sitting at a table?",
+        "role": "user"
+      },
+      {
+        "content": "8",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1269_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1269_page_16.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1269_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1269_page_14.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many more Main Questions than Screening questions were there?",
+        "role": "user"
+      },
+      {
+        "content": "8",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8142_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8142_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8142_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8142_page_12.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the difference in percentage of users reporting using the top messaging app in US and UK or using Twitter at least once a week?",
+        "role": "user"
+      },
+      {
+        "content": "19",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0,
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2868_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2868_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2868_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2868_page_15.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      1.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which country has the 2nd largest gas reserves in the world?",
+        "role": "user"
+      },
+      {
+        "content": "Iran",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9341_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9341_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9341_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9341_page_17.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What percentage of campaigns were successful in 2013?",
+        "role": "user"
+      },
+      {
+        "content": "31",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9891_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9891_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9891_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9891_page_14.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What are two problems with citation-based indicators?",
+        "role": "user"
+      },
+      {
+        "content": "Time, Journals",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0,
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8824_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8824_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8824_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8824_page_12.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      1.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What percentage of the demographic group for which 60% responded that they regularly check their phone for messages, alerts, or calls even though it didn't ring or vibrate worry about spending too much time with their smartphone?",
+        "role": "user"
+      },
+      {
+        "content": "48",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0,
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6707_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6707_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6707_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6707_page_9.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      1.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How much is the solar panel (in BDT)?",
+        "role": "user"
+      },
+      {
+        "content": "400",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4735_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4735_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4735_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4735_page_18.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What percentage of users are outside the US?",
+        "role": "user"
+      },
+      {
+        "content": "77%",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7384_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7384_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7384_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7384_page_17.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which name under the WOMEN heading has the fastest time/reps?",
+        "role": "user"
+      },
+      {
+        "content": "TRICIA",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3696_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3696_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3696_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3696_page_17.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] On the slide titled FROM THE 60'S UNTIL NOW, TELEVISION HAS OCCUPIED A CENTRAL PLACE IN PEOPLE'S LIVES, looking at the images on the slide, what is the label of the photo that has a wall-mounted television in it, 2000's or 1990's?",
+        "role": "user"
+      },
+      {
+        "content": "2000's",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2434_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2434_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2434_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2434_page_11.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] If monthly expenses are Rs. 30,000, how much are they expected to rise to in 20 years?",
+        "role": "user"
+      },
+      {
+        "content": "62,368",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6892_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6892_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6892_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6892_page_10.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What releases immunoglubin?",
+        "role": "user"
+      },
+      {
+        "content": "plasma cell in lymphoid",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8639_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8639_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8639_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8639_page_9.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the name of the author of \"Domain-Driven DESIGN\"?",
+        "role": "user"
+      },
+      {
+        "content": "Eric Evans",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2939_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2939_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2939_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2939_page_12.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What position does frederick chanut hold in \"Marketing We Trust\" ?",
+        "role": "user"
+      },
+      {
+        "content": "Managing Director",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8698_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8698_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8698_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8698_page_2.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the complexity of prediction in analytics?",
+        "role": "user"
+      },
+      {
+        "content": "High",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9201_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9201_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9201_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9201_page_4.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] In Jun-14 how many Mentions in area where there is Accelerating Interest in Bitcoin were there?",
+        "role": "user"
+      },
+      {
+        "content": "9,500",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0,
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6073_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6073_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6073_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6073_page_12.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      1.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the denominator in the equation used to calculate A?",
+        "role": "user"
+      },
+      {
+        "content": "person",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7620_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7620_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7620_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7620_page_8.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What type has the greatest Retail SF in major U.S. markets?",
+        "role": "user"
+      },
+      {
+        "content": "General Retail",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7942_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7942_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7942_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7942_page_4.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which type of railway has the highest percentage of potential without additional technology?",
+        "role": "user"
+      },
+      {
+        "content": "Local lines",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3645_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3645_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3645_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3645_page_1.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the total figure of retweets when Francois Gautier and Dibang are combined?",
+        "role": "user"
+      },
+      {
+        "content": "1964",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2614_page_20.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2614_page_16.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2614_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2614_page_1.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] In 2013, which TYPE OF SEAT PURCHASED accounts for the lowest percentage purchased?",
+        "role": "user"
+      },
+      {
+        "content": "First Class",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3002_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3002_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3002_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3002_page_16.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which compound is rated sweeter, Fructose or Sucrose?",
+        "role": "user"
+      },
+      {
+        "content": "Fructose",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1945_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1945_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1945_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1945_page_8.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What are the classifications of the kind of tumors that are unique to the jaws and originate from remnants of epithelium, ectomesenchyme or mesenchyme associated with tooth development?",
+        "role": "user"
+      },
+      {
+        "content": "BENIGN, MALIGNANT",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0,
+      3
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3200_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3200_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3200_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3200_page_5.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How much more were Capital Expenditures in 3Q15 than 3Q14 in millions of dollars?",
+        "role": "user"
+      },
+      {
+        "content": "26",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_217_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_217_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_217_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_217_page_11.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What percentage OF GOOGLE ADVERTISERS DON'T HAVE MOBILE-OPTIMIZED SITES?",
+        "role": "user"
+      },
+      {
+        "content": "79",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5065_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5065_page_16.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5065_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5065_page_1.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What’s the minimum population of cities defined as “Mid-size middleweights”?",
+        "role": "user"
+      },
+      {
+        "content": "2 million",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7888_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7888_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7888_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7888_page_19.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the most important social media for Gavin?",
+        "role": "user"
+      },
+      {
+        "content": "Snapchat",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8645_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8645_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8645_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8645_page_18.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What percentage of high school students say classmates smoke, drink, or use other drugs during the school day?",
+        "role": "user"
+      },
+      {
+        "content": "86",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10233_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10233_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10233_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10233_page_13.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many trends are to be build in 2015 plan?",
+        "role": "user"
+      },
+      {
+        "content": "4",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10573_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10573_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10573_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10573_page_9.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the woman's index finger doing in the photograph with a white background?",
+        "role": "user"
+      },
+      {
+        "content": "pointing",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1574_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1574_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1574_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1574_page_11.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which has a higher Win Rate of Forecast Deals, Informal Coaching Process or Formal Coaching Process?",
+        "role": "user"
+      },
+      {
+        "content": "Formal Coaching Process",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4886_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4886_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4886_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4886_page_3.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Was the percent increase greater in 2007 or 2008?",
+        "role": "user"
+      },
+      {
+        "content": "2008",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5439_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5439_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5439_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5439_page_18.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many times more data goes through the Web-graph than the Facebook friends graph?",
+        "role": "user"
+      },
+      {
+        "content": "20",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6751_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6751_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6751_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6751_page_8.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What are the 3 categories that make up Project?",
+        "role": "user"
+      },
+      {
+        "content": "Engineering, Procurement, Construction",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3495_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3495_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3495_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3495_page_17.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] When does the Cash Flow become positive?",
+        "role": "user"
+      },
+      {
+        "content": "Month 14",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_90_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_90_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_90_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_90_page_5.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What percentage of all actions is \"me time\"?",
+        "role": "user"
+      },
+      {
+        "content": "46",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2694_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2694_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2694_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2694_page_17.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the difference in percentage of recruiters who use or plan to use social media compared to the percentage who have hired a candidate through social media?",
+        "role": "user"
+      },
+      {
+        "content": "22",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3846_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3846_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3846_page_16.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3846_page_1.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What occurs on the flow between Dockerfile to Images?",
+        "role": "user"
+      },
+      {
+        "content": "build",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2996_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2996_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2996_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2996_page_2.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] On the slide with the text LISPRO VS REGULAR written in the top and center with a line graph below, what word is attributed to the orange line?",
+        "role": "user"
+      },
+      {
+        "content": "Regular",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1992_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1992_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1992_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1992_page_8.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What period does The Top Non-Profits Social Media report cover?",
+        "role": "user"
+      },
+      {
+        "content": "Oct 01 2015 - Dec 31 2015",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7082_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7082_page_20.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7082_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7082_page_10.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the number of visits from mobile?",
+        "role": "user"
+      },
+      {
+        "content": "1045",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2731_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2731_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2731_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2731_page_6.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What did Gordon Moore say would double every 18 months?",
+        "role": "user"
+      },
+      {
+        "content": "The number of transistors per chip",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7611_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7611_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7611_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7611_page_13.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which band is described as “England’s Phenomenal Pop Combo”?",
+        "role": "user"
+      },
+      {
+        "content": "THE BEATLES",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7472_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7472_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7472_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7472_page_6.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many procedures are there in North Carolina?",
+        "role": "user"
+      },
+      {
+        "content": "1,200",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10351_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10351_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10351_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_10351_page_12.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Into what does air mass flow during intake?",
+        "role": "user"
+      },
+      {
+        "content": "combustion chamber",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_803_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_803_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_803_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_803_page_15.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many types of common vanity metrics are there?",
+        "role": "user"
+      },
+      {
+        "content": "7",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8949_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8949_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8949_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8949_page_20.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many equally probable arrangements of chromosomes are there at metaphase?",
+        "role": "user"
+      },
+      {
+        "content": "2",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_810_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_810_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_810_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_810_page_7.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] On the slide titled What all this means? how many more red shoes are visible than blue socks?",
+        "role": "user"
+      },
+      {
+        "content": "0",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2154_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2154_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2154_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2154_page_13.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How much the LinkedIn group will bring more views from out from network?",
+        "role": "user"
+      },
+      {
+        "content": "4 times",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      2
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9114_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9114_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9114_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9114_page_16.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] On the slide titled SOURCES OF FOOD INFORMATION: with the subtitle GENERAL FOOD NEWS and looking at the image on that slide, what is the combined percentage of Television and Radio?",
+        "role": "user"
+      },
+      {
+        "content": "94",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1533_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1533_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1533_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1533_page_20.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the top-level domain of the \"oecd\" URL?",
+        "role": "user"
+      },
+      {
+        "content": "org",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3515_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3515_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3515_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3515_page_14.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many Short Answer items are there for Task Name WB Hickok?",
+        "role": "user"
+      },
+      {
+        "content": "5",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5094_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5094_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5094_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5094_page_6.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many types of infections can be caused by healthcare waste?",
+        "role": "user"
+      },
+      {
+        "content": "7",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0,
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8546_page_20.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8546_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8546_page_16.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8546_page_1.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      1.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] On the slide that has the text Old on the left and a diagram on the right, what is the word written on the middle of the left part of the diagram?",
+        "role": "user"
+      },
+      {
+        "content": "Page Cache",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1946_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1946_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1946_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1946_page_19.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Is the Obesity rate lower in CA or AR?",
+        "role": "user"
+      },
+      {
+        "content": "CA",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6093_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6093_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6093_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6093_page_9.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which type of railway has the lowest percentage of potential if additional technologies are used?",
+        "role": "user"
+      },
+      {
+        "content": "Main lines",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3644_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3644_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3644_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3644_page_4.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Were there more exabytes in 2005 or 2008?",
+        "role": "user"
+      },
+      {
+        "content": "2008",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5342_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5342_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5342_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5342_page_16.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many stages are there in EIA?",
+        "role": "user"
+      },
+      {
+        "content": "4",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      3
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9087_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9087_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9087_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9087_page_17.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many Inductive hypothesis are there?",
+        "role": "user"
+      },
+      {
+        "content": "4",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8415_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8415_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8415_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8415_page_13.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the operating system of ASR 9000?",
+        "role": "user"
+      },
+      {
+        "content": "IOS XR",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8522_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8522_page_20.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8522_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8522_page_11.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Regarding replacing dye with Perovskite, what is the name of the element layer located above the Liquid Electrolyte?",
+        "role": "user"
+      },
+      {
+        "content": "Gold",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3421_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3421_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3421_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3421_page_12.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many components are there of the activity that starts with the constitution of a planning team?",
+        "role": "user"
+      },
+      {
+        "content": "5",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3727_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3727_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3727_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3727_page_16.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Is the step that involves identifying the scope, objectives, measurements, assumptions and restrictions, project manager authority, and major participants an item applied to Planning or Initiating?",
+        "role": "user"
+      },
+      {
+        "content": "Initiating",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0,
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4670_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4670_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4670_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4670_page_12.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      1.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Is a greater number in Western Europe or Japan?",
+        "role": "user"
+      },
+      {
+        "content": "Western Europe",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5259_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5259_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5259_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5259_page_12.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which social media app was least used by 18-34 years old?",
+        "role": "user"
+      },
+      {
+        "content": "Tumblr",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8451_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8451_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8451_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8451_page_9.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the difference in the number of companies becoming unicorns between 2012 and 2013?",
+        "role": "user"
+      },
+      {
+        "content": "5",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3922_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3922_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3922_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3922_page_6.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which quarter reports a higher Mobile internet user search and download percentage: 2014Q4 or 2015Q1?",
+        "role": "user"
+      },
+      {
+        "content": "2015Q1",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2974_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2974_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2974_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2974_page_6.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] In what year is the Total value of the Public Cloud Services Market the highest?",
+        "role": "user"
+      },
+      {
+        "content": "2016",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      2
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4540_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4540_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4540_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4540_page_8.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] For ages 18-34, what is the difference in percentage of those who did not visit a doctor and those who visited a doctor 7+ times?",
+        "role": "user"
+      },
+      {
+        "content": "7",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2772_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2772_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2772_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2772_page_8.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] For SaaS, how many functions are Automated and Managed by the Cloud Provider?",
+        "role": "user"
+      },
+      {
+        "content": "6",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3404_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3404_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3404_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3404_page_17.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Regarding questions for the BOR session, in which Step do we ask Who the competition is?",
+        "role": "user"
+      },
+      {
+        "content": "6",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      3
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5005_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5005_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5005_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5005_page_16.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which industry had the highest voluntary turnover rate in the year of the HR Daily Advisor that is cited in the presentation?",
+        "role": "user"
+      },
+      {
+        "content": "Hospitality",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0,
+      2
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_366_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_366_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_366_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_366_page_19.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What percentage have vacancies fallen to?",
+        "role": "user"
+      },
+      {
+        "content": "Near 4",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      2
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9782_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9782_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9782_page_20.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9782_page_1.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which campaign sent the most emails?",
+        "role": "user"
+      },
+      {
+        "content": "Obama for America",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6671_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6671_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6671_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6671_page_19.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What makes up 8% of the pie chart?",
+        "role": "user"
+      },
+      {
+        "content": "iPhone 4",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5980_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5980_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5980_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5980_page_3.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Humans are species of which primate?",
+        "role": "user"
+      },
+      {
+        "content": "homo sapiens",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8617_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8617_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8617_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8617_page_20.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the combined percentage of Proceeds coming from Industrial & Others and Energy?",
+        "role": "user"
+      },
+      {
+        "content": "22",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4011_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4011_page_20.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4011_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4011_page_3.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the website related to the \"Best Global Brands 2014\" chart?",
+        "role": "user"
+      },
+      {
+        "content": "bestglobalbrands.com",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1563_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1563_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1563_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1563_page_16.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Regarding the venture funding of digital health companies, what was the amount in B dollars in DEC 2014?",
+        "role": "user"
+      },
+      {
+        "content": "4.1",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5571_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5571_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5571_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5571_page_12.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] On what day did Dell announce it will accept bitcoin?",
+        "role": "user"
+      },
+      {
+        "content": "18 Jul",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6019_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6019_page_16.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6019_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6019_page_6.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] The open and close must occur in which third of the price bar range?",
+        "role": "user"
+      },
+      {
+        "content": "lower",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4045_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4045_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4045_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4045_page_10.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What type of reproduction gives rise to Genetically Unique Offspring?",
+        "role": "user"
+      },
+      {
+        "content": "Sexual",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7355_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7355_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7355_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7355_page_4.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which country has the lowest number of users?",
+        "role": "user"
+      },
+      {
+        "content": "NICARAGUA",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7673_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7673_page_16.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7673_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7673_page_20.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which was introduced earlier, tea or cheese?",
+        "role": "user"
+      },
+      {
+        "content": "Cheese",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      2
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1356_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1356_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1356_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1356_page_16.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What are the 4 factors that make up the kind of justice that refers to employees' perception from justice and fair behaviors?",
+        "role": "user"
+      },
+      {
+        "content": "Ethics, Religion, Fairness, Law",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0,
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3426_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3426_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3426_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3426_page_10.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      1.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many relevant posts were found from Aug. 26 - Feb. 24, 2011?",
+        "role": "user"
+      },
+      {
+        "content": "225478",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9257_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9257_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9257_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9257_page_3.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the availability (in %) of Water Sanitation in RURAL AREAS?",
+        "role": "user"
+      },
+      {
+        "content": "21",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8335_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8335_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8335_page_16.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8335_page_17.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the name of the artist who drew the cartoon?",
+        "role": "user"
+      },
+      {
+        "content": "TOM FISHBURNE",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2693_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2693_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2693_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2693_page_1.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What does eye signals reveal?",
+        "role": "user"
+      },
+      {
+        "content": "thoughts, attitudes, emotion",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0,
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8616_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8616_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8616_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8616_page_20.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      1.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] In 2008, was ad revenue higher for Google or US Newspapers?",
+        "role": "user"
+      },
+      {
+        "content": "US Newspapers",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3821_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3821_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3821_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3821_page_6.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the most increasing valuable engagement tool?",
+        "role": "user"
+      },
+      {
+        "content": "Experience",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9330_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9330_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9330_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9330_page_13.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Regarding the European Union, who is the Commissioner for Digital Agenda?",
+        "role": "user"
+      },
+      {
+        "content": "Neelie Kroes",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_740_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_740_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_740_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_740_page_7.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Who issues Statement of work (SOW)?",
+        "role": "user"
+      },
+      {
+        "content": "Project Initiator or Sponsor",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9647_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9647_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9647_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9647_page_18.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many major objectives does PMI has for bringing personalized medicine to Canadians?",
+        "role": "user"
+      },
+      {
+        "content": "4",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9604_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9604_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9604_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9604_page_16.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] In which year is there the lowest number of boomers?",
+        "role": "user"
+      },
+      {
+        "content": "2030",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2746_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2746_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2746_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2746_page_1.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which Ukrainian city listed has the smallest surface area?",
+        "role": "user"
+      },
+      {
+        "content": "ODESSA",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8317_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8317_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8317_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8317_page_18.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How much are the frequency limit of audibility?",
+        "role": "user"
+      },
+      {
+        "content": "20 HZ to 20,000 HZ",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      3
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8937_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8937_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8937_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8937_page_6.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Which network was most commonly described as the best for internet/browsing?",
+        "role": "user"
+      },
+      {
+        "content": "MTN",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7179_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7179_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7179_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7179_page_16.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What are three examples of Data Access and Analysis?",
+        "role": "user"
+      },
+      {
+        "content": "Queries and reports, OLAP, Data mining",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      2
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_135_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_135_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_135_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_135_page_4.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] On the slide titled How to Drive Growth with Customer Success Metrics, how many more color photographs than black and white photographs are visible in the images?",
+        "role": "user"
+      },
+      {
+        "content": "2",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2163_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2163_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2163_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2163_page_17.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] How many Mn Total Telephone Subscribers are there?",
+        "role": "user"
+      },
+      {
+        "content": "1002.05",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6130_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6130_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6130_page_20.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6130_page_18.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Did a greater percentage of Respondents say Social Media is Unimportant or Important?",
+        "role": "user"
+      },
+      {
+        "content": "Important",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6149_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6149_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6149_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_6149_page_3.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What month is the deadline for Online tax returns?",
+        "role": "user"
+      },
+      {
+        "content": "January",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8104_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8104_page_10.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8104_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8104_page_17.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Who is doing the presentation titled “Urban Sprawl”?",
+        "role": "user"
+      },
+      {
+        "content": "Bill Burkey",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8219_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8219_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8219_page_18.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_8219_page_2.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] In what year were there 725149 abortions?",
+        "role": "user"
+      },
+      {
+        "content": "2010",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4947_page_4.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4947_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4947_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4947_page_6.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the difference in percentage Return between the Best Case and Most Likely Scenarios?",
+        "role": "user"
+      },
+      {
+        "content": "20",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      2
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4112_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4112_page_16.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4112_page_5.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_4112_page_3.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What do All requests to access internal database objects go through?",
+        "role": "user"
+      },
+      {
+        "content": "lock table",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5503_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5503_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5503_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5503_page_16.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What type of bond absorbs electromagnetic radiation with a wave number of 3500 cm^-1?",
+        "role": "user"
+      },
+      {
+        "content": "N-H",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7999_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7999_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7999_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_7999_page_6.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is TTL an abbreviation for?",
+        "role": "user"
+      },
+      {
+        "content": "Time To Live",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3599_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3599_page_20.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3599_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_3599_page_19.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What type of correlation does Pagerank and accuracy of information has on web?",
+        "role": "user"
+      },
+      {
+        "content": "Poor",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9819_page_13.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9819_page_2.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9819_page_17.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9819_page_1.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the name of the man visible in a black and white photo wearing a jacket with a hood?",
+        "role": "user"
+      },
+      {
+        "content": "Albert Wong",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1418_page_1.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1418_page_7.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1418_page_19.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_1418_page_9.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the keyword being searched in the Google search example?",
+        "role": "user"
+      },
+      {
+        "content": "Flu",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2761_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2761_page_3.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2761_page_8.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_2761_page_11.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the s Character of the weakest acid as a percentage?",
+        "role": "user"
+      },
+      {
+        "content": "25",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      1
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_425_page_16.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_425_page_12.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_425_page_6.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_425_page_15.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] What is the current approach of Abtran?",
+        "role": "user"
+      },
+      {
+        "content": "Holistic approach",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9340_page_16.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9340_page_11.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9340_page_9.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_9340_page_13.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "messages": [
+      {
+        "content": "<image> Answer the question directly without explanations based on the provided slides.<<<EVIDENCE>>>\n[QUESTION] Where is the beaker containing the aqueous solution of unknown concentration placed?",
+        "role": "user"
+      },
+      {
+        "content": "under the burette",
+        "role": "assistant"
+      }
+    ],
+    "images": [],
+    "gt_passage_idx": [
+      0
+    ],
+    "passages": [
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5237_page_14.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5237_page_15.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5237_page_16.png"
+        ],
+        "text": ""
+      },
+      {
+        "images": [
+          "/rds/project/rds-hirYTW1FQIw/shared_space/vqa_data/KBVQA_data/SlideVQA/train_5237_page_11.png"
+        ],
+        "text": ""
+      }
+    ],
+    "passage_scores": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+]

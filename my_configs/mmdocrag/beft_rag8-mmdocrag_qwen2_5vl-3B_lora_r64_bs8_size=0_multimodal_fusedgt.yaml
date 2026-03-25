@@ -1,0 +1,55 @@
+### model
+model_name_or_path: Qwen/Qwen2.5-VL-3B-Instruct
+
+### method
+stage: beft
+do_train: true
+finetuning_type: lora
+lora_target: all
+lora_rank: 16
+lora_alpha: 32
+ppl_hidden_state_offset: 4
+ppl_prior_loss_factor: 1.0
+ppl_prior_loss_type: logistic
+prior_head_lr: 1.0e-6
+
+use_ppl_loss: true
+ppl_loss_type: ensemble
+ppl_prior_modeling: mlp_head
+use_prior_head_loss: true
+ppl_prior_head_num_of_layers: 2
+ppl_prior_head_proj_dim: 1024
+beft_use_gt_subset_branch: true
+beft_gt_subset_loss_factor: 1.0
+
+### dataset
+dataset: mmdocrag-rag8-beft-size=0-offset=0-multimodal-max_len=2048
+template: qwen2_vl
+cutoff_len: 2500
+max_samples: 200000
+overwrite_cache: true
+preprocessing_num_workers: 16
+
+### output
+output_dir: saves/qwen2_5_vl-3b/lora/mmdocrag/beft/rag8-mmdocrag-size=0-multimodal-max_len=2048-fusedgt
+logging_steps: 10
+save_steps: 100
+plot_loss: true
+overwrite_output_dir: true
+report_to: wandb
+
+### train
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 4
+learning_rate: 1.0e-5
+num_train_epochs: 1.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+bf16: true
+ddp_timeout: 180000000
+
+### eval
+val_size: 64
+per_device_eval_batch_size: 1
+eval_strategy: steps
+eval_steps: 100

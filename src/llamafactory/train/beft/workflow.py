@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 import torch
 
@@ -36,6 +36,7 @@ if TYPE_CHECKING:
     from ...hparams import DataArguments, FinetuningArguments, GeneratingArguments, ModelArguments
 
 
+
 @dataclass
 class BEFTDataCollator(MultiModalDataCollatorForSeq2Seq):
     """
@@ -43,43 +44,59 @@ class BEFTDataCollator(MultiModalDataCollatorForSeq2Seq):
     Each passage has its own images list stored in all_passage_images.
     BEFT does NOT perform swap operation - uses original gt_passage_idx.
     """
+
+    def _build_gt_subset_batch(self, features: List[Dict[str, Any]]) -> Optional[Dict[str, torch.Tensor]]:
+        gt_subset_features = []
+        for feature in features:
+            if feature.get("gt_subset_input_ids") is None:
+                continue
+
+            gt_subset_features.append({
+                "input_ids": feature["gt_subset_input_ids"],
+                "attention_mask": feature["gt_subset_attention_mask"],
+                "labels": feature["gt_subset_labels"],
+                "images": feature.get("gt_subset_images") or feature.get("images"),
+                "videos": feature["videos"],
+            })
+
+        if not gt_subset_features:
+            return None
+
+        gt_subset_batch = super().__call__(gt_subset_features)
+        return {f"gt_subset_{key}": value for key, value in gt_subset_batch.items()}
+
     def __call__(self, features):
+        gt_subset_batch = self._build_gt_subset_batch(features)
         concatenated_features = []
-        passage_image_paths_batch = []  # Store image paths for each feature
-        deflection_labels = []  # Store deflection labels (one per feature)
-        
+        passage_image_paths_batch = []
+        deflection_labels = []
+
         for feature in features:
             K = len(feature["all_input_ids"])
             expanded_features = [None] * K
             gt_passage_idx = feature["gt_passage_idx"]
-            # Extract deflection label (default to 0 if not present)
             deflection_label = feature.get("deflection", 0)
             deflection_labels.append(deflection_label)
-            
-            # Normalize gt_passage_idx to list format
+
             if isinstance(gt_passage_idx, list):
-                # Filter out -1 values (used as placeholder for "no GT")
                 gt_passage_idx_set = {int(idx) for idx in gt_passage_idx if int(idx) != -1}
             else:
                 gt_passage_idx_set = {int(gt_passage_idx)} if gt_passage_idx != -1 else set()
-            
-            # Get passage-specific images if available, otherwise use main images
+
             all_passage_images = feature.get("all_passage_images", None)
-            # Store image paths for this feature (for debugging)
             feature_image_paths = []
-            
-            # BEFT: No swap operation - keep original order
-            # Add is_gt_passage flag to each expanded feature (as int, will be converted to tensor by parent)
-            for idx, (input_ids, attention_mask, labels) in enumerate(zip(feature["all_input_ids"], feature["all_attention_mask"], feature["all_labels"])):
+
+            for idx, (input_ids, attention_mask, labels) in enumerate(
+                zip(feature["all_input_ids"], feature["all_attention_mask"], feature["all_labels"])
+            ):
                 passage_images = all_passage_images[idx] if idx < len(all_passage_images) else feature["images"]
-                # Extract image paths (images can be list of paths or single path)
                 passage_image_paths = []
                 if isinstance(passage_images, list):
                     passage_image_paths = [img for img in passage_images if isinstance(img, str)]
                 elif isinstance(passage_images, str):
                     passage_image_paths = [passage_images]
                 feature_image_paths.append(passage_image_paths)
-                
+
                 expanded_features[idx] = {
                     "input_ids": input_ids,
                     "attention_mask": attention_mask,
@@ -91,56 +108,39 @@ class BEFTDataCollator(MultiModalDataCollatorForSeq2Seq):
             concatenated_features.extend(expanded_features)
             passage_image_paths_batch.append(feature_image_paths)
 
-        # Call parent to process concatenated features
-        # Note: parent's __call__ will pop("images") from features, so we need to save paths before
         batch = super().__call__(concatenated_features)
-        
-        # Store image paths in batch for debugging
-        # To avoid AttributeError when accelerate tries to move lists to device,
-        # we encode the paths as bytes and convert to tensor (inefficient but works)
-        # passage_image_paths_batch is a list of lists: [[passage_0_paths, passage_1_paths, ...], ...]
-        # Since passages are concatenated, we need to flatten and match the order
+
         if len(passage_image_paths_batch) > 0:
-            # For simplicity, store first feature's paths (assuming batch_size=1 per feature in BEFT)
             if len(passage_image_paths_batch) == 1:
                 all_paths = passage_image_paths_batch[0]
             else:
-                # Multiple features - flatten all
                 all_paths = []
                 for feature_paths in passage_image_paths_batch:
                     all_paths.extend(feature_paths)
-            
-            # Encode paths as a string (using a separator that won't appear in paths)
-            # Format: "path1|||path2|||path3" for each passage, separated by ":::"
-            # Always encode all passages, even if some have empty paths
+
             encoded_paths = []
             for passage_paths in all_paths:
                 if isinstance(passage_paths, list):
-                    # Filter out None and empty strings, but keep the list structure
                     valid_paths = [str(p) for p in passage_paths if p]
-                    # Join paths with ||| separator (empty string if no paths)
                     passage_str = "|||".join(valid_paths)
                 else:
                     passage_str = str(passage_paths) if passage_paths else ""
-                # Always append, even if empty, to maintain passage order
                 encoded_paths.append(passage_str)
-            
-            # Join all passages with ::: separator
-            # This ensures we have exactly K passages encoded
+
             all_paths_str = ":::".join(encoded_paths)
-            
-            # Convert string to bytes and then to tensor (can be moved to device safely)
-            path_bytes = all_paths_str.encode('utf-8')
+            path_bytes = all_paths_str.encode("utf-8")
             batch["_passage_image_paths_tokenized"] = torch.tensor(list(path_bytes), dtype=torch.long)
-        
-        # Store deflection labels in batch (one per original feature, not per passage)
-        # In BEFT, typically batch_size=1 per feature, so we have one deflection label for K passages
+
         if deflection_labels:
             batch["deflection"] = torch.tensor(deflection_labels, dtype=torch.long)
-        
+
+        if gt_subset_batch is not None:
+            batch.update(gt_subset_batch)
+
         return batch
 
 def run_beft(
+
     model_args: "ModelArguments",
     data_args: "DataArguments",
     training_args: "Seq2SeqTrainingArguments",

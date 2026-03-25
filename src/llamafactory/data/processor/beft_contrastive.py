@@ -43,11 +43,9 @@ def _expand_prompt_with_passages(prompt: Sequence[Dict[str, str]], passages: Seq
         this_prompt = deepcopy(prompt)
         prompt_content = this_prompt[-1]['content']
         
-        # Ensure prompt_content is a string
         if not isinstance(prompt_content, str):
             raise TypeError(f"Prompt content at index {psg_idx} is not a string. Got type: {type(prompt_content)}, value: {prompt_content}")
         
-        # Extract text from passage dictionary
         if isinstance(psg, dict):
             if "text" not in psg:
                 raise ValueError(f"Passage at index {psg_idx} is a dict but missing 'text' key. Passage: {psg}")
@@ -55,12 +53,16 @@ def _expand_prompt_with_passages(prompt: Sequence[Dict[str, str]], passages: Seq
             if not isinstance(passage_text, str):
                 raise TypeError(f"Passage at index {psg_idx} has 'text' key but value is not a string. Got type: {type(passage_text)}, value: {passage_text}")
             if "images" in psg:
-                passage_text = " ".join(["<image>"] * len(psg["images"])) + " " + passage_text
+                pass
+                # num_imgs = len(psg["images"]) if isinstance(psg["images"], (list, tuple)) else (1 if psg["images"] is not None else 0)
+                # existing = passage_text.count("<image>")
+                # if num_imgs > 0 and existing != num_imgs:
+                #     if existing != 0:
+                #         passage_text = passage_text.replace("<image>", "")
+                #     passage_text = " ".join(["<image>"] * num_imgs) + " " + passage_text
         else:
-            # If it's not a dict, convert to string
             passage_text = str(psg)
         
-        # Ensure passage_text is a string before replace
         if not isinstance(passage_text, str):
             raise TypeError(f"passage_text is not a string after processing. Got type: {type(passage_text)}, value: {passage_text}")
         
@@ -69,7 +71,43 @@ def _expand_prompt_with_passages(prompt: Sequence[Dict[str, str]], passages: Seq
 
         all_prompts[psg_idx] = this_prompt
 
-    return all_prompts, [response]*len(passages)
+    return all_prompts, [response] * len(passages)
+
+
+def _normalize_gt_passage_idx(gt_passage_idx: Union[int, List[int]]) -> List[int]:
+    if isinstance(gt_passage_idx, list):
+        return [int(idx) for idx in gt_passage_idx if int(idx) != -1]
+    if int(gt_passage_idx) == -1:
+        return []
+    return [int(gt_passage_idx)]
+
+
+def _build_fused_gt_passage(passages: Sequence[Dict[str, Any]], gt_passage_idx: Union[int, List[int]]) -> Optional[Dict[str, Any]]:
+    gt_indices = [idx for idx in _normalize_gt_passage_idx(gt_passage_idx) if 0 <= idx < len(passages)]
+    if len(gt_indices) <= 1:
+        return None
+
+    fused_texts: List[str] = []
+    fused_images: List[Any] = []
+    for idx in gt_indices:
+        passage = passages[idx]
+        if isinstance(passage, dict):
+            fused_texts.append(str(passage.get("text", "")))
+            passage_images = passage.get("images")
+            if passage_images is None:
+                continue
+            if isinstance(passage_images, (list, tuple)):
+                fused_images.extend(passage_images)
+            else:
+                fused_images.append(passage_images)
+        else:
+            fused_texts.append(str(passage))
+
+    fused_passage: Dict[str, Any] = {"text": "\n\n".join(text for text in fused_texts if text)}
+    if fused_images:
+        fused_passage["images"] = fused_images
+    return fused_passage
+
 
 def _encode_beft_contrastive_example(
     prompt: Sequence[Dict[str, str]],
@@ -102,10 +140,8 @@ def _encode_beft_contrastive_example(
         passage = passages[psg_idx]
         passage_images = list(images)
         
-        # Get passage image if it exists (field name is "images" in the data)
         if isinstance(passage, dict) and "images" in passage and passage["images"] is not None:
             passage_image = passage["images"]
-            # passage["images"] is already a list, so extend directly
             if isinstance(passage_image, (list, tuple)):
                 passage_images.extend(passage_image)
             else:
@@ -123,7 +159,7 @@ def _encode_beft_contrastive_example(
         encoded_pairs = template.encode_multiturn(tokenizer, messages, system, tools)
         total_length = len(input_ids) + (1 if template.efficient_eos else 0)
         if mask_history:
-            encoded_pairs = encoded_pairs[::-1]  # high priority for last turns
+            encoded_pairs = encoded_pairs[::-1]
 
         for turn_idx, (source_ids, target_ids) in enumerate(encoded_pairs):
             if total_length >= cutoff_len:
@@ -141,12 +177,12 @@ def _encode_beft_contrastive_example(
             else:
                 source_label = [IGNORE_INDEX] * source_len
 
-            if mask_history and turn_idx != 0:  # train on the last turn only
+            if mask_history and turn_idx != 0:
                 target_label = [IGNORE_INDEX] * target_len
             else:
                 target_label = target_ids
 
-            if mask_history:  # reversed sequences
+            if mask_history:
                 input_ids = source_ids + target_ids + input_ids
                 labels = source_label + target_label + labels
             else:
@@ -163,6 +199,7 @@ def _encode_beft_contrastive_example(
 
     return all_input_ids, all_attention_masks, all_labels, all_passage_images
 
+
 def preprocess_beft_contrastive_dataset(
     examples: Dict[str, List[Any]],
     template: "Template",
@@ -173,8 +210,6 @@ def preprocess_beft_contrastive_dataset(
     """
     Preprocess BEFT contrastive dataset. Passages are dictionaries with "text" and "images" keys.
     """
-    # build inputs with format `<bos> X Y <eos>` and labels with format `<ignore> ... <ignore> Y <eos>`
-    # for multiturn examples, we only mask the prompt part in each prompt-response pair.
     model_inputs = defaultdict(list)
     for i in range(len(examples["_prompt"])):
         if len(examples["_prompt"][i]) % 2 != 1 or len(examples["_response"][i]) != 1:
@@ -200,12 +235,40 @@ def preprocess_beft_contrastive_dataset(
         )
         model_inputs["all_input_ids"].append(all_input_ids)
         model_inputs["all_attention_mask"].append(all_attention_mask)
-        # Store passage-specific images for each passage
         model_inputs["all_passage_images"].append(all_passage_images)
         model_inputs["videos"].append(examples["_videos"][i])
         model_inputs["all_labels"].append(all_labels)
         model_inputs["gt_passage_idx"].append(examples["_gt_passage_idx"][i])
-        # Add deflection label if present (default to 0 if not provided)
+
+        fused_gt_passage = _build_fused_gt_passage(examples["_passages"][i], examples["_gt_passage_idx"][i])
+        if fused_gt_passage is not None:
+            gt_subset_input_ids, gt_subset_attention_mask, gt_subset_labels, gt_subset_images = _encode_beft_contrastive_example(
+                prompt=examples["_prompt"][i],
+                response=examples["_response"][i],
+                passages=[fused_gt_passage],
+                system=examples["_system"][i],
+                tools=examples["_tools"][i],
+                images=examples["_images"][i] or [],
+                videos=examples["_videos"][i] or [],
+                audios=examples.get("_audios", [None] * len(examples["_prompt"]))[i] or [],
+                gt_passage_idx=0,
+                template=template,
+                tokenizer=tokenizer,
+                processor=processor,
+                cutoff_len=data_args.cutoff_len,
+                train_on_prompt=data_args.train_on_prompt,
+                mask_history=data_args.mask_history,
+            )
+            model_inputs["gt_subset_input_ids"].append(gt_subset_input_ids[0])
+            model_inputs["gt_subset_attention_mask"].append(gt_subset_attention_mask[0])
+            model_inputs["gt_subset_labels"].append(gt_subset_labels[0])
+            model_inputs["gt_subset_images"].append(gt_subset_images[0])
+        else:
+            model_inputs["gt_subset_input_ids"].append(None)
+            model_inputs["gt_subset_attention_mask"].append(None)
+            model_inputs["gt_subset_labels"].append(None)
+            model_inputs["gt_subset_images"].append(None)
+
         deflection_value = examples.get("_deflection", [0] * len(examples["_prompt"]))
         if isinstance(deflection_value, list):
             model_inputs["deflection"].append(deflection_value[i] if i < len(deflection_value) else 0)
@@ -214,12 +277,13 @@ def preprocess_beft_contrastive_dataset(
 
     return model_inputs
 
+
 def print_beft_contrastive_dataset_example(example: Dict[str, List[int]], tokenizer: "PreTrainedTokenizer") -> None:
     print("================================================")
     print("Inspecting BEFT example:")
-    print(f"\tNumber of input_ids: {len(example['all_input_ids'])}")
-    print(f"\tgt_passage_idx: {example['gt_passage_idx']}")
-    print(f"\tgt_input: {tokenizer.decode(example['all_input_ids'][0], skip_special_tokens=True)}")
+    print(f"	Number of input_ids: {len(example['all_input_ids'])}")
+    print(f"	gt_passage_idx: {example['gt_passage_idx']}")
+    print(f"	gt_input: {tokenizer.decode(example['all_input_ids'][0], skip_special_tokens=True)}")
 
 
 @dataclass
@@ -229,4 +293,3 @@ class BeftContrastiveDatasetProcessor(DatasetProcessor):
 
     def print_data_example(self, example: dict[str, list[int]]) -> None:
         print_beft_contrastive_dataset_example(example, self.tokenizer)
-

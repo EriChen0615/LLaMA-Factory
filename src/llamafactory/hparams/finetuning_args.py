@@ -388,7 +388,7 @@ class PPLArguments:
         default="joint",
         metadata={"help": "The type of the PPL loss to use."},
     )
-    ppl_prior_modeling: Literal["mlp_head", "prompted_vlm+mlp_head", "linear_head", "none"] = field(
+    ppl_prior_modeling: Literal["mlp_head", "prompted_vlm+mlp_head", "linear_head", "dpp_mlp", "none"] = field(
         default="none",
         metadata={"help": "The type of the prior head modeling to use."},
     )
@@ -436,6 +436,22 @@ class PPLArguments:
         default=1.0e-5,
         metadata={"help": "The learning rate of the prior head."},
     )
+    ppl_dpp_embed_dim: int = field(
+        default=256,
+        metadata={"help": "The embedding dimension of each passage used to build DPP off-diagonal similarity terms."},
+    )
+    ppl_dpp_jitter: float = field(
+        default=1.0e-6,
+        metadata={"help": "Small diagonal jitter added to DPP kernel matrices for stable Cholesky/log-det."},
+    )
+    ppl_dpp_candidate_mode: Literal["gt_size", "all_if_small_k"] = field(
+        default="gt_size",
+        metadata={"help": "Candidate subset policy for DPP prior-hit metric under dpp_mlp prior modeling."},
+    )
+    ppl_dpp_all_if_small_k_max_k: int = field(
+        default=12,
+        metadata={"help": "Maximum K for exact all-subset evaluation when ppl_dpp_candidate_mode=all_if_small_k."},
+    )
     ppl_enable_chunked_checkpoint: bool = field(
         default=False,
         metadata={
@@ -463,6 +479,15 @@ class PPLArguments:
                 "When enabled, prints detailed batch information including passages, questions, answers, and image paths."
             )
         },
+    )
+
+    beft_use_gt_subset_branch: bool = field(
+        default=False,
+        metadata={"help": "Whether or not to enable the fused GT-subset generation branch for BEFT multi-GT examples."},
+    )
+    beft_gt_subset_loss_factor: float = field(
+        default=1.0,
+        metadata={"help": "Loss weight for the fused GT-subset generation branch in BEFT."},
     )
     ppl_deflection_modeling: Literal["mlp_head", "linear_head", "none"] = field(
         default="none",

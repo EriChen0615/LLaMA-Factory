@@ -363,6 +363,11 @@ class ReporterCallback(TrainerCallback):
         if "wandb" in args.report_to:
             import wandb
 
+            # Use output_dir's last path component as wandb run name (WANDB_NAME set in tuner before Trainer creation)
+            run_name = os.path.basename(os.path.normpath(args.output_dir))
+            if getattr(wandb, "run", None) is not None and wandb.run is not None:
+                wandb.run.name = run_name
+
             wandb.config.update(
                 {
                     "model_args": self.model_args.to_dict(),

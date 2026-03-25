@@ -42,10 +42,39 @@ if TYPE_CHECKING:
 
     from ...hparams import FinetuningArguments
 
-from .ppl_loss import compute_ppl_loss, compute_joint_loss, compute_ensemble_loss
+from .ppl_loss import build_dpp_kernel, compute_ppl_loss, compute_joint_loss, compute_ensemble_loss, dpp_subset_nll
 
 
 logger = get_logger(__name__)
+
+
+class DPPPriorHead(nn.Module):
+    r"""Prior head for dpp_mlp modeling.
+
+    Produces:
+    - singleton_logits: passage quality logits (for DPP diagonal after sigmoid)
+    - embeddings: passage similarity embeddings (for DPP off-diagonal dot products)
+    """
+
+    def __init__(self, hidden_size: int, proj_dim: int, embed_dim: int, num_layers: int) -> None:
+        super().__init__()
+        trunk_layers = []
+        input_dim = hidden_size
+        # Keep at least one linear layer in the shared trunk.
+        trunk_depth = max(1, num_layers - 1)
+        for _ in range(trunk_depth):
+            trunk_layers.append(nn.Linear(input_dim, proj_dim))
+            trunk_layers.append(nn.ReLU())
+            input_dim = proj_dim
+        self.trunk = nn.Sequential(*trunk_layers)
+        self.singleton_head = nn.Linear(input_dim, 1)
+        self.embedding_head = nn.Linear(input_dim, embed_dim)
+
+    def forward(self, hidden: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        feats = self.trunk(hidden)
+        singleton_logits = self.singleton_head(feats)
+        embeddings = self.embedding_head(feats)
+        return singleton_logits, embeddings
 
 
 def initialize_prior_head(finetuning_args: "FinetuningArguments", hidden_size: int):
@@ -87,6 +116,18 @@ def initialize_prior_head(finetuning_args: "FinetuningArguments", hidden_size: i
         prior_head = nn.Sequential(*layers)
         print(f"[PPL Trainer - Prior Head] Prior head number of layers: {finetuning_args.ppl_prior_head_num_of_layers}")
         print(f"[PPL Trainer - Prior Head] Prior head projection dimension: {proj_dim}")
+        print(f"[PPL Trainer - Prior Head] Prior head parameters: {sum(p.numel() for p in prior_head.parameters())}")
+    elif finetuning_args.ppl_prior_modeling == 'dpp_mlp':
+        proj_dim = finetuning_args.ppl_prior_head_proj_dim
+        prior_head = DPPPriorHead(
+            hidden_size=hidden_size,
+            proj_dim=proj_dim,
+            embed_dim=finetuning_args.ppl_dpp_embed_dim,
+            num_layers=finetuning_args.ppl_prior_head_num_of_layers,
+        )
+        print(f"[PPL Trainer - Prior Head] Prior head number of layers: {finetuning_args.ppl_prior_head_num_of_layers}")
+        print(f"[PPL Trainer - Prior Head] Prior head projection dimension: {proj_dim}")
+        print(f"[PPL Trainer - Prior Head] DPP embedding dimension: {finetuning_args.ppl_dpp_embed_dim}")
         print(f"[PPL Trainer - Prior Head] Prior head parameters: {sum(p.numel() for p in prior_head.parameters())}")
     else:
         print(f"[PPL Trainer - Prior Head] No Prior head")
@@ -275,7 +316,14 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             # print(f"Using PPL prior: {self.finetuning_args.ppl_prior}")
             # print(f"Using PPL llk factor: {self.finetuning_args.ppl_llk_factor}")
     
-    def concatenated_forward(self, model, batch, hidden_state_offset=0, return_hidden_states=True):
+    def concatenated_forward(
+        self,
+        model,
+        batch,
+        hidden_state_offset=0,
+        return_hidden_states=True,
+        return_per_token_logps=False,
+    ):
         r"""
         The first instance of the batch is the GT passage.
         NOTE: only batch size = 1 for the collator is supported currently.
@@ -283,9 +331,22 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
         outputs = model(**batch, return_dict=True, use_cache=False, output_hidden_states=return_hidden_states)
         all_logits = outputs["logits"]
         labels = batch["labels"]
-        all_logps, lengths = get_batch_logps(logits=all_logits, labels=labels)
+        lengths = (labels != IGNORE_INDEX).sum(-1)
 
-        pos_logps, neg_logps = all_logps[:1], all_logps[1:]
+        per_token_logps = None
+        if return_per_token_logps:
+            labels_shifted = labels[:, 1:].clone()
+            logits_shifted = all_logits[:, :-1, :]
+            loss_mask = labels_shifted != IGNORE_INDEX
+            labels_shifted[labels_shifted == IGNORE_INDEX] = 0  # dummy token
+            per_token_logps = torch.gather(
+                logits_shifted.log_softmax(-1), dim=2, index=labels_shifted.unsqueeze(2)
+            ).squeeze(2)
+            per_token_logps = per_token_logps * loss_mask
+            pos_logps, neg_logps = per_token_logps[0].sum(-1), per_token_logps[1:].sum(-1)
+        else:
+            all_logps, _ = get_batch_logps(logits=all_logits, labels=labels)
+            pos_logps, neg_logps = all_logps[:1], all_logps[1:]
         
         # Extract last-layer hidden states at position just before the first label
         hidden_at_pre_label = None
@@ -297,7 +358,10 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             # Extract hidden states at EOS token for deflection head
             hidden_at_eos = get_last_hidden_state_at_eos(last_hidden_states, batch["input_ids"], self.tokenizer)
         
-        return pos_logps, neg_logps, all_logps, all_logits, outputs, lengths[0], hidden_at_pre_label, hidden_at_eos
+        if return_per_token_logps:
+            all_logits = None
+
+        return pos_logps, neg_logps, per_token_logps, all_logits, outputs, lengths[0], hidden_at_pre_label, hidden_at_eos
 
     def concatenated_forward_chunk_checkpointing(self, model, batch, hidden_state_offset=0, return_hidden_states=True):
         r"""
@@ -439,7 +503,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             K = bs//2
 
         # Use chunked forward with checkpointing if K exceeds chunk size
-        return_hidden_states = self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'] or self.finetuning_args.ppl_deflection_modeling in ['mlp_head', 'linear_head']
+        return_hidden_states = self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head', 'dpp_mlp'] or self.finetuning_args.ppl_deflection_modeling in ['mlp_head', 'linear_head']
         if self.finetuning_args.ppl_enable_chunked_checkpoint and self.finetuning_args.ppl_forward_chunk_size is not None and K > self.finetuning_args.ppl_forward_chunk_size:
             pos_logps, neg_logps, per_token_logps, all_logits, outputs, ans_len, hidden_at_pre_label, hidden_at_eos = self.concatenated_forward_chunk_checkpointing(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=return_hidden_states)
         else:
@@ -447,9 +511,12 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
             per_token_logps = None
 
         prior_logits = None
+        dpp_embeddings = None
         if self.prior_head is not None:
             if self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head']:
                 prior_logits = self.prior_head(hidden_at_pre_label)  # Shape: [batch_size, 1]
+            elif self.finetuning_args.ppl_prior_modeling == 'dpp_mlp':
+                prior_logits, dpp_embeddings = self.prior_head(hidden_at_pre_label)
             elif self.finetuning_args.ppl_prior_modeling == 'prompted_vlm+mlp_head':
                 prior_outputs = model(**prior_inputs, return_dict=True, use_cache=False, output_hidden_states=True)
                 prior_llk_loss = prior_outputs["loss"]
@@ -483,7 +550,22 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
                 prior_lambda = posterior_logprob.shape[-1] # = number of answer tokens
             else:
                 prior_lambda = self.finetuning_args.ppl_prior_loss_factor
-            if self.finetuning_args.ppl_prior_loss_type == 'softmax':
+            if self.finetuning_args.ppl_prior_modeling == 'dpp_mlp':
+                if prior_logits is None or dpp_embeddings is None:
+                    prior_loss = torch.tensor(0.0, device=self.model.device)
+                else:
+                    dpp_kernel = build_dpp_kernel(
+                        prior_logits,
+                        dpp_embeddings,
+                        jitter=self.finetuning_args.ppl_dpp_jitter,
+                    )
+                    gt_indices = torch.tensor([0], device=dpp_kernel.device, dtype=torch.long)
+                    prior_loss = dpp_subset_nll(
+                        dpp_kernel,
+                        gt_indices,
+                        jitter=self.finetuning_args.ppl_dpp_jitter,
+                    ) * prior_lambda
+            elif self.finetuning_args.ppl_prior_loss_type == 'softmax':
                 prior_loss = -prior_logprob[0] * prior_lambda
             elif self.finetuning_args.ppl_prior_loss_type == 'logistic':
                 prior_labels = torch.zeros_like(prior_logits)

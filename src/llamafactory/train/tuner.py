@@ -58,6 +58,11 @@ def _training_function(config: dict[str, Any]) -> None:
     callbacks: list[Any] = config.get("callbacks")
     model_args, data_args, training_args, finetuning_args, generating_args = get_train_args(args)
 
+    # Set wandb run name to output_dir's last path component (before Trainer is created)
+    if getattr(training_args, "report_to", None) and "wandb" in training_args.report_to:
+        run_name = os.path.basename(os.path.normpath(training_args.output_dir))
+        os.environ["WANDB_NAME"] = run_name
+
     callbacks.append(LogCallback())
     if finetuning_args.pissa_convert:
         callbacks.append(PissaConvertCallback())
