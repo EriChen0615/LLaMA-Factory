@@ -1,0 +1,1241 @@
+From 0fce019a068154e7c982a0165978e5e143268efd Mon Sep 17 00:00:00 2001
+From: "J. Chen" <jc2124@gpu-q-7.data.cluster>
+Date: Mon, 9 Feb 2026 11:48:29 +0000
+Subject: [PATCH] checkpoint. before update to qwen2.5-vl ft
+
+---
+ data/dataset_info.json                        |  53 ++++++
+ ...p_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml |  75 +++++++++
+ ...p_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml |  76 +++++++++
+ ...-6-l1h4_qwen2vl-7B_lora_r64_bs8 copy.yaml} |   0
+ ...p_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml |  74 ++++++++
+ ...p_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml |  75 +++++++++
+ .../merge_lora/qwen2vl_lora_sft.yaml          |  11 +-
+ ...vl-3B_lora_r64_bs8_size=10_multimodal.yaml |  52 ++++++
+ my_scripts/hpc_activate_env_py310.sh          |  13 ++
+ ...K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh |  16 ++
+ ...K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh |  17 ++
+ ...K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh |  16 ++
+ ...K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh |  17 ++
+ .../data/processors/beft_contrastive.py       |  32 +++-
+ src/llamafactory/hparams/finetuning_args.py   |  36 ++++
+ src/llamafactory/train/beft/trainer.py        |  78 ++++++++-
+ src/llamafactory/train/beft/workflow.py       |  11 +-
+ src/llamafactory/train/ppl/ppl_loss.py        |  38 ++++-
+ src/llamafactory/train/ppl/trainer.py         | 159 +++++++++++++++---
+ 19 files changed, 808 insertions(+), 41 deletions(-)
+ create mode 100644 my_configs/infoseek_new/beft/beft-d[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+ create mode 100644 my_configs/infoseek_new/beft/beft-z0[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+ rename my_configs/infoseek_new/beft/{beft[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml => beft[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8 copy.yaml} (100%)
+ create mode 100644 my_configs/infoseek_new/beft/cont-beft-d[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+ create mode 100644 my_configs/infoseek_new/beft/cont-beft-z0[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+ create mode 100644 my_configs/mmdocrag/beft_rag8-mmdocrag_qwen2_5vl-3B_lora_r64_bs8_size=10_multimodal.yaml
+ create mode 100644 my_scripts/hpc_activate_env_py310.sh
+ create mode 100644 my_scripts/infoseek_new/beft/train_beft-d[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh
+ create mode 100644 my_scripts/infoseek_new/beft/train_beft-z0[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh
+ create mode 100644 my_scripts/infoseek_new/beft/train_cont-beft-d[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh
+ create mode 100644 my_scripts/infoseek_new/beft/train_cont-beft-z0[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh
+
+diff --git a/data/dataset_info.json b/data/dataset_info.json
+index a25f80d8..fdae74da 100644
+--- a/data/dataset_info.json
++++ b/data/dataset_info.json
+@@ -16,6 +16,42 @@
+       "assistant_tag": "assistant"
+     }
+   },
++  "infoseek-rag2-answer-controlled-deflection-ratio=0.5-size=64000-max=4096":{
++    "file_name": "jinghong_chen/Infoseek/rag2-answer-controlled-deflection-ratio=0.5-size=64000-max=4096",
++    "formatting": "sharegpt",
++    "columns": {
++      "messages": "messages",
++      "images": "images",
++      "gt_passage_idx": "gt_passage_idx",
++      "passages": "passages",
++      "passage_scores": "passage_scores",
++      "deflection": "deflection"
++    },
++    "tags": {
++      "role_tag": "role",
++      "content_tag": "content",
++      "user_tag": "user",
++      "assistant_tag": "assistant"
++    }
++  },
++  "infoseek-rag2-answer-controlled-deflection-ratio=0.5-z0-size=64000-max=4096":{
++    "file_name": "jinghong_chen/Infoseek/rag2-answer-controlled-deflection-ratio=0.5-z0-size=64000-max=4096",
++    "formatting": "sharegpt",
++    "columns": {
++      "messages": "messages",
++      "images": "images",
++      "gt_passage_idx": "gt_passage_idx",
++      "passages": "passages",
++      "passage_scores": "passage_scores",
++      "deflection": "deflection"
++    },
++    "tags": {
++      "role_tag": "role",
++      "content_tag": "content",
++      "user_tag": "user",
++      "assistant_tag": "assistant"
++    }
++  },
+   "slidevqa-rag4-beft-size=128-offset=0-max=2048":{
+     "file_name": "jinghong_chen/slidevqa/rag4-slidevqa-beft-size=128-offset=0-max=2048/train_sharegpt.json",
+     "formatting": "sharegpt",
+@@ -84,6 +120,23 @@
+       "assistant_tag": "assistant"
+     }
+   },
++  "mmdocrag-rag8-beft-size=10-offset=0-multimodal":{
++    "file_name": "jinghong_chen/mmdocrag/rag8-mmdocrag-beft-size=10-offset=0-multimodal/train_sharegpt.json",
++    "formatting": "sharegpt",
++    "columns": {
++      "messages": "messages",
++      "images": "images",
++      "gt_passage_idx": "gt_passage_idx",
++      "passages": "passages",
++      "passage_scores": "passage_scores"
++    },
++    "tags": {
++      "role_tag": "role",
++      "content_tag": "content",
++      "user_tag": "user",
++      "assistant_tag": "assistant"
++    }
++  },
+   "slidevqa-rag4-sft-size=128-offset=0-max=2048":{
+     "file_name": "jinghong_chen/slidevqa/rag4-slidevqa-sft-size=128-offset=0-max=2048/train_sharegpt.json",
+     "formatting": "sharegpt",
+diff --git a/my_configs/infoseek_new/beft/beft-d[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml b/my_configs/infoseek_new/beft/beft-d[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+new file mode 100644
+index 00000000..1d20e833
+--- /dev/null
++++ b/my_configs/infoseek_new/beft/beft-d[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+@@ -0,0 +1,75 @@
++### model
++# model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-BEFT[K=2]-data=64000-LoRA
++# ppl_prior_head_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-BEFT[K=2]-data=64000-LoRA/prior_head.pt
++model_name_or_path: Qwen/Qwen2-VL-7B-Instruct
++
++### method
++stage: beft
++do_train: true
++finetuning_type: lora
++lora_target: all
++lora_rank: 64
++
++### PPL/BEFT configuration
++use_ppl_loss: true
++ppl_loss_type: ensemble
++use_ensemble_loss: true
++
++### Prior head configuration
++ppl_prior_modeling: mlp_head
++use_prior_head_loss: true
++ppl_prior_head_num_of_layers: 2
++ppl_prior_head_proj_dim: 1024
++ppl_prior_head_path: null
++ppl_prior_loss_factor: 1.0
++ppl_prior_loss_type: logistic
++ppl_hidden_state_offset: 4
++prior_head_lr: 1.0e-6
++freeze_prior_head_weights: false
++
++### Deflection head configuration
++ppl_deflection_modeling: mlp_head
++use_deflection_head_loss: true
++ppl_deflection_head_num_of_layers: 2
++ppl_deflection_head_proj_dim: 1024
++ppl_deflection_head_path: null
++ppl_deflection_loss_factor: 1.0
++
++### Chunked checkpointing (optional)
++ppl_enable_chunked_checkpoint: false
++ppl_forward_chunk_size: null
++
++### BEFT debug
++beft_debug: false
++
++### dataset
++dataset: infoseek-rag2-answer-controlled-deflection-ratio=0.5-size=64000-max=4096
++template: qwen2_vl
++# cutoff_len: 4096
++max_samples: 200000
++overwrite_cache: true
++preprocessing_num_workers: 16
++
++### output
++output_dir: saves/qwen2_vl-7b/lora/infoseek_new/beft/beft-d[K=2*]-prior=mlp-lr1e-6-l1h4-r64-deflection-size=64000-max=4096
++logging_steps: 10 
++# logging_steps: 2 
++save_steps: 500
++plot_loss: true
++overwrite_output_dir: true
++
++### train
++per_device_train_batch_size: 1
++gradient_accumulation_steps: 4  # effective batch size = 8
++learning_rate: 1.0e-5
++num_train_epochs: 1.0
++lr_scheduler_type: cosine
++warmup_ratio: 0.1
++bf16: true
++ddp_timeout: 180000000
++
++### eval
++val_size: 0.0001
++per_device_eval_batch_size: 1
++eval_strategy: steps
++eval_steps: 500
+diff --git a/my_configs/infoseek_new/beft/beft-z0[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml b/my_configs/infoseek_new/beft/beft-z0[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+new file mode 100644
+index 00000000..3f7902e6
+--- /dev/null
++++ b/my_configs/infoseek_new/beft/beft-z0[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+@@ -0,0 +1,76 @@
++### model
++# model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-BEFT[K=2]-data=64000-LoRA
++# ppl_prior_head_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-BEFT[K=2]-data=64000-LoRA/prior_head.pt
++model_name_or_path: Qwen/Qwen2-VL-7B-Instruct
++
++### method
++stage: beft
++do_train: true
++finetuning_type: lora
++lora_target: all
++lora_rank: 64
++
++### PPL/BEFT configuration
++use_ppl_loss: true
++ppl_loss_type: ensemble
++use_ensemble_loss: true
++
++### Prior head configuration
++ppl_prior_modeling: mlp_head
++use_prior_head_loss: true
++ppl_prior_head_num_of_layers: 2
++ppl_prior_head_proj_dim: 1024
++ppl_prior_head_path: null
++ppl_prior_loss_factor: 1.0
++ppl_prior_loss_type: logistic
++ppl_hidden_state_offset: 4
++prior_head_lr: 1.0e-6
++freeze_prior_head_weights: false
++
++### Deflection head configuration (disabled)
++ppl_deflection_modeling: none
++use_deflection_head_loss: false
++ppl_deflection_head_num_of_layers: 2
++ppl_deflection_head_proj_dim: 1024
++ppl_deflection_head_path: null
++ppl_deflection_loss_factor: 1.0
++
++### Chunked checkpointing (optional)
++ppl_enable_chunked_checkpoint: false
++ppl_forward_chunk_size: null
++
++### BEFT debug
++beft_debug: false
++
++### dataset
++dataset: infoseek-rag2-answer-controlled-deflection-ratio=0.5-z0-size=64000-max=4096
++template: qwen2_vl
++# cutoff_len: 4096
++max_samples: 200000
++overwrite_cache: true
++preprocessing_num_workers: 16
++
++### output
++output_dir: saves/qwen2_vl-7b/lora/infoseek_new/beft/beft-z0[K=2*]-prior=mlp-lr1e-6-l1h4-r64-size=64000-max=4096
++logging_steps: 10 
++# logging_steps: 2 
++save_steps: 500
++plot_loss: true
++overwrite_output_dir: true
++
++### train
++per_device_train_batch_size: 1
++gradient_accumulation_steps: 4  # effective batch size = 8
++learning_rate: 1.0e-5
++num_train_epochs: 1.0
++lr_scheduler_type: cosine
++warmup_ratio: 0.1
++bf16: true
++ddp_timeout: 180000000
++
++### eval
++val_size: 0.0001
++per_device_eval_batch_size: 1
++eval_strategy: steps
++eval_steps: 500
++
+diff --git a/my_configs/infoseek_new/beft/beft[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml b/my_configs/infoseek_new/beft/beft[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8 copy.yaml
+similarity index 100%
+rename from my_configs/infoseek_new/beft/beft[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+rename to my_configs/infoseek_new/beft/beft[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8 copy.yaml
+diff --git a/my_configs/infoseek_new/beft/cont-beft-d[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml b/my_configs/infoseek_new/beft/cont-beft-d[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+new file mode 100644
+index 00000000..2bb1abdd
+--- /dev/null
++++ b/my_configs/infoseek_new/beft/cont-beft-d[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+@@ -0,0 +1,74 @@
++### model
++model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-BEFT[K=2]-data=64000-LoRA
++# model_name_or_path: Qwen/Qwen2-VL-7B-Instruct
++
++### method
++stage: beft
++do_train: true
++finetuning_type: lora
++lora_target: all
++lora_rank: 64
++
++### PPL/BEFT configuration
++use_ppl_loss: true
++ppl_loss_type: ensemble
++use_ensemble_loss: true
++
++### Prior head configuration
++ppl_prior_modeling: mlp_head
++use_prior_head_loss: true
++ppl_prior_head_num_of_layers: 2
++ppl_prior_head_proj_dim: 1024
++ppl_prior_head_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-BEFT[K=2]-data=64000-LoRA/prior_head.pt
++ppl_prior_loss_factor: 1.0
++ppl_prior_loss_type: logistic
++ppl_hidden_state_offset: 4
++prior_head_lr: 1.0e-6
++freeze_prior_head_weights: false
++
++### Deflection head configuration
++ppl_deflection_modeling: mlp_head
++use_deflection_head_loss: true
++ppl_deflection_head_num_of_layers: 2
++ppl_deflection_head_proj_dim: 1024
++ppl_deflection_head_path: null
++ppl_deflection_loss_factor: 1.0
++
++### Chunked checkpointing (optional)
++ppl_enable_chunked_checkpoint: false
++ppl_forward_chunk_size: null
++
++### BEFT debug
++beft_debug: false
++
++### dataset
++dataset: infoseek-rag2-answer-controlled-deflection-ratio=0.5-size=64000-max=4096
++template: qwen2_vl
++# cutoff_len: 4096
++max_samples: 200000
++overwrite_cache: true
++preprocessing_num_workers: 8
++
++### output
++output_dir: saves/qwen2_vl-7b/lora/infoseek_new/beft/cont-beft-d[K=2*]-prior=mlp-lr1e-6-l1h4-r64-deflection-size=64000-max=4096
++logging_steps: 10 
++# logging_steps: 2 
++save_steps: 500
++plot_loss: true
++overwrite_output_dir: true
++
++### train
++per_device_train_batch_size: 1
++gradient_accumulation_steps: 4  # effective batch size = 8
++learning_rate: 1.0e-5
++num_train_epochs: 1.0
++lr_scheduler_type: cosine
++warmup_ratio: 0.1
++bf16: true
++ddp_timeout: 180000000
++
++### eval
++val_size: 0.0001
++per_device_eval_batch_size: 1
++eval_strategy: steps
++eval_steps: 500
+diff --git a/my_configs/infoseek_new/beft/cont-beft-z0[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml b/my_configs/infoseek_new/beft/cont-beft-z0[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+new file mode 100644
+index 00000000..a373825c
+--- /dev/null
++++ b/my_configs/infoseek_new/beft/cont-beft-z0[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+@@ -0,0 +1,75 @@
++### model
++model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-BEFT[K=2]-data=64000-LoRA
++# model_name_or_path: Qwen/Qwen2-VL-7B-Instruct
++
++### method
++stage: beft
++do_train: true
++finetuning_type: lora
++lora_target: all
++lora_rank: 64
++
++### PPL/BEFT configuration
++use_ppl_loss: true
++ppl_loss_type: ensemble
++use_ensemble_loss: true
++
++### Prior head configuration
++ppl_prior_modeling: mlp_head
++use_prior_head_loss: true
++ppl_prior_head_num_of_layers: 2
++ppl_prior_head_proj_dim: 1024
++ppl_prior_head_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-BEFT[K=2]-data=64000-LoRA/prior_head.pt
++ppl_prior_loss_factor: 1.0
++ppl_prior_loss_type: logistic
++ppl_hidden_state_offset: 4
++prior_head_lr: 1.0e-6
++freeze_prior_head_weights: false
++
++### Deflection head configuration
++ppl_deflection_modeling: mlp_head
++use_deflection_head_loss: true
++ppl_deflection_head_num_of_layers: 2
++ppl_deflection_head_proj_dim: 1024
++ppl_deflection_head_path: null
++ppl_deflection_loss_factor: 1.0
++
++### Chunked checkpointing (optional)
++ppl_enable_chunked_checkpoint: false
++ppl_forward_chunk_size: null
++
++### BEFT debug
++beft_debug: false
++
++### dataset
++dataset: infoseek-rag2-answer-controlled-deflection-ratio=0.5-z0-size=64000-max=4096
++template: qwen2_vl
++# cutoff_len: 4096
++max_samples: 200000
++overwrite_cache: true
++preprocessing_num_workers: 8
++
++### output
++output_dir: saves/qwen2_vl-7b/lora/infoseek_new/beft/cont-beft-z0[K=2*]-prior=mlp-lr1e-6-l1h4-r64-deflection-size=64000-max=4096
++logging_steps: 10 
++# logging_steps: 2 
++save_steps: 500
++plot_loss: true
++overwrite_output_dir: true
++
++### train
++per_device_train_batch_size: 1
++gradient_accumulation_steps: 4  # effective batch size = 8
++learning_rate: 1.0e-5
++num_train_epochs: 1.0
++lr_scheduler_type: cosine
++warmup_ratio: 0.1
++bf16: true
++ddp_timeout: 180000000
++
++### eval
++val_size: 0.0001
++per_device_eval_batch_size: 1
++eval_strategy: steps
++eval_steps: 500
++
+diff --git a/my_configs/infoseek_new/merge_lora/qwen2vl_lora_sft.yaml b/my_configs/infoseek_new/merge_lora/qwen2vl_lora_sft.yaml
+index a655f65d..2d1a0d4a 100644
+--- a/my_configs/infoseek_new/merge_lora/qwen2vl_lora_sft.yaml
++++ b/my_configs/infoseek_new/merge_lora/qwen2vl_lora_sft.yaml
+@@ -8,9 +8,14 @@
+ # adapter_name_or_path: "saves/qwen2_vl-7b/lora/infoseek_new/rag1_answer/checkpoint-2000" # QWen/QWen2-VL-2B-Instruct
+ # export_dir: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-RAG1_LoRA-SFT
+ 
+-model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-RAG1_LoRA-SFT
+-adapter_name_or_path: "saves/qwen2_vl-7b/lora/infoseek_new/rag5_answer-sft_max=16384=1e-5/checkpoint-1349" 
+-export_dir: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-RAG5_LoRA-SFT
++# model_name_or_path: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-RAG1_LoRA-SFT
++# adapter_name_or_path: "saves/qwen2_vl-7b/lora/infoseek_new/rag5_answer-sft_max=16384=1e-5/checkpoint-1349" 
++# export_dir: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-RAG5_LoRA-SFT
++
++model_name_or_path: Qwen/Qwen2-VL-7B-Instruct
++adapter_name_or_path: "saves/qwen2_vl-7b/lora/infoseek_new/beft/beft[K=2*]-prior=mlp-lr1e-6-l1h4-r64-size=64000-max=4096/checkpoint-7950" 
++export_dir: ../../data/jinghong_chen/Qwen2-VL-7B-Instruct_InfoseekNew-BEFT[K=2]-data=64000-LoRA
++
+ 
+ template: qwen2_vl
+ finetuning_type: lora
+diff --git a/my_configs/mmdocrag/beft_rag8-mmdocrag_qwen2_5vl-3B_lora_r64_bs8_size=10_multimodal.yaml b/my_configs/mmdocrag/beft_rag8-mmdocrag_qwen2_5vl-3B_lora_r64_bs8_size=10_multimodal.yaml
+new file mode 100644
+index 00000000..3b78d988
+--- /dev/null
++++ b/my_configs/mmdocrag/beft_rag8-mmdocrag_qwen2_5vl-3B_lora_r64_bs8_size=10_multimodal.yaml
+@@ -0,0 +1,52 @@
++### model
++model_name_or_path: Qwen/Qwen2.5-VL-3B-Instruct
++
++### method
++stage: beft
++do_train: true
++finetuning_type: lora
++lora_target: all
++lora_rank: 16
++lora_alpha: 32
++ppl_hidden_state_offset: 4
++ppl_prior_loss_factor: 1.0
++ppl_prior_loss_type: logistic
++prior_head_lr: 1.0e-6
++
++use_ppl_loss: true
++ppl_loss_type: ensemble
++ppl_prior_modeling: mlp_head
++use_prior_head_loss: true
++ppl_prior_head_num_of_layers: 2
++ppl_prior_head_proj_dim: 1024
++
++### dataset
++dataset: mmdocrag-rag8-beft-size=10-offset=0-multimodal
++template: qwen2_vl
++cutoff_len: 2048
++max_samples: 200000
++overwrite_cache: true
++preprocessing_num_workers: 16
++
++### output
++output_dir: saves/qwen2_5_vl-3b/lora/mmdocrag/beft/rag8-mmdocrag-size=10-multimodal
++logging_steps: 1
++save_steps: 500
++plot_loss: true
++overwrite_output_dir: true
++
++### train
++per_device_train_batch_size: 1
++gradient_accumulation_steps: 4  # effective batch size = 4
++learning_rate: 1.0e-5
++num_train_epochs: 3.0
++lr_scheduler_type: cosine
++warmup_ratio: 0.1
++bf16: true
++ddp_timeout: 180000000
++
++### eval
++val_size: 64
++per_device_eval_batch_size: 1
++eval_strategy: steps
++eval_steps: 100
+diff --git a/my_scripts/hpc_activate_env_py310.sh b/my_scripts/hpc_activate_env_py310.sh
+new file mode 100644
+index 00000000..10e0182a
+--- /dev/null
++++ b/my_scripts/hpc_activate_env_py310.sh
+@@ -0,0 +1,13 @@
++#!/bin/bash
++module purge
++module load slurm
++module load rhel8/default-amp
++# module load cuda/11.4
++module load cuda/12.1
++module load gcc/9
++
++export HF_HOME='../../../HF_HOME'
++# export CUDA_HOME=$(dirname $(dirname $(which nvcc)))
++conda activate /rds/project/rds-hirYTW1FQIw/shared_space/envs/LlamaFactory-py310
++which python
++# conda activate /rds/project/wjb31/rds-wjb31-nmt2020/shared_drive/to0
+\ No newline at end of file
+diff --git a/my_scripts/infoseek_new/beft/train_beft-d[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh b/my_scripts/infoseek_new/beft/train_beft-d[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh
+new file mode 100644
+index 00000000..c0a46420
+--- /dev/null
++++ b/my_scripts/infoseek_new/beft/train_beft-d[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh
+@@ -0,0 +1,16 @@
++#!/bin/bash
++#SBATCH -A BYRNE-SL2-GPU
++#SBATCH --nodes=1
++#SBATCH --ntasks=1
++#SBATCH --gres=gpu:2
++#SBATCH --time=24:00:00
++#SBATCH --mail-type=BEGIN,END,FAIL
++#! Uncomment this to prevent the job from being requeued (e.g. if
++#! interrupted by node failure or system downtime):
++##SBATCH --no-requeue
++#SBATCH -p ampere
++export WANDB_RUN_GROUP="HPC"
++
++which python
++
++llamafactory-cli train my_configs/infoseek_new/beft/beft-d[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+\ No newline at end of file
+diff --git a/my_scripts/infoseek_new/beft/train_beft-z0[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh b/my_scripts/infoseek_new/beft/train_beft-z0[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh
+new file mode 100644
+index 00000000..b57f65a3
+--- /dev/null
++++ b/my_scripts/infoseek_new/beft/train_beft-z0[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh
+@@ -0,0 +1,17 @@
++#!/bin/bash
++#SBATCH -A BYRNE-SL2-GPU
++#SBATCH --nodes=1
++#SBATCH --ntasks=1
++#SBATCH --gres=gpu:2
++#SBATCH --time=24:00:00
++#SBATCH --mail-type=BEGIN,END,FAIL
++#! Uncomment this to prevent the job from being requeued (e.g. if
++#! interrupted by node failure or system downtime):
++##SBATCH --no-requeue
++#SBATCH -p ampere
++export WANDB_RUN_GROUP="HPC"
++
++which python
++
++llamafactory-cli train my_configs/infoseek_new/beft/beft-z0[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
++
+diff --git a/my_scripts/infoseek_new/beft/train_cont-beft-d[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh b/my_scripts/infoseek_new/beft/train_cont-beft-d[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh
+new file mode 100644
+index 00000000..5f5cff4c
+--- /dev/null
++++ b/my_scripts/infoseek_new/beft/train_cont-beft-d[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh
+@@ -0,0 +1,16 @@
++#!/bin/bash
++#SBATCH -A BYRNE-SL2-GPU
++#SBATCH --nodes=1
++#SBATCH --ntasks=1
++#SBATCH --gres=gpu:2
++#SBATCH --time=24:00:00
++#SBATCH --mail-type=BEGIN,END,FAIL
++#! Uncomment this to prevent the job from being requeued (e.g. if
++#! interrupted by node failure or system downtime):
++##SBATCH --no-requeue
++#SBATCH -p ampere
++export WANDB_RUN_GROUP="HPC"
++
++which python
++
++llamafactory-cli train my_configs/infoseek_new/beft/cont-beft-d[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
+\ No newline at end of file
+diff --git a/my_scripts/infoseek_new/beft/train_cont-beft-z0[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh b/my_scripts/infoseek_new/beft/train_cont-beft-z0[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh
+new file mode 100644
+index 00000000..47991b4b
+--- /dev/null
++++ b/my_scripts/infoseek_new/beft/train_cont-beft-z0[K=2*]-7B-prior=mlp-l1h4_qwen2vl-7B_lora.sh
+@@ -0,0 +1,17 @@
++#!/bin/bash
++#SBATCH -A BYRNE-SL2-GPU
++#SBATCH --nodes=1
++#SBATCH --ntasks=1
++#SBATCH --gres=gpu:2
++#SBATCH --time=24:00:00
++#SBATCH --mail-type=BEGIN,END,FAIL
++#! Uncomment this to prevent the job from being requeued (e.g. if
++#! interrupted by node failure or system downtime):
++##SBATCH --no-requeue
++#SBATCH -p ampere
++export WANDB_RUN_GROUP="HPC"
++
++which python
++
++llamafactory-cli train my_configs/infoseek_new/beft/cont-beft-z0[K=2*]-7B-prior=mlp_lr1e-6-l1h4_qwen2vl-7B_lora_r64_bs8.yaml
++
+diff --git a/src/llamafactory/data/processors/beft_contrastive.py b/src/llamafactory/data/processors/beft_contrastive.py
+index 1e35d9a8..9e8c014f 100644
+--- a/src/llamafactory/data/processors/beft_contrastive.py
++++ b/src/llamafactory/data/processors/beft_contrastive.py
+@@ -41,8 +41,26 @@ def _expand_prompt_with_passages(prompt: Sequence[Dict[str, str]], passages: Seq
+     for psg_idx, psg in enumerate(passages):
+         this_prompt = deepcopy(prompt)
+         prompt_content = this_prompt[-1]['content']
++        
++        # Ensure prompt_content is a string
++        if not isinstance(prompt_content, str):
++            raise TypeError(f"Prompt content at index {psg_idx} is not a string. Got type: {type(prompt_content)}, value: {prompt_content}")
++        
+         # Extract text from passage dictionary
+-        passage_text = psg.get("text", "") if isinstance(psg, dict) else str(psg)
++        if isinstance(psg, dict):
++            if "text" not in psg:
++                raise ValueError(f"Passage at index {psg_idx} is a dict but missing 'text' key. Passage: {psg}")
++            passage_text = psg["text"]
++            if not isinstance(passage_text, str):
++                raise TypeError(f"Passage at index {psg_idx} has 'text' key but value is not a string. Got type: {type(passage_text)}, value: {passage_text}")
++        else:
++            # If it's not a dict, convert to string
++            passage_text = str(psg)
++        
++        # Ensure passage_text is a string before replace
++        if not isinstance(passage_text, str):
++            raise TypeError(f"passage_text is not a string after processing. Got type: {type(passage_text)}, value: {passage_text}")
++        
+         prompt_content_with_passage = prompt_content.replace("<<<EVIDENCE>>>", passage_text)
+         this_prompt[-1]['content'] = prompt_content_with_passage
+ 
+@@ -67,8 +85,7 @@ def _encode_beft_contrastive_example(
+     mask_history: bool,
+ ) -> Tuple[List[int], List[int], List[int], List[List["ImageInput"]]]:
+     """
+-    Encode BEFT contrastive example. Each passage has its own images list: only passage-specific images.
+-    No main images are used in this setup - each passage has its own distinct image.
++    Encode BEFT contrastive example. Each passage has its own images list: main images + passage-specific images.
+     Returns all_input_ids, all_attention_masks, all_labels, and all_passage_images.
+     """
+     prompt_with_passages, exploded_responses = _expand_prompt_with_passages(prompt, passages, response)
+@@ -78,9 +95,6 @@ def _encode_beft_contrastive_example(
+     all_passage_images = []
+ 
+     for psg_idx, (prompt, response) in enumerate(zip(prompt_with_passages, exploded_responses)):
+-        # For each passage, use only passage-specific images (no main images)
+-        # In this setup, each passage has its own image, and there's no shared main image
+-        
+         passage = passages[psg_idx]
+         passage_images = list(images)
+         
+@@ -182,6 +196,12 @@ def preprocess_beft_contrastive_dataset(
+         model_inputs["videos"].append(examples["_videos"][i])
+         model_inputs["all_labels"].append(all_labels)
+         model_inputs["gt_passage_idx"].append(examples["_gt_passage_idx"][i])
++        # Add deflection label if present (default to 0 if not provided)
++        deflection_value = examples.get("_deflection", [0] * len(examples["_prompt"]))
++        if isinstance(deflection_value, list):
++            model_inputs["deflection"].append(deflection_value[i] if i < len(deflection_value) else 0)
++        else:
++            model_inputs["deflection"].append(deflection_value)
+ 
+     return model_inputs
+ 
+diff --git a/src/llamafactory/hparams/finetuning_args.py b/src/llamafactory/hparams/finetuning_args.py
+index 91d2a89a..1ace052e 100644
+--- a/src/llamafactory/hparams/finetuning_args.py
++++ b/src/llamafactory/hparams/finetuning_args.py
+@@ -451,6 +451,42 @@ class PPLArguments:
+                     "When enabled, prints detailed batch information including passages, questions, answers, and image paths."
+         },
+     )
++    ppl_deflection_modeling: Literal["mlp_head", "linear_head", "none"] = field(
++        default="none",
++        metadata={
++            "help": "The type of the deflection head modeling to use."
++        },
++    )
++    ppl_deflection_head_num_of_layers: int = field(
++        default=2,
++        metadata={
++            "help": "The number of layers in the deflection head."
++        },
++    )
++    ppl_deflection_head_proj_dim: int = field(
++        default=1024,
++        metadata={
++            "help": "The projection dimension in the deflection head."
++        },
++    )
++    ppl_deflection_head_path: str = field(
++        default=None,
++        metadata={
++            "help": "path to the deflection head pt file."
++        }
++    )
++    ppl_deflection_loss_factor: float = field(
++        default=1.0,
++        metadata={
++            "help": "The factor of the deflection head loss in PPL training."
++        },
++    )
++    use_deflection_head_loss: bool = field(
++        default=True,
++        metadata={
++            "help": "Whether or not to use the deflection head loss in PPL training."
++        },
++    )
+ 
+     
+ 
+diff --git a/src/llamafactory/train/beft/trainer.py b/src/llamafactory/train/beft/trainer.py
+index a46a0bce..a1d2c9f1 100644
+--- a/src/llamafactory/train/beft/trainer.py
++++ b/src/llamafactory/train/beft/trainer.py
+@@ -79,12 +79,31 @@ class CustomSeq2SeqBEFTTrainer(CustomSeq2SeqPPLTrainer):
+         
+         bs = inputs["input_ids"].size(0)
+         K = bs
++        
++        # Extract deflection labels from inputs
++        deflection_labels = inputs.pop("deflection", None)
++        if deflection_labels is not None:
++            # Deflection is per example, not per passage. In BEFT, we typically have batch_size=1 per feature with K passages
++            # So we need to expand deflection_label to match K passages (all passages from same example have same deflection)
++            if deflection_labels.dim() == 0:
++                deflection_labels = deflection_labels.unsqueeze(0)
++            # Ensure deflection_labels is on the correct device
++            device = inputs["input_ids"].device
++            deflection_labels = deflection_labels.to(device)
++            # For now, assume one deflection label per feature, and we have K passages from that feature
++            # So we repeat the deflection label K times
++            if len(deflection_labels) == 1 and K > 1:
++                deflection_labels = deflection_labels.repeat(K)
++            elif len(deflection_labels) != K:
++                # If mismatch, use first label for all passages
++                deflection_labels = deflection_labels[0:1].repeat(K)
+ 
+         # Use chunked forward with checkpointing if K exceeds chunk size
++        return_hidden_states = self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'] or self.finetuning_args.ppl_deflection_modeling in ['mlp_head', 'linear_head']
+         if self.finetuning_args.ppl_enable_chunked_checkpoint and self.finetuning_args.ppl_forward_chunk_size is not None and K > self.finetuning_args.ppl_forward_chunk_size:
+-            pos_logps, neg_logps, per_token_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward_chunk_checkpointing(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
++            pos_logps, neg_logps, per_token_logps, all_logits, outputs, ans_len, hidden_at_pre_label, hidden_at_eos = self.concatenated_forward_chunk_checkpointing(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=return_hidden_states)
+         else:
+-            pos_logps, neg_logps, _, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
++            pos_logps, neg_logps, _, all_logits, outputs, ans_len, hidden_at_pre_label, hidden_at_eos = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=return_hidden_states)
+             per_token_logps = None
+ 
+         prior_logits = None
+@@ -94,10 +113,20 @@ class CustomSeq2SeqBEFTTrainer(CustomSeq2SeqPPLTrainer):
+             else:
+                 raise NotImplementedError(f"Prior modeling type {self.finetuning_args.ppl_prior_modeling} is not implemented")
+ 
++        # Compute deflection logits from hidden states at EOS token
++        deflection_logits = None
++        if self.deflection_head is not None and hidden_at_eos is not None:
++            deflection_logits = self.deflection_head(hidden_at_eos)  # Shape: [K, 1]
++
+         from ..ppl.ppl_loss import compute_ensemble_loss
+         
+-        # Only use ensemble loss
+-        beft_loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ensemble_loss(all_logits, inputs["labels"], prior_logits, per_token_logps=per_token_logps)
++        # Only use ensemble loss, pass deflection_logits and deflection_labels if available
++        beft_loss, posterior_loss, llk_loss, posterior_logprob, prior_logprob = compute_ensemble_loss(
++            all_logits, inputs["labels"], prior_logits, 
++            per_token_logps=per_token_logps,
++            deflection_logits=deflection_logits,
++            deflection_labels=deflection_labels
++        )
+         
+         loss = torch.tensor(0.0, device=self.model.device)
+         if self.finetuning_args.use_ensemble_loss:
+@@ -126,6 +155,38 @@ class CustomSeq2SeqBEFTTrainer(CustomSeq2SeqPPLTrainer):
+                 raise NotImplementedError(f"Prior loss type {self.finetuning_args.ppl_prior_loss_type} is not implemented")
+             loss += prior_loss
+ 
++        # Compute deflection loss if deflection head is enabled
++        deflection_loss = torch.tensor(0.0, device=self.model.device)
++        deflection_accuracy = torch.tensor(0.0, device=self.model.device)
++        deflection_hit_rate = torch.tensor(0.0, device=self.model.device)
++        if self.deflection_head is not None and deflection_logits is not None and deflection_labels is not None and self.finetuning_args.use_deflection_head_loss:
++            import torch.nn.functional as F
++            deflection_lambda = self.finetuning_args.ppl_deflection_loss_factor
++            # Compute binary cross entropy loss
++            deflection_loss = F.binary_cross_entropy_with_logits(
++                deflection_logits.squeeze(-1), 
++                deflection_labels.float()
++            ) * deflection_lambda
++            loss += deflection_loss
++            
++            # Compute deflection accuracy (binary classification accuracy)
++            deflection_probs = torch.sigmoid(deflection_logits.squeeze(-1))
++            deflection_preds = (deflection_probs > 0.5).float()
++            deflection_accuracy = (deflection_preds == deflection_labels.float()).float().mean()
++            
++            # Compute deflection hit rate: when label=1 (should deflect), what fraction is predicted as 1
++            # This is recall/true positive rate: TP / (TP + FN)
++            deflection_labels_float = deflection_labels.float()
++            positive_mask = deflection_labels_float == 1.0
++            if positive_mask.any():
++                # Only compute hit rate when there are positive examples
++                true_positives = (deflection_preds * deflection_labels_float).sum()
++                total_positives = deflection_labels_float.sum()
++                deflection_hit_rate = true_positives / total_positives
++            else:
++                # No positive examples in this batch, set hit rate to 0 or NaN
++                deflection_hit_rate = torch.tensor(0.0, device=self.model.device)
++
+         # Logging
+         # posterior_logprob.shape = [K, # ans tokens]
+         map_passage_idx = torch.argmax(posterior_logprob, dim=0) # shape (# ans tokens,)
+@@ -156,6 +217,9 @@ class CustomSeq2SeqBEFTTrainer(CustomSeq2SeqPPLTrainer):
+         self._metrics["posterior_loss"].append(posterior_loss.item())
+         self._metrics["llk_loss"].append(llk_loss.item())
+         self._metrics["prior_loss"].append(prior_loss.item())
++        self._metrics["deflection_loss"].append(deflection_loss.item())
++        self._metrics["deflection_accuracy"].append(deflection_accuracy.item())
++        self._metrics["deflection_hit_rate"].append(deflection_hit_rate.item())
+         self._metrics["total_loss"].append(loss.item())
+         self._metrics["posterior_hit_at_first"].append(any(map_passage_idx[0].item() == idx for idx in gt_passage_idx_list))
+         self._metrics["posterior_hit_at_mid"].append(any(map_passage_idx[ans_len//2].item() == idx for idx in gt_passage_idx_list))
+@@ -302,6 +366,12 @@ class CustomSeq2SeqBEFTTrainer(CustomSeq2SeqPPLTrainer):
+             metrics["llk_loss"] = sum(self._metrics["llk_loss"]) / len(self._metrics["llk_loss"])
+         if self._metrics["prior_loss"]:
+             metrics["prior_loss"] = sum(self._metrics["prior_loss"]) / len(self._metrics["prior_loss"])
++        if self._metrics.get("deflection_loss"):
++            metrics["deflection_loss"] = sum(self._metrics["deflection_loss"]) / len(self._metrics["deflection_loss"])
++        if self._metrics.get("deflection_accuracy"):
++            metrics["deflection_accuracy"] = sum(self._metrics["deflection_accuracy"]) / len(self._metrics["deflection_accuracy"])
++        if self._metrics.get("deflection_hit_rate"):
++            metrics["deflection_hit_rate"] = sum(self._metrics["deflection_hit_rate"]) / len(self._metrics["deflection_hit_rate"])
+         if self._metrics["prior_hit"]:
+             metrics["prior_hit"] = sum(self._metrics["prior_hit"]) / len(self._metrics["prior_hit"])
+         if self._metrics.get("prior_accuracy_threshold_0.5"):
+diff --git a/src/llamafactory/train/beft/workflow.py b/src/llamafactory/train/beft/workflow.py
+index 210ab57c..9ac534e9 100644
+--- a/src/llamafactory/train/beft/workflow.py
++++ b/src/llamafactory/train/beft/workflow.py
+@@ -46,11 +46,15 @@ class BEFTDataCollator(MultiModalDataCollatorForSeq2Seq):
+     def __call__(self, features):
+         concatenated_features = []
+         passage_image_paths_batch = []  # Store image paths for each feature
++        deflection_labels = []  # Store deflection labels (one per feature)
+         
+         for feature in features:
+             K = len(feature["all_input_ids"])
+             expanded_features = [None] * K
+             gt_passage_idx = feature["gt_passage_idx"]
++            # Extract deflection label (default to 0 if not present)
++            deflection_label = feature.get("deflection", 0)
++            deflection_labels.append(deflection_label)
+             
+             # Normalize gt_passage_idx to list format
+             if isinstance(gt_passage_idx, list):
+@@ -61,7 +65,6 @@ class BEFTDataCollator(MultiModalDataCollatorForSeq2Seq):
+             
+             # Get passage-specific images if available, otherwise use main images
+             all_passage_images = feature.get("all_passage_images", None)
+-            # print("all_passage_images:", all_passage_images)
+             # Store image paths for this feature (for debugging)
+             feature_image_paths = []
+             
+@@ -69,7 +72,6 @@ class BEFTDataCollator(MultiModalDataCollatorForSeq2Seq):
+             # Add is_gt_passage flag to each expanded feature (as int, will be converted to tensor by parent)
+             for idx, (input_ids, attention_mask, labels) in enumerate(zip(feature["all_input_ids"], feature["all_attention_mask"], feature["all_labels"])):
+                 passage_images = all_passage_images[idx] if idx < len(all_passage_images) else feature["images"]
+-                print("passage_images:", passage_images)
+                 # Extract image paths (images can be list of paths or single path)
+                 passage_image_paths = []
+                 if isinstance(passage_images, list):
+@@ -131,6 +133,11 @@ class BEFTDataCollator(MultiModalDataCollatorForSeq2Seq):
+             path_bytes = all_paths_str.encode('utf-8')
+             batch["_passage_image_paths_tokenized"] = torch.tensor(list(path_bytes), dtype=torch.long)
+         
++        # Store deflection labels in batch (one per original feature, not per passage)
++        # In BEFT, typically batch_size=1 per feature, so we have one deflection label for K passages
++        if deflection_labels:
++            batch["deflection"] = torch.tensor(deflection_labels, dtype=torch.long)
++        
+         return batch
+ 
+ def run_beft(
+diff --git a/src/llamafactory/train/ppl/ppl_loss.py b/src/llamafactory/train/ppl/ppl_loss.py
+index b5df58fc..ce955a7b 100644
+--- a/src/llamafactory/train/ppl/ppl_loss.py
++++ b/src/llamafactory/train/ppl/ppl_loss.py
+@@ -49,12 +49,17 @@ def compute_joint_loss(pos_logps, logits, labels, prior_logits=None):
+ 
+     return total_loss.squeeze(0), posterior_loss.squeeze(0), llk_loss.squeeze(0), posterior_logprob, log_passage_prior
+ 
+-def compute_ensemble_loss(logits, labels, prior_logits=None, per_token_logps=None):
++def compute_ensemble_loss(logits, labels, prior_logits=None, per_token_logps=None, deflection_logits=None, deflection_labels=None):
+     """
+     Let pk(i) denotes the i-th answer token probability when conditioned on the k-th passage.
+     qk(i) denotes the cumulative log-probability of the answer tokens up to the i-th token (not included) when conditioned on the k-th passage.
+     Let mk denote the prior probability of the k-th passage.
+     loss = - sum_i log(sum_k exp(log[pk(i)] + log[qk(i)]+log[mk] + sum_k' log[qk'(i)]+log[mk']))
++    
++    For deflection (step N+1):
++    - p_k,N+1 = s_k^d * (1-s_k)^(1-d) where s_k = sigmoid(deflection_logits[k]) and d is deflection label
++    - logp_k,N+1 = d * log(s_k) + (1-d) * log(1-s_k)
++    - Uses passage posterior computed from all N answer tokens
+     """
+     device = per_token_logps.device if per_token_logps is not None else logits.device
+     if prior_logits is not None:
+@@ -75,6 +80,37 @@ def compute_ensemble_loss(logits, labels, prior_logits=None, per_token_logps=Non
+ 
+     step_marginalized = torch.logsumexp(step_passage_marginalized, dim=0) # logsumexp over all K , shape (N, )
+     loss = -step_marginalized.sum(dim=0) # sum over all N
++    
++    # Add deflection step (N+1) if deflection_logits and deflection_labels are provided
++    if deflection_logits is not None and deflection_labels is not None:
++        # Compute deflection probabilities: s_k = sigmoid(deflection_logits[k])
++        # logp_k,N+1 = d * log(s_k) + (1-d) * log(1-s_k)
++        deflection_logits_flat = deflection_logits.squeeze(-1)  # shape (K,)
++        deflection_labels_flat = deflection_labels.float()  # shape (K,)
++        
++        # Compute s_k = sigmoid(deflection_logits[k]) in log-space for numerical stability
++        # log(s_k) = -log(1 + exp(-deflection_logits[k]))
++        # log(1-s_k) = -log(1 + exp(deflection_logits[k]))
++        log_s_k = -torch.nn.functional.softplus(-deflection_logits_flat)  # log(sigmoid(deflection_logits))
++        log_one_minus_s_k = -torch.nn.functional.softplus(deflection_logits_flat)  # log(1 - sigmoid(deflection_logits))
++        
++        # logp_k,N+1 = d * log(s_k) + (1-d) * log(1-s_k)
++        logp_deflection = deflection_labels_flat * log_s_k + (1 - deflection_labels_flat) * log_one_minus_s_k  # shape (K,)
++        
++        # Compute passage posterior at step N+1 using cumulative logps from all N answer tokens
++        # logq_k,N+1 = cumulative_token_logps[:, N-1] (last cumulative logp, i.e., sum of all N tokens)
++        logq_N_plus_1 = cumulative_token_logps[:, N-1] if N > 0 else torch.zeros((K,), device=device)  # shape (K,)
++        
++        # Passage posterior at step N+1
++        log_passage_posterior_N_plus_1 = logq_N_plus_1.unsqueeze(-1) + logm - torch.logsumexp(logq_N_plus_1.unsqueeze(-1) + logm, dim=0)  # shape (K, 1)
++        log_passage_posterior_N_plus_1 = log_passage_posterior_N_plus_1.squeeze(-1)  # shape (K,)
++        
++        # Marginalized deflection probability: sum over passages
++        step_marginalized_N_plus_1 = torch.logsumexp(logp_deflection + log_passage_posterior_N_plus_1, dim=0)  # scalar
++        
++        # Add to loss
++        loss = loss - step_marginalized_N_plus_1
++    
+     return loss, -log_passage_posterior[0].sum(-1), -logp.sum(dim=0).sum(dim=0), log_passage_posterior, log_passage_prior.squeeze(1)
+ 
+ def _get_token_cumulative_logps(
+diff --git a/src/llamafactory/train/ppl/trainer.py b/src/llamafactory/train/ppl/trainer.py
+index 4d09ece6..7dfeeaad 100644
+--- a/src/llamafactory/train/ppl/trainer.py
++++ b/src/llamafactory/train/ppl/trainer.py
+@@ -92,6 +92,49 @@ def initialize_prior_head(finetuning_args: "FinetuningArguments", hidden_size: i
+         print(f"[PPL Trainer - Prior Head] No Prior head")
+     return prior_head
+ 
++def initialize_deflection_head(finetuning_args: "FinetuningArguments", hidden_size: int):
++    print(f"[PPL Trainer] Deflection head modeling: {finetuning_args.ppl_deflection_modeling}")
++    print(f"[PPL Trainer] Use deflection head loss: {finetuning_args.use_deflection_head_loss}")
++    print(f"[PPL Trainer] Deflection head loss factor: {finetuning_args.ppl_deflection_loss_factor}")
++
++    deflection_head = None
++    if finetuning_args.ppl_deflection_modeling in ['mlp_head']:
++        # Initialize a 2-layer MLP head of shape [h]
++        input_dim = hidden_size
++        proj_dim = finetuning_args.ppl_deflection_head_proj_dim
++
++        mlp_layers = []
++        for i in range(finetuning_args.ppl_deflection_head_num_of_layers - 1):
++            mlp_layers.append(nn.Linear(input_dim, proj_dim))
++            mlp_layers.append(nn.ReLU())
++            input_dim = proj_dim
++        mlp_layers.append(nn.Linear(input_dim, 1))
++
++        deflection_head = nn.Sequential(*mlp_layers)
++        print(f"[PPL Trainer - Deflection Head] Deflection head number of layers: {finetuning_args.ppl_deflection_head_num_of_layers}")
++        print(f"[PPL Trainer - Deflection Head] Deflection head projection dimension: {proj_dim}")
++        print(f"[PPL Trainer - Deflection Head] Deflection head parameters: {sum(p.numel() for p in deflection_head.parameters())}")
++        if finetuning_args.ppl_deflection_head_path is not None:
++            deflection_head.load_state_dict(torch.load(finetuning_args.ppl_deflection_head_path))
++            print(f"[PPL Trainer - Deflection Head] Deflection head loaded from {finetuning_args.ppl_deflection_head_path}")
++        else:
++            print(f"[PPL Trainer - Deflection Head] No deflection head path provided, initializing a new deflection head")
++    elif finetuning_args.ppl_deflection_modeling == 'linear_head':
++        input_dim = hidden_size
++        proj_dim = finetuning_args.ppl_deflection_head_proj_dim
++        layers = []
++        for _ in range(finetuning_args.ppl_deflection_head_num_of_layers - 1):
++            layers.append(nn.Linear(input_dim, proj_dim))
++            input_dim = proj_dim
++        layers.append(nn.Linear(input_dim, 1))
++        deflection_head = nn.Sequential(*layers)
++        print(f"[PPL Trainer - Deflection Head] Deflection head number of layers: {finetuning_args.ppl_deflection_head_num_of_layers}")
++        print(f"[PPL Trainer - Deflection Head] Deflection head projection dimension: {proj_dim}")
++        print(f"[PPL Trainer - Deflection Head] Deflection head parameters: {sum(p.numel() for p in deflection_head.parameters())}")
++    else:
++        print(f"[PPL Trainer - Deflection Head] No Deflection head")
++    return deflection_head
++
+ def get_last_hidden_state_before_label(hidden_states: "torch.Tensor", labels: "torch.Tensor", hidden_state_offset: int = 0) -> "torch.Tensor":
+     label_indices = (labels != IGNORE_INDEX).nonzero(as_tuple=False)
+     
+@@ -106,6 +149,24 @@ def get_last_hidden_state_before_label(hidden_states: "torch.Tensor", labels: "t
+     hidden_at_pre_label = hidden_states[torch.arange(labels.size(0), device=labels.device), pre_label_indices_tensor, :]
+     return hidden_at_pre_label
+ 
++def get_last_hidden_state_at_eos(hidden_states: "torch.Tensor", input_ids: "torch.Tensor", tokenizer) -> "torch.Tensor":
++    """
++    Extract hidden states at the last token position for each sequence.
++    Since left padding is enforced, the last token (-1 position) is the actual last token of the sequence.
++    Args:
++        hidden_states: [batch_size, seq_len, hidden_size]
++        input_ids: [batch_size, seq_len]
++        tokenizer: tokenizer to verify left padding is enforced
++    Returns:
++        hidden_at_eos: [batch_size, hidden_size]
++    """
++    # Verify left padding is enforced
++    assert tokenizer.padding_side == "left", "This method requires left padding. Set tokenizer.padding_side = 'left'"
++    
++    # With left padding, the last token position (-1) is the actual last token (EOS)
++    # Simply extract hidden states at the last position for all sequences
++    return hidden_states[:, -1, :]
++
+ 
+ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
+     r"""
+@@ -140,6 +201,17 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
+         print(f"[PPL Trainer] Hidden state offset: {finetuning_args.ppl_hidden_state_offset}")
+         print(f"[PPL Trainer] Prior head loss factor: {finetuning_args.ppl_prior_loss_factor}")
+ 
++        self.prior_head = initialize_prior_head(finetuning_args, hidden_size=self.model.config.hidden_size)
++        if self.prior_head is not None:
++            # Prepare prior_head with accelerator for proper distributed training and mixed precision
++            self.prior_head = self.accelerator.prepare_model(self.prior_head, evaluation_mode=False)
++        
++        # Initialize deflection head
++        self.deflection_head = initialize_deflection_head(finetuning_args, hidden_size=self.model.config.hidden_size)
++        if self.deflection_head is not None:
++            # Prepare deflection_head with accelerator for proper distributed training and mixed precision
++            self.deflection_head = self.accelerator.prepare_model(self.deflection_head, evaluation_mode=False)
++
+         # if finetuning_args.ppl_prior_modeling == 'mlp_head':
+         #     # Initialize a 2-layer MLP head of shape [h]
+         #     input_dim = self.model.config.hidden_size
+@@ -158,18 +230,6 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
+         #     print(f"[PPL Trainer - Prior Head] Prior head parameters: {sum(p.numel() for p in self.prior_head.parameters())}")
+         #     if finetuning_args.ppl_prior_head_path is not None:
+         #         self.prior_head.load_state_dict(torch.load(finetuning_args.ppl_prior_head_path))
+-        #         print(f"[PPL Trainer - Prior Head] Prior head loaded from {finetuning_args.ppl_prior_head_path}")
+-        #     else:
+-        #         print(f"[PPL Trainer - Prior Head] No prior head path provided, initializing a new prior head")
+-        #     self.prior_head.to(self.model.device)
+-        # else:
+-        #     self.prior_head = None
+-        #     print(f"[PPL Trainer - Prior Head] No Prior head")
+-        self.prior_head = initialize_prior_head(finetuning_args, hidden_size=self.model.config.hidden_size)
+-        if self.prior_head is not None:
+-            # Prepare prior_head with accelerator for proper distributed training and mixed precision
+-            self.prior_head = self.accelerator.prepare_model(self.prior_head, evaluation_mode=False)
+-        
+         if self.finetuning_args.ppl_prior_loss_type in ['logistic', 'logistic+llk']:
+             self.prior_loss_fn = nn.BCEWithLogitsLoss()
+ 
+@@ -195,6 +255,9 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
+         else:
+             print(f"[PPL Trainer] Prior head weights are trainable")
+         
++        if self.deflection_head is not None:
++            print(f"[PPL Trainer] Deflection head weights are trainable")
++        
+         print(f"[PPL Trainer] ppl_enable_chunked_checkpoint: {self.finetuning_args.ppl_enable_chunked_checkpoint}")
+         print(f"[PPL Trainer] ppl_forward_chunk_size: {self.finetuning_args.ppl_forward_chunk_size}")
+         
+@@ -226,12 +289,15 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
+         
+         # Extract last-layer hidden states at position just before the first label
+         hidden_at_pre_label = None
++        hidden_at_eos = None
+         if return_hidden_states:
+             hidden_states = outputs["hidden_states"]
+             last_hidden_states = hidden_states[-1]  # Shape: [batch_size, seq_len, hidden_size]
+             hidden_at_pre_label = get_last_hidden_state_before_label(last_hidden_states, labels, hidden_state_offset=hidden_state_offset)
++            # Extract hidden states at EOS token for deflection head
++            hidden_at_eos = get_last_hidden_state_at_eos(last_hidden_states, batch["input_ids"], self.tokenizer)
+         
+-        return pos_logps, neg_logps, all_logps, all_logits, outputs, lengths[0], hidden_at_pre_label
++        return pos_logps, neg_logps, all_logps, all_logits, outputs, lengths[0], hidden_at_pre_label, hidden_at_eos
+ 
+     def concatenated_forward_chunk_checkpointing(self, model, batch, hidden_state_offset=0, return_hidden_states=True):
+         r"""
+@@ -251,6 +317,7 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
+         # Process K passages in chunks
+         all_logits_list = []
+         all_hidden_states_list = []
++        all_hidden_at_eos_list = []
+         all_per_token_logps_list = []
+         last_outputs = None
+         
+@@ -307,6 +374,14 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
+                     hidden_state_offset=hidden_state_offset
+                 )
+                 all_hidden_states_list.append(hidden_at_pre_label_chunk)
++                
++                # Extract hidden states at EOS token for deflection head
++                hidden_at_eos_chunk = get_last_hidden_state_at_eos(
++                    last_hidden_states_chunk,
++                    chunk_batch["input_ids"],
++                    self.tokenizer
++                )
++                all_hidden_at_eos_list.append(hidden_at_eos_chunk)
+             
+             labels_shifted = chunk_batch["labels"][:, 1:].clone()
+             logits_shifted = outputs_chunk.logits[:, :-1, :]
+@@ -329,12 +404,14 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
+         
+         # Concatenate hidden states
+         hidden_at_pre_label = None
++        hidden_at_eos = None
+         if return_hidden_states and all_hidden_states_list:
+             hidden_at_pre_label = torch.cat(all_hidden_states_list, dim=0)  # Shape: [K, hidden_size]
+-
+-        
++            # Concatenate EOS hidden states
++            if all_hidden_at_eos_list:
++                hidden_at_eos = torch.cat(all_hidden_at_eos_list, dim=0)  # Shape: [K, hidden_size]
+         
+-        return pos_logps, neg_logps, all_per_token_logps, None, last_outputs, lengths[0], hidden_at_pre_label
++        return pos_logps, neg_logps, all_per_token_logps, None, last_outputs, lengths[0], hidden_at_pre_label, hidden_at_eos
+ 
+     def compute_loss(self, model, inputs, num_items_in_batch=None, return_outputs=False, eval_mode=False):
+         """
+@@ -362,10 +439,11 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
+             K = bs//2
+ 
+         # Use chunked forward with checkpointing if K exceeds chunk size
++        return_hidden_states = self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'] or self.finetuning_args.ppl_deflection_modeling in ['mlp_head', 'linear_head']
+         if self.finetuning_args.ppl_enable_chunked_checkpoint and self.finetuning_args.ppl_forward_chunk_size is not None and K > self.finetuning_args.ppl_forward_chunk_size:
+-            pos_logps, neg_logps, per_token_logps, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward_chunk_checkpointing(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
++            pos_logps, neg_logps, per_token_logps, all_logits, outputs, ans_len, hidden_at_pre_label, hidden_at_eos = self.concatenated_forward_chunk_checkpointing(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=return_hidden_states)
+         else:
+-            pos_logps, neg_logps, _, all_logits, outputs, ans_len, hidden_at_pre_label = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=self.finetuning_args.ppl_prior_modeling in ['mlp_head', 'linear_head'])
++            pos_logps, neg_logps, _, all_logits, outputs, ans_len, hidden_at_pre_label, hidden_at_eos = self.concatenated_forward(model, inputs, self.finetuning_args.ppl_hidden_state_offset, return_hidden_states=return_hidden_states)
+             per_token_logps = None
+ 
+         prior_logits = None
+@@ -485,6 +563,29 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
+                 else:
+                     logger.info("Prior_head parameters already in optimizer")
+         
++        # Add deflection_head parameters to the optimizer if it exists and is trainable
++        if self.deflection_head is not None and self.optimizer is not None:
++            deflection_head_params = list(self.deflection_head.parameters())
++            if deflection_head_params and deflection_head_params[0].requires_grad:
++                # Check if deflection_head params are already in optimizer
++                optimizer_params = set()
++                for group in self.optimizer.param_groups:
++                    optimizer_params.update(id(p) for p in group['params'])
++                
++                deflection_head_param_ids = set(id(p) for p in deflection_head_params)
++                
++                if not deflection_head_param_ids.issubset(optimizer_params):
++                    # Add deflection_head parameters as a new param group
++                    # Use same learning rate as prior head
++                    logger.info(f"Adding {len(deflection_head_params)} deflection_head parameters to optimizer. LR={self.finetuning_args.prior_head_lr}")
++                    self.optimizer.add_param_group({
++                        'params': deflection_head_params,
++                        'lr': self.finetuning_args.prior_head_lr,
++                        'weight_decay': self.args.weight_decay,
++                    })
++                else:
++                    logger.info("Deflection_head parameters already in optimizer")
++        
+         # Report total trainable parameters in optimizer
+         logger.info("=" * 80)
+         logger.info("OPTIMIZER PARAMETER SUMMARY")
+@@ -655,21 +756,29 @@ class CustomSeq2SeqPPLTrainer(Seq2SeqTrainer):
+     @override
+     def save_model(self, output_dir: Optional[str] = None, _internal_call: bool = False):
+         """
+-        Override save_model to save prior_head (mlp_head) as a separate .pt file.
++        Override save_model to save prior_head and deflection_head (mlp_head) as separate .pt files.
+         """
+         # Call parent save_model first
+         super().save_model(output_dir, _internal_call)
+         
++        if output_dir is None:
++            output_dir = self.args.output_dir
++        
++        # Ensure output directory exists (important for distributed training)
++        os.makedirs(output_dir, exist_ok=True)
++        
+         # Save prior_head separately if it exists (only on main process)
+         if self.accelerator.is_main_process and hasattr(self, 'prior_head') and self.prior_head is not None:
+-            if output_dir is None:
+-                output_dir = self.args.output_dir
+-            
+-            # Ensure output directory exists (important for distributed training)
+-            os.makedirs(output_dir, exist_ok=True)
+-            
+             prior_head_path = os.path.join(output_dir, "prior_head.pt")
+             # Unwrap the model if it's wrapped by accelerator (e.g., DDP)
+             prior_head_to_save = self.accelerator.unwrap_model(self.prior_head)
+             torch.save(prior_head_to_save.state_dict(), prior_head_path)
+             logger.info(f"Saved prior_head to {prior_head_path}")
++        
++        # Save deflection_head separately if it exists (only on main process)
++        if self.accelerator.is_main_process and hasattr(self, 'deflection_head') and self.deflection_head is not None:
++            deflection_head_path = os.path.join(output_dir, "deflection_head.pt")
++            # Unwrap the model if it's wrapped by accelerator (e.g., DDP)
++            deflection_head_to_save = self.accelerator.unwrap_model(self.deflection_head)
++            torch.save(deflection_head_to_save.state_dict(), deflection_head_path)
++            logger.info(f"Saved deflection_head to {deflection_head_path}")
+-- 
+2.43.7
+
